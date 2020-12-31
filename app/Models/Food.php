@@ -2,14 +2,69 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Food extends Model
 {
     use HasFactory;
 
     protected $table = 'foods';
+
+    public function scopeUserFoods(Builder $query)
+    {
+        $query->where('user_id', auth()->user()->id);
+    }
+
+    public function scopeSharedFoods(Builder $query)
+    {
+        $sharableFoodsourceIds = Foodsource::sharable()->get()->pluck('id');
+
+        if ($sharableFoodsourceIds->isNotEmpty()) {
+            $query->orWhere('foodsource_id', '=', $sharableFoodsourceIds);
+        }
+    }
+
+    public function scopeAliasSearch(Builder $query, ?string $aliasSearch = null)
+    {
+        if (is_null($aliasSearch)) {
+            return $query;
+        }
+
+        $query->where('alias', 'like', "%{$aliasSearch}%");
+    }
+
+    public function scopeDescriptionSearch(Builder $query, ?string $descriptionSearch=null)
+    {
+        if (is_null($descriptionSearch)) {
+            return $query;
+        }
+
+        $query->where('description', 'like', "%{$descriptionSearch}%");
+    }
+
+    public function scopeFoodgroupSearch(Builder $query, $foodgroupSearch)
+    {
+        if (is_null($foodgroupSearch)) {
+            return $query;
+        }
+
+        $query->where('foodgroup_id', '=', "{$foodgroupSearch}");
+    }
+
+    public function scopeFavouritesFilter(Builder $query, $favouritesFilter)
+    {
+        if (is_null($favouritesFilter) || $favouritesFilter==="no") {
+            return $query;
+        }
+        if ($favouritesFilter==="yes") {
+            $favouriteIds = User::find(auth()
+                ->user()->id)
+                ->favourites()->pluck('food_id');
+            $query->whereIn('id', $favouriteIds);
+        }
+    }
 
     public function foodgroup()
     {
