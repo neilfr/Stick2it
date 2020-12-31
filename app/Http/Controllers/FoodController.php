@@ -31,4 +31,26 @@ class FoodController extends Controller
             'foodgroups' => FoodgroupResource::collection($foodgroups),
         ]);
     }
+
+    public function show(Request $request, Food $food)
+    {
+        $foodgroups = Foodgroup::all();
+        $foods = Food::userFoods()
+        ->sharedFoods()
+        ->foodgroupSearch($request->query('foodgroupSearch'))
+        ->descriptionSearch($request->query('descriptionSearch'))
+        ->aliasSearch($request->query('aliasSearch'))
+        ->favouritesFilter($request->query('favouritesFilter'))
+        ->with('ingredients')
+        ->paginate(Config::get('ml2.paginator.per_page'));
+
+        if (($food->user_id === auth()->user()->id) || ((bool)$food->foodsource->sharable === true)){
+            return Inertia::render('Foods/Show', [
+                'food' => new FoodResource($food),
+                'foods' => FoodResource::collection($foods),
+                'foodgroups' => FoodgroupResource::collection($foodgroups),
+            ]);
+        }
+        return redirect()->route('foods.index');
+    }
 }
