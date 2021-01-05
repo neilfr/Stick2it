@@ -8,6 +8,8 @@ use App\Models\Foodgroup;
 use Illuminate\Http\Request;
 use App\Http\Resources\FoodResource;
 use Illuminate\Support\Facades\Config;
+use App\Http\Requests\CreateFoodRequest;
+use App\Http\Requests\UpdateFoodRequest;
 use App\Http\Resources\FoodgroupResource;
 
 class FoodController extends Controller
@@ -53,4 +55,20 @@ class FoodController extends Controller
         }
         return redirect()->route('foods.index');
     }
+
+    public function store(CreateFoodRequest $request)
+    {
+        Food::create($request->validated());
+
+        return redirect()->route('foods.index');
+    }
+
+    public function update(UpdateFoodRequest $request, Food $food)
+    {
+        if ($food->user_id === auth()->user()->id) {
+            $food->update($request->validated());
+        }
+        return  redirect(route('foods.index'));
+    }
+
 }

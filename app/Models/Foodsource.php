@@ -10,6 +10,8 @@ class Foodsource extends Model
 {
     use HasFactory;
 
+    protected $table = 'foodsources';
+
     public function scopeSharable(Builder $query)
     {
         return $query->where('sharable', '=', true);

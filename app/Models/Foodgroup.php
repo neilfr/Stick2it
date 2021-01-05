@@ -9,6 +9,8 @@ class Foodgroup extends Model
 {
     use HasFactory;
 
+    protected $table = 'foodgroups';
+
     public function foods()
     {
         return $this->hasMany(Food::class);

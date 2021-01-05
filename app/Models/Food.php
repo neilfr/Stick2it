@@ -12,6 +12,23 @@ class Food extends Model
 
     protected $table = 'foods';
 
+    protected $fillable = [
+        'alias',
+        'description',
+        'kcal',
+        'fat',
+        'protein',
+        'carbohydrate',
+        'potassium',
+        'favourite',
+        'base_quantity',
+        'editable',
+        'foodgroup_id',
+        'foodsource_id',
+        'user_id',
+    ];
+
+
     public function scopeUserFoods(Builder $query)
     {
         $query->where('user_id', auth()->user()->id);
