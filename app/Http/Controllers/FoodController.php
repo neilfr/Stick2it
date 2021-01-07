@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Food;
+use App\Models\User;
 use Inertia\Inertia;
 use App\Models\Foodgroup;
 use Illuminate\Http\Request;
@@ -71,4 +72,26 @@ class FoodController extends Controller
         return  redirect(route('foods.index'));
     }
 
+    public function destroy(Food $food)
+    {
+        if ($food->user_id === auth()->user()->id) {
+            Food::destroy($food->id);
+        }
+
+        return redirect()->route('foods.index');
+    }
+
+    public function toggleFavourite(Request $request, Food $food)
+    {
+        $user = User::find(auth()->user()->id);
+
+        if ($user->favourites->contains($food)) {
+            $user->favourites()->detach($food);
+        } else {
+            $user->favourites()->attach($food);
+        };
+
+        return redirect()->back();
+
+    }
 }

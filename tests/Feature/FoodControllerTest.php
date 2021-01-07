@@ -276,27 +276,6 @@ class FoodControllerTest extends TestCase
         $this->assertDatabaseHas('foods', $payload);
     }
 
-    /**
-     * @test
-     * @dataProvider foodStoreValidationProvider
-     */
-    public function it_cannot_store_food_if_food_data_is_invalid($getData)
-    {
-        $user = User::factory()->create();
-        Sanctum::actingAs($user);
-
-        Food::factory()->create([
-            'description' => 'existing description',
-            'alias' => 'existing alias',
-        ]);
-
-        [$ruleName, $payload] = $getData();
-
-        $response = $this->post(route('foods.store'), $payload);
-
-        $response->assertSessionHasErrors($ruleName);
-    }
-
     /** @test */
     public function it_can_store_food_if_food_description_is_duplicate_of_another_users_food_description()
     {
@@ -498,12 +477,124 @@ class FoodControllerTest extends TestCase
         $response->assertSessionDoesntHaveErrors('alias');
     }
 
+        /** @test */
+    public function it_can_update_a_users_food()
+    {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
 
-    /**
-     * @test
-     * @dataProvider foodUpdateValidationProvider
-     */
-    public function it_cannot_update_food_if_food_data_is_invalid($getData)
+        $initialFoodsource = Foodsource::factory()->create();
+        $updatedFoodsource = Foodsource::factory()->create();
+        $initialFoodgroup = Foodgroup::factory()->create();
+        $updatedFoodgroup = Foodgroup::factory()->create();
+
+        $food = Food::factory()->create($this->getValidFoodData());
+
+        $payload = [
+            'description' => 'new description',
+            'alias' => 'new alias',
+            'kcal' => 222,
+            'fat' => 222,
+            'protein' => 222,
+            'carbohydrate' => 222,
+            'potassium' => 222,
+            'base_quantity' => 222,
+            'foodgroup_id' => $updatedFoodgroup->id,
+            'foodsource_id' => $updatedFoodsource->id,
+        ];
+
+        $response = $this->patch(route('foods.update', $food->id), $payload);
+
+        $response->assertRedirect(route('foods.index'));
+        $this->assertDatabaseHas('foods', $payload);
+    }
+
+/** @test */
+    public function it_can_update_a_foods_description_while_alias_is_unchanged()
+    {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        $food = Food::factory()->create([
+            'user_id' => $user->id,
+            'alias' => 'original alias',
+            'description' => 'original description',
+        ]);
+
+        $payload = [
+            'alias' => 'original alias',
+            'description' => 'new description',
+        ];
+
+        $response = $this->patch(route('foods.update', $food->id), $payload);
+
+        $response->assertRedirect(route('foods.index'));
+        $this->assertDatabaseHas('foods', $payload);
+    }
+
+
+    /** @test */
+    public function it_can_update_a_foods_alias_while_description_is_unchanged()
+    {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        $food = Food::factory()->create([
+            'user_id' => $user->id,
+            'alias' => 'original alias',
+            'description' => 'original description',
+        ]);
+
+        $payload = [
+            'alias' => 'new alias',
+            'description' => 'original description',
+        ];
+
+        $response = $this->patch(route('foods.update', $food->id), $payload);
+
+        $response->assertRedirect(route('foods.index'));
+        $this->assertDatabaseHas('foods', $payload);
+    }
+
+    /** @test */
+    public function it_cannot_update_another_users_food()
+    {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        $anotherUser = User::factory()->create();
+
+        $food = Food::factory()->create([
+            'user_id' => $anotherUser->id,
+            'description' => 'initial description',
+        ]);
+
+        $this->assertDatabaseHas('foods', [
+            'user_id' => $anotherUser->id,
+            'description' => 'initial description',
+        ]);
+
+        $payload = [
+            'description' => 'new description'
+        ];
+
+        $response = $this->patch(route('foods.update', $food->id), $payload);
+        $this->assertDatabaseMissing('foods', [
+            'user_id' => $anotherUser->id,
+            'description' => 'new description',
+        ]);
+
+        $this->assertDatabaseHas('foods', [
+            'user_id' => $anotherUser->id,
+            'description' => 'initial description',
+        ]);
+
+        $response->assertRedirect(route('foods.index'));
+    }
+
+
+    /** @test */
+    public function it_can_delete_a_users_food()
     {
         $user = User::factory()->create();
         Sanctum::actingAs($user);
@@ -512,152 +603,86 @@ class FoodControllerTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        $anotherFood = Food::factory()->create([
+        $response = $this->delete(route('foods.destroy', $food->id))
+            ->assertRedirect(route('foods.index'));
+
+        $response = $this->assertDatabaseMissing('foods', ['id' => $food->id]);
+    }
+
+    /** @test */
+    public function it_cannot_delete_another_users_food()
+    {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        $anotherUser = User::factory()->create();
+
+        $food = Food::factory()->create([
+            'user_id' => $anotherUser->id,
+        ]);
+
+        $response = $this->delete(route('foods.destroy', $food->id))
+            ->assertRedirect(route('foods.index'));
+
+        $response = $this->assertDatabaseHas('foods', ['id' => $food->id]);
+    }
+
+    /** @test */
+    public function it_can_toggle_food_as_favourite()
+    {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        $food = Food::factory()->create([
             'user_id' => $user->id,
-            'alias' => 'another foods alias',
-            'description' => 'another foods description',
+            'description' => 'test food one',
+        ]);
+
+        $user->favourites()->attach($food);
+
+        $this->assertDatabaseHas('favourites', [
+            'user_id' => $user->id,
+            'food_id' => $food->id,
+        ]);
+
+        $response = $this->from(route('foods.index'))
+            ->post(route('foods.toggle-favourite', $food->id));
+
+        $response->assertRedirect(route('foods.index'));
+        $this->assertDatabaseMissing('favourites', [
+            'food_id' => $food->id,
+            'user_id' => $user->id,
+        ]);
+
+        $response = $this->from(route('foods.index'))
+                        ->post(route('foods.toggle-favourite', $food->id));
+
+        $response->assertRedirect(route('foods.index'));
+        $this->assertDatabaseHas('favourites', [
+            'food_id' => $food->id,
+            'user_id' => $user->id,
+        ]);
+    }
+
+    /**
+     * @test
+     * @dataProvider foodStoreValidationProvider
+     */
+    public function it_cannot_store_food_if_food_data_is_invalid($getData)
+    {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        Food::factory()->create([
+            'description' => 'existing description',
+            'alias' => 'existing alias',
         ]);
 
         [$ruleName, $payload] = $getData();
 
-        $response = $this->patch(route('foods.update', $food->id), $payload);
+        $response = $this->post(route('foods.store'), $payload);
 
         $response->assertSessionHasErrors($ruleName);
-    }
-
-    public function foodUpdateValidationProvider()
-    {
-        return [
-            // 'it fails if alias is not a string' => [
-            //     function () {
-            //         return [
-            //             'alias', ['alias' => []],
-            //         ];
-            //     }
-            // ],
-            'it fails if alias is not unique' => [
-                function () {
-                    return [
-                        'alias',
-                        array_merge($this->getValidFoodData(), ['alias' => 'another foods alias']),
-                    ];
-                }
-            ],
-            'it fails if description is not a non-empty string' => [
-                function () {
-                    return [
-                        'description', ['description' => ''],
-                    ];
-                }
-            ],
-            'it fails if description is not unique' => [
-                function () {
-                    return [
-                        'description',
-                        array_merge($this->getValidFoodData(), ['description' => 'another foods description']),
-                    ];
-                }
-            ],
-            'it fails if kcal is not an integer' => [
-                function () {
-                    return [
-                        'kcal', ['kcal' => 'not an integer'],
-                    ];
-                }
-            ],
-            'it fails if kcal is not a non-negative integer' => [
-                function () {
-                    return [
-                        'kcal', ['kcal' => -1],
-                    ];
-                }
-            ],
-            'it fails if fat is not an integer' => [
-                function () {
-                    return [
-                        'fat', ['fat' => 'not an integer'],
-                    ];
-                }
-            ],
-            'it fails if fat is not a non-negative integer' => [
-                function () {
-                    return [
-                        'fat', ['fat' => -1],
-                    ];
-                }
-            ],
-            'it fails if protein is not an integer' => [
-                function () {
-                    return [
-                        'protein', ['protein' => 'not an integer'],
-                    ];
-                }
-            ],
-            'it fails if protein is not a non-negative integer' => [
-                function () {
-                    return [
-                        'protein', ['protein' => -1],
-                    ];
-                }
-            ],
-            'it fails if carbohydrate is not an integer' => [
-                function () {
-                    return [
-                        'carbohydrate', ['carbohydrate' => 'not an integer'],
-                    ];
-                }
-            ],
-            'it fails if carbohydrate is not a non-negative integer' => [
-                function () {
-                    return [
-                        'carbohydrate', ['carbohydrate' => -1],
-                    ];
-                }
-            ],
-            'it fails if potassium is not an integer' => [
-                function () {
-                    return [
-                        'potassium', ['potassium' => 'not an integer'],
-                    ];
-                }
-            ],
-            'it fails if potassium is not a non-negative integer' => [
-                function () {
-                    return [
-                        'potassium', ['potassium' => -1],
-                    ];
-                }
-            ],
-            'it fails if base_quantity is not an integer' => [
-                function () {
-                    return [
-                        'base_quantity',
-                        array_merge($this->getValidFoodData(), ['base_quantity' => 'not an integer']),
-                    ];
-                }
-            ],
-            'it fails if base_quantity is not a non-negative integer' => [
-                function () {
-                    return [
-                        'base_quantity', ['base_quantity' => -1],
-                    ];
-                }
-            ],
-            'it fails if foodgroup_id is not a valid foodgroup id' => [
-                function () {
-                    return [
-                        'foodgroup_id', ['foodgroup_id' => 99999999],
-                    ];
-                }
-            ],
-            'it fails if user_id is not a valid user id' => [
-                function () {
-                    return [
-                        'user_id', ['user_id' => 99999999],
-                    ];
-                }
-            ]
-        ];
     }
 
     public function foodStoreValidationProvider()
@@ -803,6 +828,183 @@ class FoodControllerTest extends TestCase
             ]
         ];
     }
+
+    /**
+     * @test
+     * @dataProvider foodUpdateValidationProvider
+     */
+    public function it_cannot_update_food_if_food_data_is_invalid($getData)
+    {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        $food = Food::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        $anotherFood = Food::factory()->create([
+            'user_id' => $user->id,
+            'alias' => 'another foods alias',
+            'description' => 'another foods description',
+        ]);
+
+        [$ruleName, $payload] = $getData();
+
+        $response = $this->patch(route('foods.update', $food->id), $payload);
+
+        $response->assertSessionHasErrors($ruleName);
+    }
+
+    public function foodUpdateValidationProvider()
+    {
+        return [
+            'it fails if alias is not a string' => [
+                function () {
+                    return [
+                        'alias',
+                        array_merge($this->getValidFoodData(), ['alias' => []]),
+                    ];
+                }
+            ],
+            'it fails if alias is not unique' => [
+                function () {
+                    return [
+                        'alias',
+                        array_merge($this->getValidFoodData(), ['alias' => 'another foods alias']),
+                    ];
+                }
+            ],
+            'it fails if description is not a non-empty string' => [
+                function () {
+                    return [
+                        'description',
+                        array_merge($this->getValidFoodData(), ['description' => '']),
+                    ];
+                }
+            ],
+            'it fails if description is not unique' => [
+                function () {
+                    return [
+                        'description',
+                        array_merge($this->getValidFoodData(), ['description' => 'another foods description']),
+                    ];
+                }
+            ],
+            'it fails if kcal is not an integer' => [
+                function () {
+                    return [
+                        'kcal',
+                        array_merge($this->getValidFoodData(), ['kcal' => 'not an integer']),
+                    ];
+                }
+            ],
+            'it fails if kcal is not a non-negative integer' => [
+                function () {
+                    return [
+                        'kcal',
+                        array_merge($this->getValidFoodData(), ['kcal' => -1]),
+                    ];
+                }
+            ],
+            'it fails if fat is not an integer' => [
+                function () {
+                    return [
+                        'fat',
+                        array_merge($this->getValidFoodData(), ['fat' => 'not an integer']),
+                    ];
+                }
+            ],
+            'it fails if fat is not a non-negative integer' => [
+                function () {
+                    return [
+                        'fat',
+                        array_merge($this->getValidFoodData(), ['fat' => -1]),
+                    ];
+                }
+            ],
+            'it fails if protein is not an integer' => [
+                function () {
+                    return [
+                        'protein',
+                        array_merge($this->getValidFoodData(), ['protein' => 'not an integer']),
+                    ];
+                }
+            ],
+            'it fails if protein is not a non-negative integer' => [
+                function () {
+                    return [
+                        'protein',
+                        array_merge($this->getValidFoodData(), ['protein' => -1]),
+                    ];
+                }
+            ],
+            'it fails if carbohydrate is not an integer' => [
+                function () {
+                    return [
+                        'carbohydrate',
+                        array_merge($this->getValidFoodData(), ['carbohydrate' => 'not an integer']),
+                    ];
+                }
+            ],
+            'it fails if carbohydrate is not a non-negative integer' => [
+                function () {
+                    return [
+                        'carbohydrate',
+                        array_merge($this->getValidFoodData(), ['carbohydrate' => -1]),
+                    ];
+                }
+            ],
+            'it fails if potassium is not an integer' => [
+                function () {
+                    return [
+                        'potassium',
+                        array_merge($this->getValidFoodData(), ['potassium' => 'not an integer']),
+                    ];
+                }
+            ],
+            'it fails if potassium is not a non-negative integer' => [
+                function () {
+                    return [
+                        'potassium',
+                        array_merge($this->getValidFoodData(), ['potassium' => -1]),
+                    ];
+                }
+            ],
+            'it fails if base_quantity is not an integer' => [
+                function () {
+                    return [
+                        'base_quantity',
+                        array_merge($this->getValidFoodData(), ['base_quantity' => 'not an integer']),
+                    ];
+                }
+            ],
+            'it fails if base_quantity is not a non-negative integer' => [
+                function () {
+                    return [
+                        'base_quantity',
+                        array_merge($this->getValidFoodData(), ['base_quantity' => -1]),
+                    ];
+                }
+            ],
+            'it fails if foodgroup_id is not a valid foodgroup id' => [
+                function () {
+                    return [
+                        'foodgroup_id',
+                        array_merge($this->getValidFoodData(), ['foodgroup_id' => "not an integer"]),
+                    ];
+                }
+            ],
+            'it fails if user_id is not a valid user id' => [
+                function () {
+                    return [
+                        'user_id',
+                        array_merge($this->getValidFoodData(), ['user_id' => 99999999]),
+                    ];
+                }
+            ]
+        ];
+    }
+
 
     public function getValidFoodData()
     {

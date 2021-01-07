@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Food;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateFoodRequest extends FormRequest
@@ -50,9 +52,9 @@ class UpdateFoodRequest extends FormRequest
             'carbohydrate' => 'integer|min:0',
             'potassium' => 'integer|min:0',
             'base_quantity' => 'integer|min:0',
-            'foodgroup_id' => 'exists:App\Foodgroup,id',
-            'foodsource_id' => 'exists:App\Foodsource,id',
-            'user_id' => 'exists:App\User,id',
+            'foodgroup_id' => 'exists:App\Models\Foodgroup,id',
+            'foodsource_id' => 'exists:App\Models\Foodsource,id',
+            'user_id' => 'exists:App\Models\User,id',
         ];
     }
 }
