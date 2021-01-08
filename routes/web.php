@@ -32,6 +32,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::patch('/foods/{food}', 'FoodController@update')->name('foods.update');
     Route::delete('/foods/{food}', 'FoodController@destroy')->name('foods.destroy');
     Route::post('/foods/{food}/toggle-favourite', 'FoodController@toggleFavourite')->name('foods.toggle-favourite');
+    Route::patch('/foods/{food}/ingredients/{ingredient}', 'FoodIngredientController@update')->name('foods.ingredients.update');
 
 });
 
