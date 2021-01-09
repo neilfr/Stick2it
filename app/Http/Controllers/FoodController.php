@@ -57,6 +57,13 @@ class FoodController extends Controller
         return redirect()->route('foods.index');
     }
 
+    public function create()
+    {
+        return Inertia::render('Foods/Create', [
+            'user' => auth()->user(),
+        ]);
+    }
+
     public function store(CreateFoodRequest $request)
     {
         Food::create($request->validated());

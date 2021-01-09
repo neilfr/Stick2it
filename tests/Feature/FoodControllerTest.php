@@ -262,10 +262,25 @@ class FoodControllerTest extends TestCase
         $response->assertRedirect(route('foods.index'));
     }
 
+
+    /** @test */
+    public function it_can_access_food_create_as_authorized_user()
+    {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        $this->get(route('foods.create'))->assertOk();
+    }
+
+    /** @test */
+    public function it_cannot_access_food_create_as_unauthorized_user()
+    {
+        $this->get(route('foods.create'))->assertRedirect('/login');
+    }
+
     /** @test */
     public function it_can_store_a_food()
     {
-        $this->withoutExceptionHandling();
         $user = User::factory()->create();
         Sanctum::actingAs($user);
 

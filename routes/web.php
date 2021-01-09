@@ -27,6 +27,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         return Inertia\Inertia::render('Dashboard');
     })->name('dashboard');
     Route::get('/foods', 'FoodController@index')->name('foods.index');
+    Route::get('/foods/new', 'FoodController@create')->name('foods.create');
     Route::post('/foods', 'FoodController@store')->name('foods.store');
     Route::get('/foods/{food}', 'FoodController@show')->name('foods.show');
     Route::patch('/foods/{food}', 'FoodController@update')->name('foods.update');
