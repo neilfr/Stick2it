@@ -235,4 +235,88 @@ class FoodIngredientControllerTest extends TestCase
         ];
     }
 
+    /** @test */
+    public function it_can_update_ingredient_quantity()
+    {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        $food = Food::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        $ingredient = Ingredient::factory()->create();
+
+        $food->ingredients()->attach($ingredient, ['quantity' => 100]);
+
+        $this->patch(route('foods.ingredients.update', [
+                'food' => $food->id,
+                'ingredient' => $ingredient->id,
+            ]),
+                ['quantity' => 200]);
+
+        $this->assertDatabaseHas('ingredients', [
+            'parent_food_id' => $food->id,
+            'ingredient_id' => $ingredient->id,
+            'quantity' => 200,
+        ]);
+    }
+
+    /** @test */
+    public function it_cannot_update_ingredient_attributes_other_than_quantity()
+    {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        $food = Food::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        $ingredient = Ingredient::factory()->create();
+
+        $food->ingredients()->attach($ingredient, ['quantity' => 100]);
+
+        $response = $this->patch(route('foods.ingredients.update', [
+                'food' => $food->id,
+                'ingredient' => $ingredient->id,
+            ]),
+                ['alias' => 'new alias']);
+
+        $this->assertDatabaseHas('ingredients', [
+            'parent_food_id' => $food->id,
+            'ingredient_id' => $ingredient->id,
+            'quantity' => 100,
+        ]);
+    }
+
+
+    /** @test */
+    public function it_cannot_update_ingredient_quantity_for_another_users_food()
+    {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        $anotherUser = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        $food = Food::factory()->create([
+            'user_id' => $anotherUser->id,
+        ]);
+
+        $ingredient = Ingredient::factory()->create();
+
+        $food->ingredients()->attach($ingredient, ['quantity' => 100]);
+
+        $this->patch(route('foods.ingredients.update', [
+                'food' => $food->id,
+                'ingredient' => $ingredient->id,
+            ]),
+                ['quantity' => 200]);
+
+        $this->assertDatabaseHas('ingredients', [
+            'parent_food_id' => $food->id,
+            'ingredient_id' => $ingredient->id,
+            'quantity' => 100,
+        ]);
+    }
 }
