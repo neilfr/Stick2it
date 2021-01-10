@@ -289,6 +289,53 @@ class FoodIngredientControllerTest extends TestCase
         ]);
     }
 
+    /** @test */
+    public function it_cannot_update_ingredient_if_ingredient_data_is_invalid()
+    {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        $ingredient = Food::factory()->create();
+        $food = Food::factory()->create();
+        $food->ingredients()->attach($ingredient->id, ['quantity' => 100]);
+
+        $payload = [
+            'ingredient_id' => $ingredient->id,
+            'quantity' => 'not an integer',
+        ];
+
+        $response = $this->patch(route('foods.ingredients.update', [
+            'food' => $food,
+            'ingredient' => $ingredient,
+        ]), $payload);
+
+        $response->assertSessionHasErrors('quantity');
+    }
+
+    /** @test */
+    public function it_cannot_add_an_ingredient_to_another_users_food()
+    {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        $anotherUser = User::factory()->create();
+
+        $food = Food::factory()->create([
+            'user_id' => $anotherUser->id,
+        ]);
+
+        $ingredient = Food::factory()->create();
+
+        $payload = [
+            'ingredient_id' => $ingredient->id,
+            'quantity' => 200,
+        ];
+
+        $response = $this->post(route('foods.ingredients.store', $food), $payload);
+
+        $response->assertRedirect(route('foods.index'));
+        $this->assertDatabaseMissing('ingredients', $payload);
+    }
 
     /** @test */
     public function it_cannot_update_ingredient_quantity_for_another_users_food()
@@ -319,4 +366,32 @@ class FoodIngredientControllerTest extends TestCase
             'quantity' => 100,
         ]);
     }
+
+    /** @test */
+    public function it_can_remove_an_ingredient_from_a_user_owned_food()
+    {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        $food = Food::factory()->create();
+
+        $ingredients = Ingredient::factory()->times(2)->create();
+
+        foreach($ingredients as $ingredient) {
+            $food->ingredients()->attach($ingredient->id, ['quantity' => 555]);
+        }
+
+        $response = $this->delete(route('foods.ingredients.destroy', [
+            'food' => $food,
+            'ingredient' =>$ingredients[0],
+        ]));
+
+        $response->assertRedirect(route('foods.show', $food));
+        $this->assertDatabaseMissing('ingredients', [
+            'parent_food_id' => $food->id,
+            'ingredient_id' => $ingredients[0]->id,
+            'quantity' => 555,
+        ]);
+    }
+
 }
