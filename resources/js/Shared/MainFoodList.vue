@@ -35,6 +35,9 @@
                     <button v-if="food.editable" @click="edit" :id="food.id">
                         Edit
                     </button>
+                    <button v-if="food.editable" @click="destroy" :id="food.id">
+                        Delete
+                    </button>
                     <button v-if="!food.editable" @click="view" :id="food.id">
                         View
                     </button>
@@ -58,6 +61,9 @@ export default {
         },
         edit (e) {
             this.$emit('edit', e);
+        },
+        destroy (e) {
+            this.$emit('destroy', e);
         }
     }
 }

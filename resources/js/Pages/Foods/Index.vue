@@ -25,7 +25,7 @@
                 <input type="radio" name="favourites" id="favouriteNo" value="no" checked v-model="favouritesFilter" @change="goToPageOne">
             </div>
         </div>
-        <main-food-list :foods="foods.data" @view="show" @edit="show" @favourite="toggleFavourite"></main-food-list>
+        <main-food-list :foods="foods.data" @view="show" @edit="show" @destroy="destroy" @favourite="toggleFavourite"></main-food-list>
         <div>
             <button @click="goToPageOne">First</button>
             <button @click="previousPage">Previous</button>
@@ -61,6 +61,13 @@
             toggleFavourite(e){
                 let url =this.$route("foods.toggle-favourite", e.target.id);
                 this.$inertia.post(url,{},{preserveScroll: true});
+            },
+            destroy(e){
+                console.log("destroy", e.target.id);
+                let url =this.$route("foods.destroy", e.target.id);
+                this.$inertia.delete(url,{
+                    food:e.target.id
+                });
             },
             goToPageOne(){
                 this.goToPage(1);

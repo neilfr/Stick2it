@@ -21,7 +21,7 @@ class CreateIngredientsTable extends Migration
 
             $table->timestamps();
 
-            $table->foreign('parent_food_id')->on('foods')->references('id');
+            $table->foreign('parent_food_id')->on('foods')->references('id')->onDelete('cascade');
             $table->foreign('ingredient_id')->on('foods')->references('id');
         });
     }

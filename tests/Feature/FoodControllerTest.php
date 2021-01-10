@@ -621,7 +621,43 @@ class FoodControllerTest extends TestCase
         $response = $this->delete(route('foods.destroy', $food->id))
             ->assertRedirect(route('foods.index'));
 
-        $response = $this->assertDatabaseMissing('foods', ['id' => $food->id]);
+        $this->assertDatabaseMissing('foods', ['id' => $food->id]);
+    }
+
+    /** @test */
+    public function it_deletes_a_foods_ingredients_when_the_food_is_deleted()
+    {
+        $this->withoutExceptionHandling();
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        $food = Food::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        $ingredient = Ingredient::factory()->create();
+
+        $food->ingredients()->attach($ingredient, ['quantity' => 100]);
+        $this->assertDatabaseHas('foods', [
+            'id' => $food->id,
+            'user_id' => $user->id,
+        ]);
+        $this->assertDatabaseHas('ingredients', [
+            'parent_food_id' => $food->id,
+            'ingredient_id' => $ingredient->id,
+            'quantity' => 100,
+        ]);
+
+        $response = $this->delete(route('foods.destroy', $food->id))
+            ->assertRedirect(route('foods.index'));
+
+        $this->assertDatabaseMissing('foods', ['id' => $food->id]);
+        $this->assertDatabaseMissing('ingredients', [
+            'parent_food_id' => $food->id,
+            'ingredient_id' => $ingredient->id,
+            'quantity' => 100,
+        ]);
+
     }
 
     /** @test */

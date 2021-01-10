@@ -3602,6 +3602,13 @@ __webpack_require__.r(__webpack_exports__);
         preserveScroll: true
       });
     },
+    destroy: function destroy(e) {
+      console.log("destroy", e.target.id);
+      var url = this.$route("foods.destroy", e.target.id);
+      this.$inertia["delete"](url, {
+        food: e.target.id
+      });
+    },
     goToPageOne: function goToPageOne() {
       this.goToPage(1);
     },
@@ -4779,10 +4786,10 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _Shared_UpdateNumberModal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Shared/UpdateNumberModal */ "./resources/js/Shared/UpdateNumberModal.vue");
-/* harmony import */ var _Shared_IngredientAdd__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Shared/IngredientAdd */ "./resources/js/Shared/IngredientAdd.vue");
-/* harmony import */ var _Shared_Modal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Shared/Modal */ "./resources/js/Shared/Modal.vue");
-/* harmony import */ var _Shared_UpdateQuantity_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Shared/UpdateQuantity.vue */ "./resources/js/Shared/UpdateQuantity.vue");
+/* harmony import */ var _Shared_UpdateNumberModal__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Shared/UpdateNumberModal */ "./resources/js/Shared/UpdateNumberModal.vue");
+/* harmony import */ var _Shared_IngredientAdd__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Shared/IngredientAdd */ "./resources/js/Shared/IngredientAdd.vue");
+/* harmony import */ var _Shared_Modal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Shared/Modal */ "./resources/js/Shared/Modal.vue");
+/* harmony import */ var _Shared_UpdateQuantity_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Shared/UpdateQuantity.vue */ "./resources/js/Shared/UpdateQuantity.vue");
 //
 //
 //
@@ -4838,10 +4845,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    UpdateNumberModal: _Shared_UpdateNumberModal__WEBPACK_IMPORTED_MODULE_3__["default"],
-    IngredientAdd: _Shared_IngredientAdd__WEBPACK_IMPORTED_MODULE_2__["default"],
-    Modal: _Shared_Modal__WEBPACK_IMPORTED_MODULE_1__["default"],
-    UpdateQuantity: _Shared_UpdateQuantity_vue__WEBPACK_IMPORTED_MODULE_4__["default"]
+    UpdateNumberModal: _Shared_UpdateNumberModal__WEBPACK_IMPORTED_MODULE_0__["default"],
+    IngredientAdd: _Shared_IngredientAdd__WEBPACK_IMPORTED_MODULE_1__["default"],
+    Modal: _Shared_Modal__WEBPACK_IMPORTED_MODULE_2__["default"],
+    UpdateQuantity: _Shared_UpdateQuantity_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
   },
   props: {
     food: Object,
@@ -4965,6 +4972,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     foods: Array
@@ -4978,6 +4988,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     edit: function edit(e) {
       this.$emit('edit', e);
+    },
+    destroy: function destroy(e) {
+      this.$emit('destroy', e);
     }
   }
 });
@@ -48973,7 +48986,12 @@ var render = function() {
       _vm._v(" "),
       _c("main-food-list", {
         attrs: { foods: _vm.foods.data },
-        on: { view: _vm.show, edit: _vm.show, favourite: _vm.toggleFavourite }
+        on: {
+          view: _vm.show,
+          edit: _vm.show,
+          destroy: _vm.destroy,
+          favourite: _vm.toggleFavourite
+        }
       }),
       _vm._v(" "),
       _c("div", [
@@ -51390,6 +51408,18 @@ var render = function() {
                     "button",
                     { attrs: { id: food.id }, on: { click: _vm.edit } },
                     [_vm._v("\n                      Edit\n                  ")]
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              food.editable
+                ? _c(
+                    "button",
+                    { attrs: { id: food.id }, on: { click: _vm.destroy } },
+                    [
+                      _vm._v(
+                        "\n                      Delete\n                  "
+                      )
+                    ]
                   )
                 : _vm._e(),
               _vm._v(" "),
