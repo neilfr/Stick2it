@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
 use App\Models\Food;
 use App\Models\User;
+use App\Models\Logentry;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -35,5 +37,12 @@ class TestUserSeeder extends Seeder
         $food->ingredients()->attach(4, ['quantity' => 250]);
 
         $testUser->favourites()->sync([2,4,$food->id]);
+
+        $logentry = Logentry::factory()->create([
+            'user_id' => $testUser->id,
+            'food_id' => $food->id,
+            'quantity' => 100,
+            'consumed_at' => Carbon::now(),
+        ]);
     }
 }
