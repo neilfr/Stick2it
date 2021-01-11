@@ -629,7 +629,6 @@ class FoodControllerTest extends TestCase
     /** @test */
     public function it_deletes_a_foods_ingredients_when_the_food_is_deleted()
     {
-        $this->withoutExceptionHandling();
         $user = User::factory()->create();
         Sanctum::actingAs($user);
 
