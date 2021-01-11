@@ -175,7 +175,9 @@ class FoodControllerTest extends TestCase
         $user = User::factory()->create();
         Sanctum::actingAs($user);
 
-        $foods = Food::factory(2)->create();
+        $foods = Food::factory(2)->create([
+            'user_id' => $user->id,
+        ]);
 
         $response = $this->get(route('foods.show', $foods[0]));
 
@@ -727,6 +729,7 @@ class FoodControllerTest extends TestCase
         Food::factory()->create([
             'description' => 'existing description',
             'alias' => 'existing alias',
+            'user_id' => $user->id,
         ]);
 
         [$ruleName, $payload] = $getData();

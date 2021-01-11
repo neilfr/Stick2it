@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Models\Food;
 use App\Models\User;
+use App\Models\Logentry;
 use Laravel\Sanctum\Sanctum;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -23,10 +24,11 @@ class LogentryControllerTest extends TestCase
 
         $logentry = Logentry::factory()->create([
             'user_id' => $user->id,
-            'food' => $food->food->id,
+            'food_id' => $food->id,
             'quantity' => 100,
         ]);
 
+        $response = $this->get(route('logentry.index', $user))->assertOk();
 
     }
 }
