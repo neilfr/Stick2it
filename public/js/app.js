@@ -3821,9 +3821,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
-    logentries: Array
+    logentries: Object
   }
 });
 
@@ -49611,9 +49614,19 @@ var render = function() {
     _vm._v(" "),
     _c(
       "ul",
-      _vm._l(_vm.logentries, function(logentry) {
+      _vm._l(_vm.logentries.data, function(logentry) {
         return _c("li", { key: logentry.id }, [
-          _vm._v("\n            " + _vm._s(logentry.consumed_at) + "\n        ")
+          _vm._v(
+            "\n            " +
+              _vm._s(logentry.consumed_at) +
+              "\n            " +
+              _vm._s(logentry.food_description) +
+              "\n            " +
+              _vm._s(logentry.food_alias) +
+              "\n            " +
+              _vm._s(logentry.quantity) +
+              "\n        "
+          )
         ])
       }),
       0
