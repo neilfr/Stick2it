@@ -28,7 +28,7 @@ class LogentryControllerTest extends TestCase
             'quantity' => 100,
         ]);
 
-        $response = $this->get(route('logentry.index', $user));
+        $response = $this->get(route('logentries.index', $user));
 
         $response->assertOk();
         $response->assertPropValue('logentries', function ($logentries) use($logentry) {

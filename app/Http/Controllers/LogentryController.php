@@ -11,7 +11,7 @@ class LogentryController extends Controller
     public function index()
     {
         $logentries = Logentry::where('user_id', auth()->user()->id)->get();
-        return Inertia::render('Logentry/Index',[
+        return Inertia::render('Logentries/Index',[
             'logentries' => $logentries,
         ]);
     }
