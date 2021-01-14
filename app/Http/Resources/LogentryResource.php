@@ -18,6 +18,7 @@ class LogentryResource extends JsonResource
         $food = Food::find($this->food_id);
         return [
             'id' => $this->id,
+            'user_id' => $this->user_id,
             'consumed_at' => $this->consumed_at,
             'food_id' => $this->food_id,
             'food_description' => $food->description,
