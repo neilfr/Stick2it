@@ -23,7 +23,6 @@ class LogentryControllerTest extends TestCase
         $foods = Food::factory(2)->create([
             'user_id' => $user->id,
         ]);
-        // dd($foods);
 
         foreach($foods as $index => $food){
             $logentries[$index] = Logentry::factory()->create([
@@ -41,11 +40,8 @@ class LogentryControllerTest extends TestCase
         $response->assertPropValue('logentries', function ($returnedLogentries) use($logentries) {
             $this->assertEquals(2, count($returnedLogentries['data']));
             foreach($returnedLogentries['data'] as $index => $returnedLogentry){
-                dd('logentries[index]', $logentries[$index], 'returnedlogentry', $returnedLogentry);
-                $this->assertEquals($logentries[$index]->food_id, $returnedLogentry['food_id']);
-                $this->assertEquals($logentries[$index]->user_id, $returnedLogentry['user_id']);
-                // $this->assertEquals($logentries[$index]->description, $returnedLogentry['description']);
-                // $this->assertEquals($logentries[$index]->alias, $returnedLogentry['alias']);
+                $this->assertEquals($logentries[$index]->food->description,$returnedLogentry['food']['description']);
+                $this->assertEquals($logentries[$index]->user->email,$returnedLogentry['user']['email']);
             }
         });
     }

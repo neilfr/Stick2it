@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Food;
+use App\Http\Resources\FoodResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class LogentryResource extends JsonResource
@@ -15,15 +15,12 @@ class LogentryResource extends JsonResource
      */
     public function toArray($request)
     {
-        $food = Food::find($this->food_id);
         return [
             'id' => $this->id,
-            'user_id' => $this->user_id,
-            'consumed_at' => $this->consumed_at,
-            'food_id' => $this->food_id,
-            'food_description' => $food->description,
-            'food_alias' => $food->alias,
+            'user' => $this->user,
+            'food' => new FoodResource($this->food),
             'quantity' => $this->quantity,
+            'consumed_at' => $this->consumed_at,
         ];
     }
 }
