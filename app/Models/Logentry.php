@@ -11,6 +11,13 @@ class Logentry extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'user_id',
+        'food_id',
+        'quantity',
+        'consumed_at',
+    ];
+
     protected $table = 'logentries';
 
     public function user(){

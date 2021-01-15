@@ -39,6 +39,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::delete('/foods/{food}/ingredients/{ingredient}', 'FoodIngredientController@destroy')->name('foods.ingredients.destroy');
 
     Route::get('/logentries', 'LogentryController@index')->name('logentries.index');
+    Route::post('/logentries', 'LogentryController@store')->name('logentries.store');
 
 });
 
