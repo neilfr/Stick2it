@@ -16,17 +16,12 @@ class LogentryControllerTest extends TestCase
     use RefreshDatabase;
 
     protected $user;
-    // protected $food;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->user = User::factory()->create();
-
-        // $this->food = Food::factory()->create([
-        //     'user_id' => $this->user->id,
-        // ]);
     }
 
     /** @test */
@@ -42,7 +37,7 @@ class LogentryControllerTest extends TestCase
     public function it_cannot_access_logentries_index_if_unauthenticated()
     {
         $response = $this->get(route('logentries.index', 1))
-            ->assertRedirect();
+            ->assertRedirect(route('login'));
     }
 
     /** @test */
@@ -107,29 +102,9 @@ class LogentryControllerTest extends TestCase
         ];
 
         $this->post(route('logentries.store'), $payload)
-            ->assertRedirect();
+            ->assertRedirect(route('logentries.index'));
 
         $this->assertDatabaseHas('logentries', $payload);
-    }
-
-    /** @test */
-    public function it_cannot_store_a_new_logentry_with_invalid_data()
-    {
-        Sanctum::actingAs($this->user);
-
-        Food::factory()->create(["user_id" => $this->user->id]);
-
-        $payload = [
-            "user_id" => 999,
-            'food_id' => 11,
-            'quantity' => -1,
-            'consumed_at' => "not a date",
-        ];
-
-        $this->post(route('logentries.store'), $payload)
-            ->assertSessionHasErrors(['user_id','food_id','quantity','consumed_at']);
-
-        $this->assertDatabaseMissing('logentries', $payload);
     }
 
     /**
@@ -140,21 +115,12 @@ class LogentryControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user);
 
-        // Food::factory()->create(["user_id" => $this->user->id]);
-
-        // $payload = [
-        //     "user_id" => 999,
-        //     'food_id' => 11,
-        //     'quantity' => -1,
-        //     'consumed_at' => "not a date",
-        // ];
-
         [$ruleName, $payload] = $getData();
 
         $this->post(route('logentries.store'), $payload)
             ->assertSessionHasErrors($ruleName);
 
-        // $this->assertDatabaseMissing('logentries', $payload);
+        $this->assertDatabaseMissing('logentries', $payload);
     }
 
     public function logentryStoreDataProvider()
@@ -229,5 +195,70 @@ class LogentryControllerTest extends TestCase
             'quantity' => 100,
             'consumed_at' => Carbon::now(),
         ];
+    }
+
+
+    /** @test */
+    public function it_can_update_a_new_logentry()
+    {
+        Sanctum::actingAs($this->user);
+
+        $logentry = Logentry::factory()->create([
+            'user_id' => $this->user->id,
+            'food_id' => Food::factory()->create([
+                'user_id' => $this->user->id,
+                'description' => 'initial food',
+            ])->id,
+            'quantity' => 200,
+            'consumed_at' => Carbon::now()->subDays(2),
+        ]);
+
+        $payload = [
+            'user_id' => $this->user->id,
+            'food_id' => Food::factory()->create([
+                'user_id' => $this->user->id,
+                'description' => 'new food',
+            ])->id,
+            'quantity' => 100,
+            'consumed_at' => Carbon::now(),
+        ];
+
+        $this->patch(route('logentries.update', $logentry), $payload)
+            ->assertRedirect(route('logentries.index'));
+
+        $this->assertDatabaseHas('logentries', array_merge(['id' => $logentry->id], $payload));
+    }
+
+        /** @test */
+    public function it_cannot_update_another_users_logentry()
+    {
+        Sanctum::actingAs($this->user);
+
+        $anotherUser = User::factory()->create();
+
+        $logentry = Logentry::factory()->create([
+            'user_id' => $anotherUser->id,
+            'food_id' => Food::factory()->create([
+                'user_id' => $anotherUser->id,
+                'description' => 'initial food',
+            ])->id,
+            'quantity' => 200,
+            'consumed_at' => Carbon::now()->subDays(2),
+        ]);
+
+        $payload = [
+            'user_id' => $anotherUser->id,
+            'food_id' => Food::factory()->create([
+                'user_id' => $anotherUser->id,
+                'description' => 'new food',
+            ])->id,
+            'quantity' => 100,
+            'consumed_at' => Carbon::now(),
+        ];
+
+        $this->patch(route('logentries.update', $logentry), $payload)
+            ->assertRedirect(route('logentries.index'));
+
+        $this->assertDatabaseHas('logentries', array_merge(['id' => $logentry->id], $payload));
     }
 }

@@ -23,4 +23,10 @@ class LogentryController extends Controller
 
         return redirect()->route('logentries.index');
     }
+
+    public function update(Request $request, Logentry $logentry)
+    {
+        $logentry->update($request->input());
+        return redirect()->route('logentries.index');
+    }
 }

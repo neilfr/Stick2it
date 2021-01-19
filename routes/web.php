@@ -40,6 +40,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     Route::get('/logentries', 'LogentryController@index')->name('logentries.index');
     Route::post('/logentries', 'LogentryController@store')->name('logentries.store');
+    Route::patch('/logentries/{logentry}', 'LogentryController@update')->name('logentries.update');
 
 });
 
