@@ -16,12 +16,17 @@ class LogentryControllerTest extends TestCase
     use RefreshDatabase;
 
     protected $user;
+    // protected $food;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->user = User::factory()->create();
+
+        // $this->food = Food::factory()->create([
+        //     'user_id' => $this->user->id,
+        // ]);
     }
 
     /** @test */
@@ -60,15 +65,15 @@ class LogentryControllerTest extends TestCase
             $this->user->logentries()->save($logentry);
         }
 
-        $response = $this->get(route('logentries.index', $this->user));
-        $response->assertOk();
-        $response->assertPropValue('logentries', function ($returnedLogentries) use($logentries) {
-            $this->assertEquals(2, count($returnedLogentries['data']));
-            foreach($returnedLogentries['data'] as $index => $returnedLogentry){
-                $this->assertEquals($logentries[$index]->food->description,$returnedLogentry['food']['description']);
-                $this->assertEquals($logentries[$index]->user->email,$returnedLogentry['user']['email']);
-            }
-        });
+        $response = $this->get(route('logentries.index', $this->user))
+            ->assertOk()
+            ->assertPropValue('logentries', function ($returnedLogentries) use($logentries) {
+                $this->assertEquals(2, count($returnedLogentries['data']));
+                foreach($returnedLogentries['data'] as $index => $returnedLogentry){
+                    $this->assertEquals($logentries[$index]->food->description,$returnedLogentry['food']['description']);
+                    $this->assertEquals($logentries[$index]->user->email,$returnedLogentry['user']['email']);
+                }
+            });
     }
 
     /** @test */
@@ -125,5 +130,104 @@ class LogentryControllerTest extends TestCase
             ->assertSessionHasErrors(['user_id','food_id','quantity','consumed_at']);
 
         $this->assertDatabaseMissing('logentries', $payload);
+    }
+
+    /**
+     * @test
+     * @dataProvider logentryStoreDataProvider
+    */
+    public function it_cannot_store_a_new_logentry_with_invalid_data2($getData)
+    {
+        Sanctum::actingAs($this->user);
+
+        // Food::factory()->create(["user_id" => $this->user->id]);
+
+        // $payload = [
+        //     "user_id" => 999,
+        //     'food_id' => 11,
+        //     'quantity' => -1,
+        //     'consumed_at' => "not a date",
+        // ];
+
+        [$ruleName, $payload] = $getData();
+
+        $this->post(route('logentries.store'), $payload)
+            ->assertSessionHasErrors($ruleName);
+
+        // $this->assertDatabaseMissing('logentries', $payload);
+    }
+
+    public function logentryStoreDataProvider()
+    {
+        return [
+            'it fails if user_id is not an integer' => [
+                function () {
+                    return [
+                        'user_id',
+                        array_merge($this->getValidLogentryData(), ['user_id' => 'not an integer']),
+                    ];
+                }
+            ],
+            'it fails if user_id is not in users table' => [
+                function () {
+                    return [
+                        'user_id',
+                        array_merge($this->getValidLogentryData(), ['user_id' => 999]),
+                    ];
+                }
+            ],
+            'it fails if food_id is not in foods table' => [
+                function () {
+                    return [
+                        'food_id',
+                        array_merge($this->getValidLogentryData(), ['food_id' => 999]),
+                    ];
+                }
+            ],
+            'it fails if food_id is not an integer' => [
+                function () {
+                    return [
+                        'food_id',
+                        array_merge($this->getValidLogentryData(), ['food_id' => 'not an integer']),
+                    ];
+                }
+            ],
+            'it fails if quantity is not an integer' => [
+                function () {
+                    return [
+                        'quantity',
+                        array_merge($this->getValidLogentryData(), ['quantity' => 'not an integer']),
+                    ];
+                }
+            ],
+            'it fails if quantity is below zero' => [
+                function () {
+                    return [
+                        'quantity',
+                        array_merge($this->getValidLogentryData(), ['quantity' => -1]),
+                    ];
+                }
+            ],
+            'it fails if consumed_at is not a date' => [
+                function () {
+                    return [
+                        'consumed_at',
+                        array_merge($this->getValidLogentryData(), ['consumed_at' => 'not an integer']),
+                    ];
+                }
+            ],
+        ];
+    }
+
+    public function getValidLogentryData()
+    {
+        return [
+            'user_id' => $user_id = auth()->user()->id,
+            'food_id' => Food::factory()->create([
+                'user_id' => $user_id,
+            ]),
+            'quantity' => 100,
+            'consumed_at' => Carbon::now(),
+        ];
     }
 }
