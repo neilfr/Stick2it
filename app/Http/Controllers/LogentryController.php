@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreLogentryRequest;
+use App\Http\Requests\UpdateLogentryRequest;
 use Inertia\Inertia;
 use App\Models\Logentry;
 use Illuminate\Http\Request;
@@ -24,9 +25,15 @@ class LogentryController extends Controller
         return redirect()->route('logentries.index');
     }
 
-    public function update(Request $request, Logentry $logentry)
+    public function update(UpdateLogentryRequest $request, Logentry $logentry)
     {
-        $logentry->update($request->input());
+        $logentry->update($request->validated());
+        return redirect()->route('logentries.index');
+    }
+
+    public function destroy(Logentry $logentry)
+    {
+        $logentry->delete();
         return redirect()->route('logentries.index');
     }
 }
