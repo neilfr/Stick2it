@@ -111,7 +111,7 @@ class LogentryControllerTest extends TestCase
      * @test
      * @dataProvider logentryStoreDataProvider
     */
-    public function it_cannot_store_a_new_logentry_with_invalid_data2($getData)
+    public function it_cannot_store_a_new_logentry_with_invalid_data($getData)
     {
         Sanctum::actingAs($this->user);
 

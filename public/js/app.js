@@ -3824,6 +3824,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     logentries: Object
@@ -49613,27 +49619,42 @@ var render = function() {
     _c("h1", [_vm._v("Log Entries")]),
     _vm._v(" "),
     _c(
-      "ul",
-      _vm._l(_vm.logentries.data, function(logentry) {
-        return _c("li", { key: logentry.id }, [
-          _vm._v(
-            "\n            " +
-              _vm._s(logentry.consumed_at) +
-              "\n            " +
-              _vm._s(logentry.food_description) +
-              "\n            " +
-              _vm._s(logentry.food_alias) +
-              "\n            " +
-              _vm._s(logentry.quantity) +
-              "\n        "
-          )
-        ])
-      }),
-      0
+      "table",
+      [
+        _vm._m(0),
+        _vm._v(" "),
+        _vm._l(_vm.logentries.data, function(logentry) {
+          return _c("tr", { key: logentry.id }, [
+            _c("td", [_vm._v(_vm._s(logentry.consumed_at))]),
+            _vm._v(" "),
+            _c("td", [_vm._v(_vm._s(logentry.food.description))]),
+            _vm._v(" "),
+            _c("td", [_vm._v(_vm._s(logentry.food.alias))]),
+            _vm._v(" "),
+            _c("td", [_vm._v(_vm._s(logentry.quantity))])
+          ])
+        })
+      ],
+      2
     )
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("th", [_vm._v("Date / Time")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Alias")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Description")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Quantity")])
+    ])
+  }
+]
 render._withStripped = true
 
 
