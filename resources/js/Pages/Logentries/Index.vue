@@ -1,6 +1,9 @@
 <template>
     <div class="container">
-        <h1>Log Entries</h1>
+        <div class='flex justify-between'>
+            <h1>Log Entries</h1>
+            <button @click="add">Add Log Entry</button>
+        </div>
         <table>
             <tr>
                 <th>Date / Time</th>
@@ -22,6 +25,12 @@
 export default {
     props:{
         logentries: Object,
+    },
+    methods:{
+        add () {
+            let url = `${this.$route("logentries.create")}`;
+            this.$inertia.visit(url);
+        }
     }
 }
 </script>

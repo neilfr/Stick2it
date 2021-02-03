@@ -350,7 +350,22 @@ class LogentryControllerTest extends TestCase
             ->assertRedirect(route('logentries.index'));
 
         $this->assertDatabaseMissing('logentries', $logentry->toArray());
+    }
 
+        /** @test */
+    public function it_can_access_logentries_create_as_an_authenticated_user()
+    {
+        Sanctum::actingAs($this->user);
+
+        $response = $this->get(route('logentries.create'))
+        ->assertOk();
+    }
+
+    /** @test */
+    public function it_cannot_access_logentries_create_if_unauthenticated()
+    {
+        $response = $this->get(route('logentries.create', 1))
+            ->assertRedirect(route('login'));
     }
 
 }
