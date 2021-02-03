@@ -68,4 +68,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Food::class, 'favourites');
     }
+
+    public function logentries()
+    {
+        return $this->hasMany(Logentry::class);
+    }
 }
