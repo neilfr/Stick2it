@@ -2,7 +2,9 @@
 
 namespace Database\Factories;
 
+use id;
 use App\Models\Food;
+use App\Models\User;
 use App\Models\Foodgroup;
 use App\Models\Foodsource;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -34,7 +36,7 @@ class FoodFactory extends Factory
             'base_quantity' => $this->faker->numberBetween(1,300),
             'foodgroup_id' => Foodgroup::factory()->create()->id,
             'foodsource_id' => Foodsource::factory()->create()->id,
-            'user_id' => auth()->user()->id,
+            'user_id' => User::factory()->create()->id,
         ];
     }
 }

@@ -119,7 +119,9 @@ class FoodIngredientControllerTest extends TestCase
         $user = User::factory()->create();
         Sanctum::actingAs($user);
 
-        $food = Food::factory()->create();
+        $food = Food::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         $ingredient = Ingredient::factory()->create();
 
@@ -140,7 +142,9 @@ class FoodIngredientControllerTest extends TestCase
         $user = User::factory()->create();
         Sanctum::actingAs($user);
 
-        $food = Food::factory()->create();
+        $food = Food::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         $ingredient = Ingredient::factory()->create();
 
@@ -163,7 +167,9 @@ class FoodIngredientControllerTest extends TestCase
         $user = User::factory()->create();
         Sanctum::actingAs($user);
 
-        $food = Food::factory()->create();
+        $food = Food::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         $ingredient = Ingredient::factory()->create([
             'base_quantity' => 999,
@@ -373,7 +379,9 @@ class FoodIngredientControllerTest extends TestCase
         $user = User::factory()->create();
         Sanctum::actingAs($user);
 
-        $food = Food::factory()->create();
+        $food = Food::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         $ingredients = Ingredient::factory()->times(2)->create();
 
