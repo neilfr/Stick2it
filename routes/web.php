@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 
 // Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 //     return Inertia\Inertia::render('Dashboard');
@@ -38,6 +38,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::patch('/foods/{food}/ingredients/{ingredient}', 'FoodIngredientController@update')->name('foods.ingredients.update');
     Route::delete('/foods/{food}/ingredients/{ingredient}', 'FoodIngredientController@destroy')->name('foods.ingredients.destroy');
 
+    Route::get('/logentries', 'LogentryController@index')->name('logentries.index');
+    Route::post('/logentries', 'LogentryController@store')->name('logentries.store');
+    Route::delete('/logentries/{logentry}', 'LogentryController@destroy')->name('logentries.destroy');
+    Route::patch('/logentries/{logentry}', 'LogentryController@update')->name('logentries.update');
 
 });
 

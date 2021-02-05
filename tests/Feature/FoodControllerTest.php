@@ -175,7 +175,9 @@ class FoodControllerTest extends TestCase
         $user = User::factory()->create();
         Sanctum::actingAs($user);
 
-        $foods = Food::factory(2)->create();
+        $foods = Food::factory(2)->create([
+            'user_id' => $user->id,
+        ]);
 
         $response = $this->get(route('foods.show', $foods[0]));
 
@@ -627,7 +629,6 @@ class FoodControllerTest extends TestCase
     /** @test */
     public function it_deletes_a_foods_ingredients_when_the_food_is_deleted()
     {
-        $this->withoutExceptionHandling();
         $user = User::factory()->create();
         Sanctum::actingAs($user);
 
@@ -727,6 +728,7 @@ class FoodControllerTest extends TestCase
         Food::factory()->create([
             'description' => 'existing description',
             'alias' => 'existing alias',
+            'user_id' => $user->id,
         ]);
 
         [$ruleName, $payload] = $getData();
