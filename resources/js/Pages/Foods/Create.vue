@@ -64,7 +64,6 @@ export default {
             this.$inertia.post(
                 this.$route("foods.store"), this.food
             ).then(()=>{
-                console.log("respond!");
                 console.log("errors", this.errors.description);
             });
         }
