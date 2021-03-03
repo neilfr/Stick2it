@@ -20,7 +20,7 @@ class LogentryController extends Controller
 
     public function create()
     {
-        //
+        return Inertia::render('Logentries/Create');
     }
 
     public function store(StoreLogentryRequest $request)
