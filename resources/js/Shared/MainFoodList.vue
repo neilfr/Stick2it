@@ -1,19 +1,19 @@
 <template>
   <div>
-      <table>
+      <table class="table-fixed w-full">
             <tr>
                 <th>Favourite</th>
                 <th>Alias</th>
-                <th>Description</th>
-                <th>KCal</th>
-                <th>Protein</th>
-                <th>Fat</th>
-                <th>Carbohydrate</th>
-                <th>Potassium</th>
-                <th>Quantity</th>
-                <th>Actions</th>
+                <th class="w-1/3">Description</th>
+                <th class="text-left translate-x-4 transform -rotate-45 origin-bottom-left">KCal</th>
+                <th class="text-left translate-x-4 transform -rotate-45 origin-bottom-left">Protein</th>
+                <th class="text-left translate-x-4 transform -rotate-45 origin-bottom-left">Fat</th>
+                <th class="text-left translate-x-4 transform -rotate-45 origin-bottom-left">Carbohydrate</th>
+                <th class="text-left translate-x-4 transform -rotate-45 origin-bottom-left">Potassium</th>
+                <th class="text-left translate-x-4 transform -rotate-45 origin-bottom-left">Quantity</th>
+                <th class="text-left translate-x-4 transform -rotate-45 origin-bottom-left">Actions</th>
             </tr>
-            <tr v-for="food in foods" :key="food.id">
+            <tr v-for="food in foods" :key="food.id" class="odd:bg-gray-100">
                 <td>
                     <input
                         type="checkbox"
@@ -24,7 +24,7 @@
                     />
                 </td>
                 <td>{{food.alias}}</td>
-                <td>{{food.description}}</td>
+                <td class="truncate">{{food.description}}</td>
                 <td>{{food.kcal}}</td>
                 <td>{{food.protein}}</td>
                 <td>{{food.fat}}</td>
@@ -68,3 +68,8 @@ export default {
     }
 }
 </script>
+<style scoped>
+    td {
+        padding:0.5rem;
+    }
+</style>
