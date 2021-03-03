@@ -29,6 +29,7 @@ export default {
     methods:{
         add () {
             let url = `${this.$route("logentries.create")}`;
+            console.log(url);
             this.$inertia.visit(url);
         }
     }
