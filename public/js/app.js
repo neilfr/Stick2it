@@ -3518,7 +3518,6 @@ __webpack_require__.r(__webpack_exports__);
 
       console.log("food", this.food);
       this.$inertia.post(this.$route("foods.store"), this.food).then(function () {
-        console.log("respond!");
         console.log("errors", _this.errors.description);
       });
     }
@@ -3821,7 +3820,35 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-/* harmony default export */ __webpack_exports__["default"] = ({});
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  mounted: function mounted() {
+    this.mydate = new Date();
+    this.foo.setDate(this.foo.getDate(new Date()) + 10);
+    console.log(this.foo.toISOString().substr(0, 10));
+    this.consumed_at = this.foo.toISOString().substr(0, 10);
+  },
+  props: {
+    errors: Object
+  },
+  data: function data() {
+    return {
+      foo: 0,
+      food: 'foo',
+      consumed_at: '2021-02-01',
+      quantity: 99
+    };
+  }
+});
 
 /***/ }),
 
@@ -3864,6 +3891,7 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     add: function add() {
       var url = "".concat(this.$route("logentries.create"));
+      console.log(url);
       this.$inertia.visit(url);
     }
   }
@@ -50305,16 +50333,75 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", [
+    _c("h1", [_vm._v("Create Log Entry")]),
+    _vm._v(" "),
+    _c(
+      "form",
+      {
+        attrs: { method: "POST" },
+        on: {
+          submit: function($event) {
+            $event.preventDefault()
+            return _vm.submit($event)
+          }
+        }
+      },
+      [
+        _c("div", { staticClass: "grid grid-cols-2 gap-2" }, [
+          _vm.errors.quantity
+            ? _c("p", { staticClass: "col-span-2" }, [
+                _vm._v(_vm._s(_vm.errors.quantity))
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c("label", { staticClass: "p-2", attrs: { for: "quantity" } }, [
+            _vm._v("Quantity:")
+          ]),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.quantity,
+                expression: "quantity"
+              }
+            ],
+            staticClass: "border rounded",
+            attrs: { id: "quantity", type: "number", min: "0" },
+            domProps: { value: _vm.quantity },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.quantity = $event.target.value
+              }
+            }
+          }),
+          _vm._v(" "),
+          _vm.errors.consumed_at
+            ? _c("p", { staticClass: "col-span-2" }, [
+                _vm._v(_vm._s(_vm.errors.consumed_at))
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c("label", { staticClass: "p-2", attrs: { for: "consumed_at" } }, [
+            _vm._v("Consumed at:")
+          ]),
+          _vm._v(" "),
+          _c("input", {
+            staticClass: "border rounded",
+            attrs: { id: "consumed_at", type: "date" },
+            domProps: { value: _vm.consumed_at }
+          })
+        ])
+      ]
+    )
+  ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", [_c("h1", [_vm._v("Create Log Entry")])])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
