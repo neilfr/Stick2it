@@ -8,7 +8,7 @@
                 <input class="border rounded" id="quantity" type="number" min="0" v-model="logentry.quantity">
                 <p class="col-span-2" v-if="errors.consumed_at">{{errors.consumed_at}}</p>
                 <label class="p-2" for="consumed_at">Consumed at:</label>
-                <input class="border rounded" id="consumed_at_date" type="date" v-model="logentry.consumed_at" @change="update_date">
+                <input class="border rounded" id="consumed_at_date" type="date" v-model="logentry.consumed_at">
             </div>
         </form>
         <button @click="store">Save</button>
@@ -33,12 +33,9 @@ export default {
         }
     },
     methods: {
-        update_date(){
-            console.log(this.logentry);
-        },
         store(){
             this.$inertia.post(
-                this.$route("logentries.store"), this.food
+                this.$route("logentries.store"), this.logentry
             ).then(()=>{
                 console.log("errors", this.errors.description);
             });
