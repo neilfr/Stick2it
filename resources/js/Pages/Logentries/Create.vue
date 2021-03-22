@@ -20,7 +20,12 @@
 export default {
     props: {
         errors: Object,
-        user: Object
+        user: Object,
+        foods: Object,
+        foodgroups: Object
+    },
+    mounted () {
+        console.log("mounted", this.foodgroups);
     },
     data() {
         return {
