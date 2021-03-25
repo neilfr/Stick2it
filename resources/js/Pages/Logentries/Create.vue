@@ -13,6 +13,62 @@
         </form>
         <button @click="store">Save</button>
         <button>Cancel</button>
+        <div>
+            <select name="foodgroups" id="foodgroups" v-model="foodgroupFilter" @change="goToPageOne">
+                <option value="">All</option>
+                <option v-for="foodgroup in foodgroups.data" :key="foodgroup.id" :value="foodgroup.id">
+                    {{ foodgroup.description }}
+                </option>
+            </select>
+            <br>
+            <label for="descriptionSearch">Description Search:</label>
+            <input type="text" name="descriptionSearch" id="descriptionSearch" @input="goToPageOne" v-model="descriptionSearchText"/>
+            <br/>
+            <label for="aliasSearch">Alias Search:</label>
+            <input type="text" name="aliasSearch" id="aliasSearch" @input="goToPageOne" v-model="aliasSearchText"/>
+            <div class="flex">
+                <p>Favourites:</p>
+                <div class="ml-2">
+                    <label for="favouriteYes">Yes</label>
+                    <input type="radio" name="favourites" id="favouriteYes" value="yes" v-model="favouritesFilter" @change="goToPageOne">
+                    <label for="favouriteNo">No</label>
+                    <input type="radio" name="favourites" id="favouriteNo" value="no" checked v-model="favouritesFilter" @change="goToPageOne">
+                </div>
+            </div>
+            <table>
+                <tr>
+                    <th>Alias</th>
+                    <th>Description</th>
+                    <th>KCal</th>
+                    <th>Protein</th>
+                    <th>Fat</th>
+                    <th>Carbohydrate</th>
+                    <th>Potassium</th>
+                    <th>Quantity</th>
+                    <th>Actions</th>
+                </tr>
+                <tr v-for="food in foods.data" :key="food.id">
+                    <td>{{food.alias}}</td>
+                    <td>{{food.description}}</td>
+                    <td>{{Math.round(food.kcal)}}</td>
+                    <td>{{Math.round(food.protein)}}</td>
+                    <td>{{Math.round(food.fat)}}</td>
+                    <td>{{Math.round(food.carbohydrate)}}</td>
+                    <td>{{Math.round(food.potassium)}}</td>
+                    <td>{{food.quantity}}</td>
+                    <td>ADD</td>
+                </tr>
+            </table>
+            <div>
+                <button @click="goToPageOne">First</button>
+                <button @click="previousPage">Previous</button>
+                <button @click="nextPage">Next</button>
+                <button @click="lastPage">Last</button>
+            </div>
+            <div>
+                <p>Page: {{foods.meta.current_page}} of {{foods.meta.last_page}}</p>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -29,6 +85,11 @@ export default {
     },
     data() {
         return {
+            descriptionSearchText: '',
+            aliasSearchText: '',
+            foodgroupFilter: '',
+            favouritesFilter: '',
+            page: 1,
             logentry: {
                 user_id: this.user.id,
                 food_id: 2,
@@ -44,7 +105,42 @@ export default {
             ).then(()=>{
                 console.log("errors", this.errors.description);
             });
-        }
+        },
+        goToPageOne(){
+            this.page=1;
+            this.goToPage(1);
+        },
+        previousPage(){
+            if(this.page>1){
+                this.page--;
+                this.goToPage();
+            }
+        },
+        nextPage(){
+            console.log("page", this.page);
+            if(this.page<this.foods.meta.last_page){
+                this.page++;
+                this.goToPage();
+            }
+        },
+        lastPage(){
+            this.page = this.foods.meta.last_page;
+            this.goToPage();
+        },
+        goToPage(){
+            let url = `${this.$route("logentries.create")}`;
+            url += `?descriptionSearch=${this.descriptionSearchText}`;
+            url += `&aliasSearch=${this.aliasSearchText}`;
+            url += `&foodgroupSearch=${this.foodgroupFilter}`;
+            url += `&favouritesFilter=${this.favouritesFilter}`;
+            this.$inertia.visit(url, {
+                data:{
+                    'page':this.page
+                },
+                preserveState: true,
+                preserveScroll: true,
+            });
+        },
     }
 }
 </script>
