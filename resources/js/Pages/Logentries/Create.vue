@@ -11,9 +11,9 @@
                 <input class="border rounded" id="consumed_at_date" type="date" v-model="logentry.consumed_at">
             </div>
         </form>
-        <button @click="store">Save</button>
         <button>Cancel</button>
         <div>
+            <label for="foodgroups">Food Group:</label>
             <select name="foodgroups" id="foodgroups" v-model="foodgroupFilter" @change="goToPageOne">
                 <option value="">All</option>
                 <option v-for="foodgroup in foodgroups.data" :key="foodgroup.id" :value="foodgroup.id">
@@ -56,7 +56,7 @@
                     <td>{{Math.round(food.carbohydrate)}}</td>
                     <td>{{Math.round(food.potassium)}}</td>
                     <td>{{food.quantity}}</td>
-                    <td>ADD</td>
+                    <td><button :disabled="!readyToSelect" @click="store(food)">Select</button><span>"{{readyToSelect}}"</span></td>
                 </tr>
             </table>
             <div>
@@ -80,8 +80,10 @@ export default {
         foods: Object,
         foodgroups: Object
     },
-    mounted () {
-        console.log("mounted", this.foodgroups);
+    computed: {
+        readyToSelect () {
+            return this.logentry.quantity>0 &&  !isNaN(new Date(this.logentry.consumed_at).getDate());
+        }
     },
     data() {
         return {
@@ -95,16 +97,21 @@ export default {
                 food_id: 2,
                 consumed_at: (new Date()).toISOString().substr(0,10),
                 quantity: 0
-            }
+            },
         }
     },
     methods: {
-        store(){
+        store(food){
+            console.log(food);
             this.$inertia.post(
-                this.$route("logentries.store"), this.logentry
-            ).then(()=>{
-                console.log("errors", this.errors.description);
-            });
+                this.$route("logentries.store"),
+                {
+                    'user_id': this.user.id,
+                    'food_id': food.id,
+                    'quantity': this.logentry.quantity,
+                    'consumed_at': this.logentry.consumed_at
+                }
+            )
         },
         goToPageOne(){
             this.page=1;
@@ -117,7 +124,6 @@ export default {
             }
         },
         nextPage(){
-            console.log("page", this.page);
             if(this.page<this.foods.meta.last_page){
                 this.page++;
                 this.goToPage();
