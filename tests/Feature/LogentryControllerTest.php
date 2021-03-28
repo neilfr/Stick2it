@@ -353,7 +353,7 @@ class LogentryControllerTest extends TestCase
         $this->assertDatabaseMissing('logentries', $logentry->toArray());
     }
 
-        /** @test */
+    /** @test */
     public function it_can_access_logentries_create_as_an_authenticated_user()
     {
         Sanctum::actingAs($this->user);
@@ -365,7 +365,7 @@ class LogentryControllerTest extends TestCase
     /** @test */
     public function it_cannot_access_logentries_create_if_unauthenticated()
     {
-        $response = $this->get(route('logentries.create', 1))
+        $response = $this->get(route('logentries.create'))
             ->assertRedirect(route('login'));
     }
 
@@ -409,5 +409,27 @@ class LogentryControllerTest extends TestCase
                     $this->assertEquals($foodgroups[$index]->description,$returnedFoodgroup['description']);
                 }
             });
+    }
+
+    /** @test */
+    public function it_can_access_logentries_edit_as_an_authenticated_user()
+    {
+        Sanctum::actingAs($this->user);
+
+        $logentry = Logentry::factory()->create([
+            'user_id' => $this->user->id
+        ]);
+
+        $response = $this->get(route('logentries.edit', $logentry))
+            ->assertOk();
+    }
+
+    /** @test */
+    public function it_cannot_access_logentries_edit_if_unauthenticated()
+    {
+        $logentry = Logentry::factory()->create();
+
+        $response = $this->get(route('logentries.edit', $logentry))
+            ->assertRedirect(route('login'));
     }
 }

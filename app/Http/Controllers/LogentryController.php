@@ -48,6 +48,26 @@ class LogentryController extends Controller
         return redirect()->route('logentries.index');
     }
 
+    public function edit(Request $request)
+    {
+        $logentry = Logentry::find($request->logentry);
+        $foodgroups = Foodgroup::all();
+        $foods = Food::userFoods()
+            ->sharedFoods()
+            ->foodgroupSearch($request->query('foodgroupSearch'))
+            ->descriptionSearch($request->query('descriptionSearch'))
+            ->aliasSearch($request->query('aliasSearch'))
+            ->favouritesFilter($request->query('favouritesFilter'))
+            ->with('ingredients')
+            ->paginate(Config::get('ml2.paginator.per_page'));
+
+        return Inertia::render('Logentries/Edit',[
+            'logentry' => new LogentryResource($logentry),
+            'foods' => FoodResource::collection($foods),
+            'foodgroups' => FoodgroupResource::collection($foodgroups),
+        ]);
+    }
+
     public function update(UpdateLogentryRequest $request, Logentry $logentry)
     {
         $logentry->update($request->validated());

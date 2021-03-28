@@ -46,6 +46,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::post('/logentries', 'LogentryController@store')->name('logentries.store');
     Route::delete('/logentries/{logentry}', 'LogentryController@destroy')->name('logentries.destroy');
     Route::patch('/logentries/{logentry}', 'LogentryController@update')->name('logentries.update');
+    Route::get('/logentries/{logentry}', 'LogentryController@edit')->name('logentries.edit');
 
 });
 
