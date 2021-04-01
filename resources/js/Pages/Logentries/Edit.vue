@@ -10,9 +10,9 @@
                 <label class="p-2" for="consumed_at">Consumed at:</label>
                 <input class="border rounded" id="consumed_at_date" type="date" v-model="logentry.data.consumed_at">
                 <label class="p-2" for="selected_food_alias">Food Alias:</label>
-                <input disabled class="border rounded" id="selected_food_alias" type="text" :value="selectedFood.alias">
+                <input disabled class="border rounded" id="food_alias" type="text" v-model="logentry.data.food.alias">
                 <label class="p-2" for="selected_food_description">Food Description:</label>
-                <input disabled class="border rounded" id="selected_food_description" type="text" :value="selectedFood.description">
+                <input disabled class="border rounded" id="food_description" type="text" v-model="logentry.data.food.description">
             </div>
         </form>
         <div>
@@ -99,19 +99,17 @@ export default {
             aliasSearchText: '',
             foodgroupFilter: '',
             favouritesFilter: '',
-            page: 1,
-            selectedFood: this.logentry.data.food
+            page: 1
         }
     },
     methods: {
         selectFood(food){
             console.log("food", food);
-            this.selectedFood = food;
-            console.log("selectedfood", this.selectedFood);
+            this.logentry.data.food = food;
         },
         update(){
             console.log("update", this.logentry.data.id);
-            console.log("withfood", this.selectedFood);
+            console.log("withfood", this.logentry.data.food);
             console.log("withqty", this.logentry.data.quantity);
             console.log("withfood", this.logentry.data.consumed_at);
 
@@ -119,7 +117,7 @@ export default {
                 this.$route("logentries.update", this.logentry.data.id),
                 {
                     'user_id': this.logentry.data.user.id,
-                    'food_id': this.selectedFood.id,
+                    'food_id': this.logentry.data.food.id,
                     'quantity': this.logentry.data.quantity,
                     'consumed_at': this.logentry.data.consumed_at
                 }
