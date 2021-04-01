@@ -9,9 +9,14 @@
                 <p class="col-span-2" v-if="errors.consumed_at">{{errors.consumed_at}}</p>
                 <label class="p-2" for="consumed_at">Consumed at:</label>
                 <input class="border rounded" id="consumed_at_date" type="date" v-model="logentry.consumed_at">
+                <label class="p-2" for="selected_food_alias">Food Alias:</label>
+                <input disabled class="border rounded" id="selected_food_alias" type="text" :value="this.selectedFood.alias">
+                <label class="p-2" for="selected_food_description">Food Description:</label>
+                <input disabled class="border rounded" id="selected_food_description" type="text" :value="this.selectedFood.description">
             </div>
         </form>
         <button>Cancel</button>
+        <button :disabled="!readyToSave" @click="store">Save</button>
         <div>
             <label for="foodgroups">Food Group:</label>
             <select name="foodgroups" id="foodgroups" v-model="foodgroupFilter" @change="goToPageOne">
@@ -56,7 +61,7 @@
                     <td>{{Math.round(food.carbohydrate)}}</td>
                     <td>{{Math.round(food.potassium)}}</td>
                     <td>{{food.quantity}}</td>
-                    <td><button :disabled="!readyToSelect" @click="store(food)">Select</button><span>"{{readyToSelect}}"</span></td>
+                    <td><button @click="selectFood(food)">Select</button></td>
                 </tr>
             </table>
             <div>
@@ -81,8 +86,8 @@ export default {
         foodgroups: Object
     },
     computed: {
-        readyToSelect () {
-            return this.logentry.quantity>0 &&  !isNaN(new Date(this.logentry.consumed_at).getDate());
+        readyToSave () {
+            return this.logentry.quantity>0 && !isNaN(new Date(this.logentry.consumed_at).getDate()) && this.selectedFood!=null;
         }
     },
     data() {
@@ -98,20 +103,24 @@ export default {
                 consumed_at: (new Date()).toISOString().substr(0,10),
                 quantity: 0
             },
+            selectedFood: ''
         }
     },
     methods: {
-        store(food){
-            console.log(food);
+        store(){
             this.$inertia.post(
                 this.$route("logentries.store"),
                 {
                     'user_id': this.user.id,
-                    'food_id': food.id,
+                    'food_id': this.selectedFood.id,
                     'quantity': this.logentry.quantity,
                     'consumed_at': this.logentry.consumed_at
                 }
             )
+        },
+        selectFood(food){
+            console.log("select food", food);
+            this.selectedFood=food;
         },
         goToPageOne(){
             this.page=1;

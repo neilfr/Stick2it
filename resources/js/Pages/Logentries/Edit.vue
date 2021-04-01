@@ -9,10 +9,16 @@
                 <p class="col-span-2" v-if="errors.consumed_at">{{errors.consumed_at}}</p>
                 <label class="p-2" for="consumed_at">Consumed at:</label>
                 <input class="border rounded" id="consumed_at_date" type="date" v-model="logentry.data.consumed_at">
-                <p>food: {{logentry.data.food.description}}</p>
+                <label class="p-2" for="selected_food_alias">Food Alias:</label>
+                <input disabled class="border rounded" id="selected_food_alias" type="text" :value="selectedFood.alias">
+                <label class="p-2" for="selected_food_description">Food Description:</label>
+                <input disabled class="border rounded" id="selected_food_description" type="text" :value="selectedFood.description">
             </div>
         </form>
-        <button>Cancel</button>
+        <div>
+            <button @click="update">Save</button>
+            <button>Cancel</button>
+        </div>
         <div>
             <label for="foodgroups">Food Group:</label>
             <select name="foodgroups" id="foodgroups" v-model="foodgroupFilter" @change="goToPageOne">
@@ -57,7 +63,7 @@
                     <td>{{Math.round(food.carbohydrate)}}</td>
                     <td>{{Math.round(food.potassium)}}</td>
                     <td>{{food.quantity}}</td>
-                    <td><button :disabled="!readyToSelect" @click="update(food)">Select</button><span>"{{readyToSelect}}"</span></td>
+                    <td><button @click="selectFood(food)">Select</button></td>
                 </tr>
             </table>
             <div>
@@ -83,8 +89,8 @@ export default {
         foodgroups: Object
     },
     computed: {
-        readyToSelect () {
-            return this.logentry.data.quantity>0 &&  !isNaN(new Date(this.logentry.data.consumed_at).getDate());
+        readyToSave () {
+            return this.logentry.quantity>0 && !isNaN(new Date(this.logentry.consumed_at).getDate()) && this.selectedFood!=null;
         }
     },
     data() {
@@ -94,15 +100,26 @@ export default {
             foodgroupFilter: '',
             favouritesFilter: '',
             page: 1,
+            selectedFood: this.logentry.data.food
         }
     },
     methods: {
-        update(food){
+        selectFood(food){
+            console.log("food", food);
+            this.selectedFood = food;
+            console.log("selectedfood", this.selectedFood);
+        },
+        update(){
+            console.log("update", this.logentry.data.id);
+            console.log("withfood", this.selectedFood);
+            console.log("withqty", this.logentry.data.quantity);
+            console.log("withfood", this.logentry.data.consumed_at);
+
             this.$inertia.patch(
-                this.$route("logentries.update", this.logentry.data),
+                this.$route("logentries.update", this.logentry.data.id),
                 {
-                    'user_id': this.user.id,
-                    'food_id': food.id,
+                    'user_id': this.logentry.data.user.id,
+                    'food_id': this.selectedFood.id,
                     'quantity': this.logentry.data.quantity,
                     'consumed_at': this.logentry.data.consumed_at
                 }
