@@ -21,7 +21,6 @@
         <span v-if="food.data.editable">Recommended</span>
         <span v-if="!food.data.editable"></span>
 
-
         <p class="col-span-2" v-if="errors.kcal">{{errors.kcal}}</p>
         <label class="m-0 px-2" for="kcal">KCal:</label>
         <input class="border rounded" id="kcal" type="number" :readonly="!food.data.editable" v-model="food.data.kcal" min="0"/>
@@ -66,7 +65,6 @@
         :foodgroups="foodgroups"
         :foods="foods"
     />
-    <modal :showing="iAmShowing">test</modal>
   </div>
 </template>
 

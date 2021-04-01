@@ -2,11 +2,12 @@
 
 namespace Tests\Feature;
 
+use Carbon\Carbon;
 use Tests\TestCase;
 use App\Models\Food;
 use App\Models\User;
 use App\Models\Logentry;
-use Carbon\Carbon;
+use App\Models\Foodgroup;
 use Laravel\Sanctum\Sanctum;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -191,7 +192,7 @@ class LogentryControllerTest extends TestCase
             'user_id' => $user_id = auth()->user()->id,
             'food_id' => Food::factory()->create([
                 'user_id' => $user_id,
-                'description' => 'initial description'
+                'description' => 'food description'
             ]),
             'quantity' => 100,
             'consumed_at' => Carbon::now(),
@@ -352,7 +353,7 @@ class LogentryControllerTest extends TestCase
         $this->assertDatabaseMissing('logentries', $logentry->toArray());
     }
 
-        /** @test */
+    /** @test */
     public function it_can_access_logentries_create_as_an_authenticated_user()
     {
         Sanctum::actingAs($this->user);
@@ -364,8 +365,71 @@ class LogentryControllerTest extends TestCase
     /** @test */
     public function it_cannot_access_logentries_create_if_unauthenticated()
     {
-        $response = $this->get(route('logentries.create', 1))
+        $response = $this->get(route('logentries.create'))
             ->assertRedirect(route('login'));
     }
 
+    /** @test */
+    public function it_can_create_a_log_entry_from_only_the_users_list_of_foods()
+    {
+        Sanctum::actingAs($this->user);
+
+        $userFoods = Food::factory()->count(2)->create([
+            'user_id' => $this->user->id,
+        ]);
+
+        $anotherUser = User::factory()->create();
+
+        $anotherUserFoods = Food::factory()->count(1)->create([
+            'user_id' => $anotherUser->id,
+        ]);
+
+        $response = $this->get(route('logentries.create'))
+            ->assertOk()
+            ->assertPropValue('foods', function ($returnedFoods) use($userFoods) {
+                $this->assertEquals(2, count($returnedFoods['data']));
+                foreach($returnedFoods['data'] as $index => $returnedFood){
+                    $this->assertEquals($userFoods[$index]->description,$returnedFood['description']);
+                }
+            });
+    }
+
+    /** @test */
+    public function it_can_create_a_log_entry_using_foodgroups()
+    {
+        Sanctum::actingAs($this->user);
+
+        $foodgroups = Foodgroup::factory()->count(2)->create();
+
+        $response = $this->get(route('logentries.create'))
+            ->assertOk()
+            ->assertPropValue('foodgroups', function ($returnedFoodgroups) use($foodgroups) {
+                $this->assertEquals(2, count($returnedFoodgroups['data']));
+                foreach($returnedFoodgroups['data'] as $index => $returnedFoodgroup){
+                    $this->assertEquals($foodgroups[$index]->description,$returnedFoodgroup['description']);
+                }
+            });
+    }
+
+    /** @test */
+    public function it_can_access_logentries_edit_as_an_authenticated_user()
+    {
+        Sanctum::actingAs($this->user);
+
+        $logentry = Logentry::factory()->create([
+            'user_id' => $this->user->id
+        ]);
+
+        $response = $this->get(route('logentries.edit', $logentry))
+            ->assertOk();
+    }
+
+    /** @test */
+    public function it_cannot_access_logentries_edit_if_unauthenticated()
+    {
+        $logentry = Logentry::factory()->create();
+
+        $response = $this->get(route('logentries.edit', $logentry))
+            ->assertRedirect(route('login'));
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Http\Resources\FoodResource;
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class LogentryResource extends JsonResource
@@ -20,7 +21,7 @@ class LogentryResource extends JsonResource
             'user' => $this->user,
             'food' => new FoodResource($this->food),
             'quantity' => $this->quantity,
-            'consumed_at' => $this->consumed_at,
+            'consumed_at' => Carbon::parse($this->consumed_at)->format('Y-m-d'),
         ];
     }
 }
