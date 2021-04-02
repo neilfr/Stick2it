@@ -19,8 +19,13 @@ class LogentryResource extends JsonResource
         return [
             'id' => $this->id,
             'user' => $this->user,
-            'food' => new FoodResource($this->food),
+            'description' => $this->description,
             'quantity' => $this->quantity,
+            'kcal' => $this->kcal,
+            'fat' => $this->fat,
+            'protein' => $this->protein,
+            'carbohydrate' => $this->carbohydrate,
+            'potassium' => $this->potassium,
             'consumed_at' => Carbon::parse($this->consumed_at)->format('Y-m-d'),
         ];
     }

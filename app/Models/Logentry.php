@@ -13,8 +13,13 @@ class Logentry extends Model
 
     protected $fillable = [
         'user_id',
-        'food_id',
+        'description',
         'quantity',
+        'kcal',
+        'fat',
+        'protein',
+        'carbohydrate',
+        'potassium',
         'consumed_at',
     ];
 
@@ -24,7 +29,7 @@ class Logentry extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function food(){
-        return $this->belongsTo(Food::class);
-    }
+    // public function food(){
+    //     return $this->belongsTo(Food::class);
+    // }
 }
