@@ -3,16 +3,38 @@
         <h1>Create Log Entry</h1>
         <form method="POST" @submit.prevent="submit">
             <div class="grid grid-cols-2 gap-2">
-                <p class="col-span-2" v-if="errors.quantity">{{errors.quantity}}</p>
-                <label class="p-2" for="quantity">Quantity:</label>
-                <input class="border rounded" id="quantity" type="number" min="0" v-model="logentry.quantity">
                 <p class="col-span-2" v-if="errors.consumed_at">{{errors.consumed_at}}</p>
                 <label class="p-2" for="consumed_at">Consumed at:</label>
                 <input class="border rounded" id="consumed_at_date" type="date" v-model="logentry.consumed_at">
-                <label class="p-2" for="selected_food_alias">Food Alias:</label>
-                <input disabled class="border rounded" id="selected_food_alias" type="text" :value="this.selectedFood.alias">
-                <label class="p-2" for="selected_food_description">Food Description:</label>
-                <input disabled class="border rounded" id="selected_food_description" type="text" :value="this.selectedFood.description">
+
+                <p class="col-span-2" v-if="errors.quantity">{{errors.quantity}}</p>
+                <label class="p-2" for="quantity">Quantity:</label>
+                <input class="border rounded" id="quantity" type="number" min="0" v-model="logentry.quantity" @change="updateQuantity">
+
+                <p class="col-span-2" v-if="errors.description">{{errors.consumed_at}}</p>
+                <label class="p-2" for="description">Description:</label>
+                <input disabled class="border rounded" id="description" type="text" :value="this.selectedFood.description">
+
+                <p class="col-span-2" v-if="errors.kcal">{{errors.kcal}}</p>
+                <label class="p-2" for="kcal">KCal:</label>
+                <input disabled class="border rounded" id="kcal" type="number" min="0" :value="logentry.kcal">
+
+                <p class="col-span-2" v-if="errors.fat">{{errors.fat}}</p>
+                <label class="p-2" for="fat">Fat:</label>
+                <input disabled class="border rounded" id="fat" type="number" min="0" :value="logentry.fat">
+
+                <p class="col-span-2" v-if="errors.protein">{{errors.protein}}</p>
+                <label class="p-2" for="protein">Protein:</label>
+                <input disabled class="border rounded" id="protein" type="number" min="0" :value="logentry.protein">
+
+                <p class="col-span-2" v-if="errors.carbohydrate">{{errors.carbohydrate}}</p>
+                <label class="p-2" for="carbohydrate">Carbohydrate:</label>
+                <input disabled class="border rounded" id="carbohydrate" type="number" min="0" :value="logentry.carbohydrate">
+
+                <p class="col-span-2" v-if="errors.potassium">{{errors.potassium}}</p>
+                <label class="p-2" for="potassium">Potassium:</label>
+                <input disabled class="border rounded" id="potassium" type="number" min="0" :value="logentry.potassium">
+
             </div>
         </form>
         <button>Cancel</button>
@@ -44,6 +66,7 @@
                 <tr>
                     <th>Alias</th>
                     <th>Description</th>
+                    <th>Base Quantity</th>
                     <th>KCal</th>
                     <th>Protein</th>
                     <th>Fat</th>
@@ -55,6 +78,7 @@
                 <tr v-for="food in foods.data" :key="food.id">
                     <td>{{food.alias}}</td>
                     <td>{{food.description}}</td>
+                    <td>{{food.base_quantity}}</td>
                     <td>{{Math.round(food.kcal)}}</td>
                     <td>{{Math.round(food.protein)}}</td>
                     <td>{{Math.round(food.fat)}}</td>
@@ -99,21 +123,32 @@ export default {
             page: 1,
             logentry: {
                 user_id: this.user.id,
-                food_id: 2,
+                description: '',
+                quantity: 0,
+                kcal: 0,
+                fat: 0,
+                protein: 0,
+                carbohydrate: 0,
+                potassium: 0,
                 consumed_at: (new Date()).toISOString().substr(0,10),
-                quantity: 0
             },
             selectedFood: ''
         }
     },
     methods: {
         store(){
+            console.log('store', this.logentry);
             this.$inertia.post(
                 this.$route("logentries.store"),
                 {
                     'user_id': this.user.id,
-                    'food_id': this.selectedFood.id,
+                    'description': this.logentry.description,
                     'quantity': this.logentry.quantity,
+                    'kcal': this.logentry.kcal,
+                    'fat': this.logentry.fat,
+                    'protein': this.logentry.protein,
+                    'carbohydrate': this.logentry.carbohydrate,
+                    'potassium': this.logentry.potassium,
                     'consumed_at': this.logentry.consumed_at
                 }
             )
@@ -121,6 +156,22 @@ export default {
         selectFood(food){
             console.log("select food", food);
             this.selectedFood=food;
+            this.logentry.description = food.description;
+            this.logentry.kcal = food.kcal;
+            this.logentry.fat = food.fat;
+            this.logentry.protein = food.protein;
+            this.logentry.carbohydrate = food.carbohydrate;
+            this.logentry.potassium = food.potassium;
+            this.logentry.quantity = food.base_quantity;
+        },
+        updateQuantity(){
+            if(this.selectedFood){
+                this.logentry.kcal = Math.round(this.selectedFood.kcal * (this.logentry.quantity / this.selectedFood.base_quantity));
+                this.logentry.fat = Math.round(this.selectedFood.fat * (this.logentry.quantity / this.selectedFood.base_quantity));
+                this.logentry.protein = Math.round(this.selectedFood.protein * (this.logentry.quantity / this.selectedFood.base_quantity));
+                this.logentry.carbohydrate = Math.round(this.selectedFood.carbohydrate * (this.logentry.quantity / this.selectedFood.base_quantity));
+                this.logentry.potassium = Math.round(this.selectedFood.potassium * (this.logentry.quantity / this.selectedFood.base_quantity));
+            }
         },
         goToPageOne(){
             this.page=1;

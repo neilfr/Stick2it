@@ -44,14 +44,24 @@ class TestUserSeeder extends Seeder
 
         Logentry::factory()->create([
             'user_id' => $testUser->id,
-            'food_id' => $food1->id,
-            'quantity' => 100,
+            'description' => 'log entry from food one',
+            'quantity' => 200,
+            'kcal' => 201,
+            'fat' => 202,
+            'protein' => 203,
+            'carbohydrate' => 204,
+            'potassium' => 205,
             'consumed_at' => Carbon::now()->subDays(1)->subHours(1),
         ]);
         Logentry::factory()->create([
             'user_id' => $testUser->id,
-            'food_id' => $food2->id,
-            'quantity' => 200,
+            'description' => 'log entry from food two',
+            'quantity' => 300,
+            'kcal' => 301,
+            'fat' => 302,
+            'protein' => 303,
+            'carbohydrate' => 304,
+            'potassium' => 305,
             'consumed_at' => Carbon::now()->subDays(2)->subHours(2),
         ]);
     }
