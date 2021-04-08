@@ -39,7 +39,9 @@
         </form>
         <button>Cancel</button>
         <button :disabled="!readyToSave" @click="store">Save</button>
-        <div>
+        <button @click="handlePickFood">Pick Food</button>
+        <div v-if="showSelectFoodModal" class="fixed inset-0 w-full h-screen flex items-center justify-center overflow-auto">
+            <div class="w-full max-w-6xl bg-white shadow-lg rounded-lg p-8">
             <label for="foodgroups">Food Group:</label>
             <select name="foodgroups" id="foodgroups" v-model="foodgroupFilter" @change="goToPageOne">
                 <option value="">All</option>
@@ -64,6 +66,7 @@
             </div>
             <table>
                 <tr>
+                    <th>Favourite</th>
                     <th>Alias</th>
                     <th>Description</th>
                     <th>Base Quantity</th>
@@ -76,6 +79,11 @@
                     <th>Actions</th>
                 </tr>
                 <tr v-for="food in foods.data" :key="food.id">
+                    <td>
+                        <div class="ml-2">
+                            <input type="checkbox" name="favourites" id="favourite" disabled :checked="food.favourite">
+                        </div>
+                    </td>
                     <td>{{food.alias}}</td>
                     <td>{{food.description}}</td>
                     <td>{{food.base_quantity}}</td>
@@ -97,6 +105,7 @@
             <div>
                 <p>Page: {{foods.meta.current_page}} of {{foods.meta.last_page}}</p>
             </div>
+            </div>
         </div>
     </div>
 </template>
@@ -116,6 +125,7 @@ export default {
     },
     data() {
         return {
+            showSelectFoodModal: false,
             descriptionSearchText: '',
             aliasSearchText: '',
             foodgroupFilter: '',
@@ -137,7 +147,17 @@ export default {
     },
     methods: {
         store(){
-            console.log('store', this.logentry);
+            console.log("payload",                {
+                    'user_id': this.user.id,
+                    'description': this.logentry.description,
+                    'quantity': this.logentry.quantity,
+                    'kcal': this.logentry.kcal,
+                    'fat': this.logentry.fat,
+                    'protein': this.logentry.protein,
+                    'carbohydrate': this.logentry.carbohydrate,
+                    'potassium': this.logentry.potassium,
+                    'consumed_at': this.logentry.consumed_at
+                });
             this.$inertia.post(
                 this.$route("logentries.store"),
                 {
@@ -153,16 +173,18 @@ export default {
                 }
             )
         },
+        handlePickFood(){
+            this.showSelectFoodModal = true;
+        },
         selectFood(food){
-            console.log("select food", food);
+            console.log("logentry.quantity", this.logentry.quantity);
             this.selectedFood=food;
-            this.logentry.description = food.description;
-            this.logentry.kcal = food.kcal;
-            this.logentry.fat = food.fat;
-            this.logentry.protein = food.protein;
-            this.logentry.carbohydrate = food.carbohydrate;
-            this.logentry.potassium = food.potassium;
-            this.logentry.quantity = food.base_quantity;
+            this.logentry.description=food.description;
+            if(this.logentry.quantity===0){
+                this.logentry.quantity = food.base_quantity
+            }
+            this.updateQuantity();
+            this.showSelectFoodModal = false;
         },
         updateQuantity(){
             if(this.selectedFood){
