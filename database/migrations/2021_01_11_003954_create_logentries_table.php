@@ -17,8 +17,13 @@ class CreateLogentriesTable extends Migration
             $table->id();
             $table->timestamps();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('food_id');
+            $table->string('description')->nullable();
             $table->integer('quantity');
+            $table->integer('kcal');
+            $table->integer('fat');
+            $table->integer('protein');
+            $table->integer('carbohydrate');
+            $table->integer('potassium');
             $table->dateTime('consumed_at');
         });
     }

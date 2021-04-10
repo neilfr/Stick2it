@@ -7,16 +7,24 @@
         <table>
             <tr>
                 <th>Date / Time</th>
-                <th>Alias</th>
                 <th>Description</th>
                 <th>Quantity</th>
+                <th>KCal</th>
+                <th>Fat</th>
+                <th>Protein</th>
+                <th>Carbohydrate</th>
+                <th>Potassium</th>
                 <th>Actions</th>
             </tr>
             <tr v-for="logentry in logentries.data" :key="logentry.id">
                 <td>{{logentry.consumed_at}}</td>
-                <td>{{logentry.food.description}}</td>
-                <td>{{logentry.food.alias}}</td>
+                <td>{{logentry.description}}</td>
                 <td>{{logentry.quantity}}</td>
+                <td>{{logentry.kcal}}</td>
+                <td>{{logentry.fat}}</td>
+                <td>{{logentry.protein}}</td>
+                <td>{{logentry.carbohydrate}}</td>
+                <td>{{logentry.potassium}}</td>
                 <td><button @click="edit(logentry)">Edit</button><button @click="destroy">Delete</button></td>
             </tr>
         </table>
