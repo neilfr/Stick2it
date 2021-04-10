@@ -25,7 +25,7 @@
                 <td>{{logentry.protein}}</td>
                 <td>{{logentry.carbohydrate}}</td>
                 <td>{{logentry.potassium}}</td>
-                <td><button @click="edit(logentry)">Edit</button><button @click="destroy">Delete</button></td>
+                <td><button @click="edit(logentry)">Edit</button><button @click="destroy(logentry)">Delete</button></td>
             </tr>
         </table>
     </div>
@@ -43,12 +43,12 @@ export default {
             this.$inertia.visit(url);
         },
         edit(logentry) {
-            console.log("Edit", logentry);
             let url = `${this.$route("logentries.edit", logentry)}`;
             this.$inertia.visit(url);
         },
-        destroy() {
-            console.log("Destroy");
+        destroy(logentry) {
+            let url =this.$route("logentries.destroy", logentry.id);
+            this.$inertia.delete(url);
         }
     }
 }
