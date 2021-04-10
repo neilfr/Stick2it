@@ -122,7 +122,7 @@ export default {
     },
     computed: {
         readyToSave () {
-            return this.logentry.data.quantity>0 && !isNaN(new Date(this.logentry.data.consumed_at).getDate()) && this.selectedFood!=null;
+            return this.logentry.data.quantity>0 && !isNaN(new Date(this.logentry.data.consumed_at).getDate()) && this.logentry.data.description!=null;
         }
     },
     data() {
