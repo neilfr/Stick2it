@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Food;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -29,7 +30,13 @@ class Logentry extends Model
         return $this->belongsTo(User::class);
     }
 
-    // public function food(){
-    //     return $this->belongsTo(Food::class);
-    // }
+    public function scopeUserLogentries(Builder $query)
+    {
+        $query->where('user_id', auth()->user()->id);
+    }
+
+    public function scopeInDateRange(Builder $query, $from, $to)
+    {
+        $query->whereBetween('consumed_at', [$from, $to]);
+    }
 }
