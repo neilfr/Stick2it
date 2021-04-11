@@ -18,13 +18,10 @@ class LogentryController extends Controller
 {
     public function index(Request $request)
     {
-        $from = date('2021-04-01');
-        $to = date('2021-05-01');
-
         return Inertia::render('Logentries/Index',[
             'logentries' => LogentryResource::collection(Logentry::query()
                 ->userLogEntries()
-                ->inDateRange($from, $to)
+                ->inDateRange($request->query('from'), $request->query('to'))
                 ->get()),
         ]);
     }
