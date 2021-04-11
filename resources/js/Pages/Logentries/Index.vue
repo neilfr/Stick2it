@@ -1,5 +1,13 @@
 <template>
     <div class="container">
+        <div>
+            <label for="from">From:</label>
+            <input type="date" name="from" id="from" v-model='from'>
+        </div>
+        <div>
+            <label for="to">To:</label>
+            <input type="date" name="to" id="to" v-model='to'>
+        </div>
         <div class='flex justify-between'>
             <h1>Log Entries</h1>
             <button @click="add">Add Log Entry</button>
@@ -35,6 +43,22 @@
 export default {
     props:{
         logentries: Object,
+    },
+    data(){
+        return {
+            today: '',
+            from: '',
+            to: '',
+            myhello:''
+        }
+    },
+    mounted(){
+        this.today = new Date()
+        this.to = this.today.toISOString().substr(0,10);
+
+        this.lastWeek = new Date();
+        this.lastWeek.setDate(this.lastWeek.getDate()-7);
+        this.from = this.lastWeek.toISOString().substr(0,10);
     },
     methods:{
         add () {
