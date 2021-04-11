@@ -2,11 +2,11 @@
     <div class="container">
         <div>
             <label for="from">From:</label>
-            <input type="date" name="from" id="from" v-model='from'>
+            <input type="date" name="from" id="from" v-model='from' @change="refresh">
         </div>
         <div>
             <label for="to">To:</label>
-            <input type="date" name="to" id="to" v-model='to'>
+            <input type="date" name="to" id="to" v-model='to' @change="refresh">
         </div>
         <div class='flex justify-between'>
             <h1>Log Entries</h1>
@@ -71,8 +71,14 @@ export default {
             this.$inertia.visit(url);
         },
         destroy(logentry) {
-            let url =this.$route("logentries.destroy", logentry.id);
+            let url = this.$route("logentries.destroy", logentry.id);
             this.$inertia.delete(url);
+        },
+        refresh(){
+            let url = `${this.$route("logentries.index")}`;
+            url += `?from=${this.from}`;
+            url += `&to=${this.to}`;
+            this.$inertia.visit(url);
         }
     }
 }
