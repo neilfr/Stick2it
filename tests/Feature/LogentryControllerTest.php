@@ -66,6 +66,39 @@ class LogentryControllerTest extends TestCase
     }
 
     /** @test */
+    public function it_can_return_a_user_logentry_in_a_date_range()
+    {
+        Sanctum::actingAs($this->user);
+
+        $logentries[0] = Logentry::factory()->create([
+            'user_id' => $this->user->id,
+            'consumed_at' => Carbon::parse(Carbon::now()->subDays(5))->format('Y-m-d')
+        ]);
+
+        $logentries[1] = Logentry::factory()->create([
+            'user_id' => $this->user->id,
+            'consumed_at' => Carbon::parse(Carbon::now())->format('Y-m-d')
+        ]);
+
+        $logentries[2] = Logentry::factory()->create([
+            'user_id' => $this->user->id,
+            'consumed_at' => Carbon::parse(Carbon::now()->addDays(5))->format('Y-m-d')
+        ]);
+
+        $response = $this->get(route('logentries.index', [
+                'user_id' => $this->user,
+                'from' => Carbon::parse(Carbon::now()->subDays(2))->format('Y-m-d'),
+                'to' => Carbon::parse(Carbon::now()->addDays(2))->format('Y-m-d'),
+                ]
+            ))
+            ->assertOk()
+            ->assertPropValue('logentries', function ($returnedLogentries) use($logentries) {
+                $this->assertEquals(1, count($returnedLogentries['data']));
+                $this->assertEquals($logentries[1]->description, $returnedLogentries['data'][0]['description']);
+            });
+    }
+
+    /** @test */
     public function it_cannot_return_another_users_logentries()
     {
         Sanctum::actingAs($this->user);
