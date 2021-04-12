@@ -8,6 +8,23 @@
             <label for="to">To:</label>
             <input type="date" name="to" id="to" v-model='to' @change="goToPageOne">
         </div>
+        <div>
+            <h1>Totals</h1>
+            <label for="totalKcal">Calories</label>
+            <input type="text" name="totalKcal" id="totalKcal" :value="totalKcal" disabled>
+
+            <label for="totalFat">Fat</label>
+            <input type="text" name="totalFat" id="totalFat" :value="totalFat" disabled>
+
+            <label for="totalProtein">Protein</label>
+            <input type="text" name="totalProtein" id="totalProtein" :value="totalProtein" disabled>
+
+            <label for="totalCarbohydrate">Carbohydrate</label>
+            <input type="text" name="totalCarbohydrate" id="totalCarbohydrate" :value="totalCarbohydrate" disabled>
+
+            <label for="totalPotassium">Potassium</label>
+            <input type="text" name="totalPotassium" id="totalPotassium" :value="totalPotassium" disabled>
+        </div>
         <div class='flex justify-between'>
             <h1>Log Entries</h1>
             <button @click="add">Add Log Entry</button>
@@ -49,7 +66,12 @@
 export default {
     props:{
         logentries: Object,
-        page: Number
+        page: Number,
+        totalKcal: Number,
+        totalFat: Number,
+        totalProtein: Number,
+        totalCarbohydrate: Number,
+        totalPotassium: Number,
     },
     data(){
         return {
