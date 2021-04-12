@@ -25,6 +25,24 @@
             <label for="totalPotassium">Potassium</label>
             <input type="text" name="totalPotassium" id="totalPotassium" :value="totalPotassium" disabled>
         </div>
+        <div>
+            <h1>Averages</h1>
+            <label for="averageKcal">Calories</label>
+            <input type="text" name="averageKcal" id="averageKcal" :value="averageKcal" disabled>
+
+            <label for="averageFat">Fat</label>
+            <input type="text" name="averageFat" id="averageFat" :value="averageFat" disabled>
+
+            <label for="averageProtein">Protein</label>
+            <input type="text" name="averageProtein" id="averageProtein" :value="averageProtein" disabled>
+
+            <label for="averageCarbohydrate">Carbohydrate</label>
+            <input type="text" name="averageCarbohydrate" id="averageCarbohydrate" :value="averageCarbohydrate" disabled>
+
+            <label for="averagePotassium">Potassium</label>
+            <input type="text" name="averagePotassium" id="averagePotassium" :value="averagePotassium" disabled>
+        </div>
+
         <div class='flex justify-between'>
             <h1>Log Entries</h1>
             <button @click="add">Add Log Entry</button>
@@ -72,6 +90,11 @@ export default {
         totalProtein: Number,
         totalCarbohydrate: Number,
         totalPotassium: Number,
+        averageKcal: Number,
+        averageFat: Number,
+        averageProtein: Number,
+        averageCarbohydrate: Number,
+        averagePotassium: Number,
     },
     data(){
         return {

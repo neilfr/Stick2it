@@ -18,20 +18,28 @@ class LogentryController extends Controller
 {
     public function index(Request $request)
     {
-        $logentries = LogentryResource::collection(
-            Logentry::query()
+        $paginatedLogentries = Logentry::query()
                 ->userLogEntries()
                 ->inDateRange($request->query('from'), $request->query('to'))
-                ->paginate(Config::get('stick2it.paginator.per_page')));
+                ->paginate(Config::get('stick2it.paginator.per_page'));
+        $allLogentries = Logentry::query()
+                ->userLogEntries()
+                ->inDateRange($request->query('from'), $request->query('to'))
+                ->get();
 
         return Inertia::render('Logentries/Index',[
-            'page' => $logentries->currentPage(),
-            'logentries' => LogentryResource::collection($logentries),
-            'totalKcal' => $logentries->sum('kcal'),
-            'totalFat' => $logentries->sum('fat'),
-            'totalProtein' => $logentries->sum('protein'),
-            'totalCarbohydrate' => $logentries->sum('carbohydrate'),
-            'totalPotassium' => $logentries->sum('potassium'),
+            'page' => $paginatedLogentries->currentPage(),
+            'logentries' => LogentryResource::collection($paginatedLogentries),
+            'totalKcal' => $allLogentries->sum('kcal'),
+            'totalFat' => $allLogentries->sum('fat'),
+            'totalProtein' => $allLogentries->sum('protein'),
+            'totalCarbohydrate' => $allLogentries->sum('carbohydrate'),
+            'totalPotassium' => $allLogentries->sum('potassium'),
+            'averageKcal' => round($allLogentries->avg('kcal')),
+            'averageFat' => round($allLogentries->avg('fat')),
+            'averageProtein' => round($allLogentries->avg('protein')),
+            'averageCarbohydrate' => round($allLogentries->avg('carbohydrate')),
+            'averagePotassium' => round($allLogentries->avg('potassium')),
         ]);
     }
 
