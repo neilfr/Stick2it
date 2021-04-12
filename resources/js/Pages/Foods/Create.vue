@@ -29,7 +29,7 @@
         </div>
     </form>
     <button @click="store">Save</button>
-    <button>Cancel</button>
+    <button @click="cancel">Cancel</button>
   </div>
 </template>
 
@@ -66,7 +66,11 @@ export default {
             ).then(()=>{
                 console.log("errors", this.errors.description);
             });
-        }
+        },
+        cancel () {
+            let url = `${this.$route("foods.index")}`;
+            this.$inertia.visit(url);
+        },
     }
 }
 </script>
