@@ -37,7 +37,7 @@
 
             </div>
         </form>
-        <button>Cancel</button>
+        <button @click='cancel'>Cancel</button>
         <button :disabled="!readyToSave" @click="store">Save</button>
         <button @click="handlePickFood">Pick Food</button>
         <div v-if="showSelectFoodModal" class="fixed inset-0 w-full h-screen flex items-center justify-center overflow-auto">
@@ -229,6 +229,11 @@ export default {
                 preserveScroll: true,
             });
         },
+        cancel(){
+            console.log("cancel");
+            let url = `${this.$route("logentries.index")}`;
+            this.$inertia.visit(url);
+        }
     }
 }
 </script>

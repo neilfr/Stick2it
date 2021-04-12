@@ -3,8 +3,8 @@
     <div v-if="food.data.editable">
         <button class="border rounded" @click="updateFood">Update Food</button>
         <button class="border rounded" @click="setToRecommendedValues">Set to Recommended Values</button>
-        <button class="border rounded" @click="cancelFoodUpdate">Back</button>
     </div>
+    <button class="border rounded" @click="cancelFoodUpdate">Back</button>
     <h2>Overview</h2>
     <div class="grid grid-cols-3 gap-2">
         <p class="col-span-2" v-if="errors.description">{{errors.description}}</p>

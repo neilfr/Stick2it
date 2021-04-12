@@ -33,7 +33,7 @@ class LogentryFactory extends Factory
             'carbohydrate' => $this->faker->numberBetween(1, 300),
             'potassium' => $this->faker->numberBetween(1, 300),
             'quantity' => $this->faker->numberBetween(1,300),
-            'consumed_at' => Carbon::now()->subDays(random_int(-14,14)),
+            'consumed_at' => Carbon::now()->subDays(random_int(0,9)),
             ];
     }
 }
