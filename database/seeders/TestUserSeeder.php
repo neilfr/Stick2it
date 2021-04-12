@@ -64,5 +64,8 @@ class TestUserSeeder extends Seeder
             'potassium' => 305,
             'consumed_at' => Carbon::now()->subDays(2)->subHours(2),
         ]);
+        $logentries = Logentry::factory()->times(20)->create([
+            'user_id' => $testUser->id,
+        ]);
     }
 }

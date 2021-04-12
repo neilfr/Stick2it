@@ -18,11 +18,14 @@ class LogentryController extends Controller
 {
     public function index(Request $request)
     {
+        $logentries = Logentry::query()
+            ->userLogEntries()
+            ->inDateRange($request->query('from'), $request->query('to'))
+            ->paginate(Config::get('stick2it.paginator.per_page'));
+
         return Inertia::render('Logentries/Index',[
-            'logentries' => LogentryResource::collection(Logentry::query()
-                ->userLogEntries()
-                ->inDateRange($request->query('from'), $request->query('to'))
-                ->get()),
+            'page' => $logentries->currentPage(),
+            'logentries' => LogentryResource::collection($logentries),
         ]);
     }
 

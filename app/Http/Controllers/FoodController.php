@@ -18,13 +18,13 @@ class FoodController extends Controller
     public function index(Request $request)
     {
         $foods = Food::query()
-        ->userFoods()
-        ->sharedFoods()
-        ->foodgroupSearch($request->query('foodgroupSearch'))
-        ->descriptionSearch($request->query('descriptionSearch'))
-        ->aliasSearch($request->query('aliasSearch'))
-        ->favouritesFilter($request->query('favouritesFilter'))
-        ->paginate(Config::get('stick2it.paginator.per_page'));
+            ->userFoods()
+            ->sharedFoods()
+            ->foodgroupSearch($request->query('foodgroupSearch'))
+            ->descriptionSearch($request->query('descriptionSearch'))
+            ->aliasSearch($request->query('aliasSearch'))
+            ->favouritesFilter($request->query('favouritesFilter'))
+            ->paginate(Config::get('stick2it.paginator.per_page'));
 
         $foodgroups = Foodgroup::all();
 

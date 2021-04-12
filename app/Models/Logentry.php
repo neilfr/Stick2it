@@ -32,7 +32,8 @@ class Logentry extends Model
 
     public function scopeUserLogentries(Builder $query)
     {
-        $query->where('user_id', auth()->user()->id);
+        $query->where('user_id', auth()->user()->id)
+        ->orderBy('consumed_at', 'DESC');
     }
 
     public function scopeInDateRange(Builder $query, $from = '2021-04-08', $to = '2021-05-01')
