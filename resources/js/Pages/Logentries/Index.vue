@@ -2,11 +2,11 @@
     <div class="container">
         <div>
             <label for="from">From:</label>
-            <input type="date" name="from" id="from" v-model='from' @change="refresh">
+            <input type="date" name="from" id="from" v-model='from' @change="goToPageOne">
         </div>
         <div>
             <label for="to">To:</label>
-            <input type="date" name="to" id="to" v-model='to' @change="refresh">
+            <input type="date" name="to" id="to" v-model='to' @change="goToPageOne">
         </div>
         <div class='flex justify-between'>
             <h1>Log Entries</h1>
@@ -36,6 +36,12 @@
                 <td><button @click="edit(logentry)">Edit</button><button @click="destroy(logentry)">Delete</button></td>
             </tr>
         </table>
+        <div>
+            <button @click="goToPageOne">First</button>
+            <button @click="previousPage">Previous</button>
+            <button @click="nextPage">Next</button>
+            <button @click="lastPage">Last</button>
+        </div>
     </div>
 </template>
 
@@ -43,6 +49,7 @@
 export default {
     props:{
         logentries: Object,
+        page: Number
     },
     data(){
         return {
@@ -74,12 +81,33 @@ export default {
             let url = this.$route("logentries.destroy", logentry.id);
             this.$inertia.delete(url);
         },
-        refresh(){
+        goToPageOne(){
+            this.goToPage(1);
+        },
+        previousPage(){
+            if(this.page>1) this.goToPage(this.page-1);
+        },
+        nextPage(){
+            console.log('next page');
+            console.log('this.page', this.page);
+            console.log('this.logentries.meta.last_page', this.logentries.meta.last_page);
+            if(this.page<this.logentries.meta.last_page) this.goToPage(this.page+1);
+        },
+        lastPage(){
+            this.goToPage(this.logentries.meta.last_page);
+        },
+        goToPage(page){
             let url = `${this.$route("logentries.index")}`;
             url += `?from=${this.from}`;
             url += `&to=${this.to}`;
-            this.$inertia.visit(url);
-        }
+            this.$inertia.visit(url, {
+                data:{
+                    'page':page
+                },
+                preserveState: true,
+                preserveScroll: true,
+            });
+        },
     }
 }
 </script>
