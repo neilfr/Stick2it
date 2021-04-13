@@ -1,53 +1,63 @@
 <template>
-    <div class="container bg-white h-screen overflow-hidden mx-auto">
-        <section class="py-2 px-4">
-            <h1>Foods</h1>
-            <button @click="add">Add</button>
-        </section>
-        <section class="py-2 px-4">
-            <label for="foodgroups">Food Group:</label>
-            <select name="foodgroups" id="foodgroups" v-model="foodgroupFilter" @change="goToPageOne">
-                <option value="">All</option>
-                <option v-for="foodgroup in foodgroups.data" :key="foodgroup.id" :value="foodgroup.id">
-                    {{ foodgroup.description }}
-                </option>
-            </select>
-            <br>
-            <label for="descriptionSearch">Description Search:</label>
-            <input type="text" name="descriptionSearch" id="descriptionSearch" @input="goToPageOne" v-model="descriptionSearchText"/>
-            <br/>
-            <label for="aliasSearch">Alias Search:</label>
-            <input type="text" name="aliasSearch" id="aliasSearch" @input="goToPageOne" v-model="aliasSearchText"/>
-            <div class="flex">
-                <p>Favourites:</p>
-                <div class="ml-2">
-                    <label for="favouriteYes">Yes</label>
-                    <input type="radio" name="favourites" id="favouriteYes" value="yes" v-model="favouritesFilter" @change="goToPageOne">
-                    <label for="favouriteNo">No</label>
-                    <input type="radio" name="favourites" id="favouriteNo" value="no" checked v-model="favouritesFilter" @change="goToPageOne">
+    <app-layout>
+        <template #header>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                Foods
+            </h2>
+        </template>
+        <div class="container bg-white h-screen overflow-hidden mx-auto">
+            <section class="py-2 px-4">
+                <h1>Foods</h1>
+                <button @click="add">Add</button>
+            </section>
+            <section class="py-2 px-4">
+                <label for="foodgroups">Food Group:</label>
+                <select name="foodgroups" id="foodgroups" v-model="foodgroupFilter" @change="goToPageOne">
+                    <option value="">All</option>
+                    <option v-for="foodgroup in foodgroups.data" :key="foodgroup.id" :value="foodgroup.id">
+                        {{ foodgroup.description }}
+                    </option>
+                </select>
+                <br>
+                <label for="descriptionSearch">Description Search:</label>
+                <input type="text" name="descriptionSearch" id="descriptionSearch" @input="goToPageOne" v-model="descriptionSearchText"/>
+                <br/>
+                <label for="aliasSearch">Alias Search:</label>
+                <input type="text" name="aliasSearch" id="aliasSearch" @input="goToPageOne" v-model="aliasSearchText"/>
+                <div class="flex">
+                    <p>Favourites:</p>
+                    <div class="ml-2">
+                        <label for="favouriteYes">Yes</label>
+                        <input type="radio" name="favourites" id="favouriteYes" value="yes" v-model="favouritesFilter" @change="goToPageOne">
+                        <label for="favouriteNo">No</label>
+                        <input type="radio" name="favourites" id="favouriteNo" value="no" checked v-model="favouritesFilter" @change="goToPageOne">
+                    </div>
                 </div>
-            </div>
-        </section>
-        <section class="py-2 px-4">
-            <main-food-list :foods="foods.data" @view="show" @edit="show" @destroy="destroy" @favourite="toggleFavourite"></main-food-list>
-            <div>
-                <button @click="goToPageOne">First</button>
-                <button @click="previousPage">Previous</button>
-                <button @click="nextPage">Next</button>
-                <button @click="lastPage">Last</button>
-            </div>
-            <div>
-                <p>Page: {{foods.meta.current_page}} of {{foods.meta.last_page}}</p>
-            </div>
-        </section>
-    </div>
+            </section>
+            <section class="py-2 px-4">
+                <main-food-list :foods="foods.data" @view="show" @edit="show" @destroy="destroy" @favourite="toggleFavourite"></main-food-list>
+                <div>
+                    <button @click="goToPageOne">First</button>
+                    <button @click="previousPage">Previous</button>
+                    <button @click="nextPage">Next</button>
+                    <button @click="lastPage">Last</button>
+                </div>
+                <div>
+                    <p>Page: {{foods.meta.current_page}} of {{foods.meta.last_page}}</p>
+                </div>
+            </section>
+        </div>
+    </app-layout>
 </template>
 
 <script>
     import MainFoodList from "@/Shared/MainFoodList";
+    import AppLayout from '@/Layouts/AppLayout';
+
     export default {
         components:{
             MainFoodList,
+            AppLayout
         },
         props:{
             foods: Object,
