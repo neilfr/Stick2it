@@ -1,6 +1,6 @@
 <template>
   <div>
-      <table class="table-fixed w-full">
+      <table class="table-fixed w-full mt-16">
             <tr>
                 <th>Favourite</th>
                 <th>Alias</th>

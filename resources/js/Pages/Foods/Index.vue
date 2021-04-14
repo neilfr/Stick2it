@@ -1,36 +1,41 @@
 <template>
     <app-layout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Foods
-            </h2>
+            <div class="flex justify-between">
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                    Foods
+                </h2>
+                <button @click="add">+</button>
+            </div>
         </template>
         <div class="container bg-white h-screen overflow-hidden mx-auto">
-            <section class="py-2 px-4">
-                <h1>Foods</h1>
-                <button @click="add">Add</button>
-            </section>
-            <section class="py-2 px-4">
-                <label for="foodgroups">Food Group:</label>
-                <select name="foodgroups" id="foodgroups" v-model="foodgroupFilter" @change="goToPageOne">
-                    <option value="">All</option>
-                    <option v-for="foodgroup in foodgroups.data" :key="foodgroup.id" :value="foodgroup.id">
-                        {{ foodgroup.description }}
-                    </option>
-                </select>
-                <br>
-                <label for="descriptionSearch">Description Search:</label>
-                <input type="text" name="descriptionSearch" id="descriptionSearch" @input="goToPageOne" v-model="descriptionSearchText"/>
-                <br/>
-                <label for="aliasSearch">Alias Search:</label>
-                <input type="text" name="aliasSearch" id="aliasSearch" @input="goToPageOne" v-model="aliasSearchText"/>
-                <div class="flex">
-                    <p>Favourites:</p>
-                    <div class="ml-2">
-                        <label for="favouriteYes">Yes</label>
-                        <input type="radio" name="favourites" id="favouriteYes" value="yes" v-model="favouritesFilter" @change="goToPageOne">
-                        <label for="favouriteNo">No</label>
-                        <input type="radio" name="favourites" id="favouriteNo" value="no" checked v-model="favouritesFilter" @change="goToPageOne">
+            <section class="py-2 px-4 border-t border-b">
+                <div class="grid grid-cols-5">
+                    <div class="col-span-2">
+                        <label for="aliasSearch">Alias:</label>
+                        <input class="border" type="text" name="aliasSearch" id="aliasSearch" @input="goToPageOne" v-model="aliasSearchText" placeholder="Alias"/>
+                    </div>
+                    <div class="col-span-3">
+                        <label for="foodgroups">Food Group:</label>
+                        <select class="border" name="foodgroups" id="foodgroups" v-model="foodgroupFilter" @change="goToPageOne">
+                            <option value="">All</option>
+                            <option v-for="foodgroup in foodgroups.data" :key="foodgroup.id" :value="foodgroup.id">
+                                {{ foodgroup.description }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-span-2">
+                        <label for="descriptionSearch">Description:</label>
+                        <input class="border" type="text" name="descriptionSearch" id="descriptionSearch" @input="goToPageOne" v-model="descriptionSearchText" placeholder="Description"/>
+                    </div>
+                    <div class="flex col-span-3">
+                        <p>Favourites:</p>
+                        <div class="ml-2">
+                            <label for="favouriteYes">Yes</label>
+                            <input type="radio" name="favourites" id="favouriteYes" value="yes" v-model="favouritesFilter" @change="goToPageOne">
+                            <label for="favouriteNo">No</label>
+                            <input type="radio" name="favourites" id="favouriteNo" value="no" checked v-model="favouritesFilter" @change="goToPageOne">
+                        </div>
                     </div>
                 </div>
             </section>
