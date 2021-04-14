@@ -5,7 +5,9 @@
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                     Foods
                 </h2>
-                <button @click="add">+</button>
+                <button @click="add">
+                    <img class="w-6" src="/images/add-outline.svg">
+                </button>
             </div>
         </template>
         <div class="max-w-7xl mx-auto pb-2 px-4 sm:px-6 lg:px-8">
