@@ -20,7 +20,7 @@
                         :id="food.id"
                         :value="food.favourite"
                         :checked="food.favourite"
-                        @change="favourite"
+                        @change="favourite(food)"
                     />
                 </td>
                 <td class="w-5 text-center">{{food.alias}}</td>
@@ -53,11 +53,10 @@ export default {
         foods: Array,
     },
     methods:{
-        favourite (e) {
-            this.$emit('favourite', e);
+        favourite (food) {
+            this.$emit('favourite', food);
         },
         view (food) {
-            console.log('clicked!', food);
             this.$emit('view', food);
         },
         edit (food) {

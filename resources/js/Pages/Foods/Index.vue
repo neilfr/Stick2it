@@ -75,8 +75,9 @@
             }
         },
         methods:{
-            toggleFavourite(e){
-                let url =this.$route("foods.toggle-favourite", e.target.id);
+            toggleFavourite(food){
+                console.log(food);
+                let url =this.$route("foods.toggle-favourite", food.id);
                 this.$inertia.post(url,{},{preserveScroll: true});
             },
             destroy(food){
