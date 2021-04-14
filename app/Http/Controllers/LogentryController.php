@@ -51,7 +51,7 @@ class LogentryController extends Controller
             ->foodgroupSearch($request->query('foodgroupSearch'))
             ->descriptionSearch($request->query('descriptionSearch'))
             ->aliasSearch($request->query('aliasSearch'))
-            ->favouritesFilter($request->query('favouritesFilter'))
+            ->favouritesFilter($request->query('favouritesFilter') ? $request->query('favouritesFilter') : 'yes')
             ->with('ingredients')
             ->paginate(Config::get('ml2.paginator.per_page'));
 

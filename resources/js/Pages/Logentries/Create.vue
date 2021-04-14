@@ -142,7 +142,7 @@ export default {
             descriptionSearchText: '',
             aliasSearchText: '',
             foodgroupFilter: '',
-            favouritesFilter: '',
+            favouritesFilter: 'yes',
             page: 1,
             logentry: {
                 user_id: this.user.id,
