@@ -8,47 +8,44 @@
                 <button @click="add">+</button>
             </div>
         </template>
-        <div class="container bg-white h-screen overflow-hidden mx-auto">
-            <section class="py-2 px-4 border-t border-b">
-                <div class="grid grid-cols-5">
-                    <div class="col-span-2">
-                        <label for="aliasSearch">Alias:</label>
-                        <input class="border" type="text" name="aliasSearch" id="aliasSearch" @input="goToPageOne" v-model="aliasSearchText" placeholder="Alias"/>
-                    </div>
-                    <div class="col-span-3">
-                        <label for="foodgroups">Food Group:</label>
-                        <select class="border" name="foodgroups" id="foodgroups" v-model="foodgroupFilter" @change="goToPageOne">
-                            <option value="">All</option>
-                            <option v-for="foodgroup in foodgroups.data" :key="foodgroup.id" :value="foodgroup.id">
-                                {{ foodgroup.description }}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="col-span-2">
-                        <label for="descriptionSearch">Description:</label>
-                        <input class="border" type="text" name="descriptionSearch" id="descriptionSearch" @input="goToPageOne" v-model="descriptionSearchText" placeholder="Description"/>
-                    </div>
-                    <div class="flex col-span-3">
-                        <p>Favourites:</p>
-                        <div class="ml-2">
-                            <label for="favouriteYes">Yes</label>
-                            <input type="radio" name="favourites" id="favouriteYes" value="yes" v-model="favouritesFilter" @change="goToPageOne">
-                            <label for="favouriteNo">No</label>
-                            <input type="radio" name="favourites" id="favouriteNo" value="no" checked v-model="favouritesFilter" @change="goToPageOne">
-                        </div>
-                    </div>
+        <div class="max-w-7xl mx-auto pb-2 px-4 sm:px-6 lg:px-8">
+            <section class="py-2 grid grid-cols-12 gap-2">
+                <label for="aliasSearch">Alias:</label>
+                <input class="border col-span-3" type="text" name="aliasSearch" id="aliasSearch" @input="goToPageOne" v-model="aliasSearchText" placeholder="Alias"/>
+                <div class="col-span-8"></div>
+
+                <label for="descriptionSearch">Description:</label>
+                <input class="border col-span-3" type="text" name="descriptionSearch" id="descriptionSearch" @input="goToPageOne" v-model="descriptionSearchText" placeholder="Description"/>
+                <div class="col-span-8"></div>
+
+                <label for="foodgroups">Food Group:</label>
+                <select class="border col-span-3" name="foodgroups" id="foodgroups" v-model="foodgroupFilter" @change="goToPageOne">
+                    <option value="">All</option>
+                    <option v-for="foodgroup in foodgroups.data" :key="foodgroup.id" :value="foodgroup.id">
+                        {{ foodgroup.description }}
+                    </option>
+                </select>
+                <div class="col-span-8"></div>
+
+                <div class="flex">
+                    <p>Favourites:</p>
                 </div>
+                <div class="ml-2 col-span-2">
+                    <label for="favouriteYes">Yes</label>
+                    <input type="radio" name="favourites" id="favouriteYes" value="yes" v-model="favouritesFilter" @change="goToPageOne">
+                    <label for="favouriteNo">No</label>
+                    <input type="radio" name="favourites" id="favouriteNo" value="no" checked v-model="favouritesFilter" @change="goToPageOne">
+                </div>
+                <div class="col-span-9"></div>
             </section>
-            <section class="py-2 px-4">
+            <section class="py-2">
                 <main-food-list :foods="foods.data" @view="show" @edit="show" @destroy="destroy" @favourite="toggleFavourite"></main-food-list>
-                <div>
-                    <button @click="goToPageOne">First</button>
-                    <button @click="previousPage">Previous</button>
-                    <button @click="nextPage">Next</button>
-                    <button @click="lastPage">Last</button>
-                </div>
-                <div>
-                    <p>Page: {{foods.meta.current_page}} of {{foods.meta.last_page}}</p>
+                <div class="grid grid-cols-12 gap-2 mt-2">
+                    <button class="col-span-1 border rounded" @click="goToPageOne">First</button>
+                    <button class="col-span-1 border rounded" @click="previousPage">Previous</button>
+                    <button class="col-span-1 border rounded" @click="nextPage">Next</button>
+                    <button class="col-span-1 border rounded" @click="lastPage">Last</button>
+                    <p class="col-span-2">Page: {{foods.meta.current_page}} of {{foods.meta.last_page}}</p>
                 </div>
             </section>
         </div>
@@ -82,12 +79,10 @@
                 let url =this.$route("foods.toggle-favourite", e.target.id);
                 this.$inertia.post(url,{},{preserveScroll: true});
             },
-            destroy(e){
-                console.log("destroy", e.target.id);
-                let url =this.$route("foods.destroy", e.target.id);
-                this.$inertia.delete(url,{
-                    food:e.target.id
-                });
+            destroy(food){
+                console.log("destroy", food.id);
+                let url =this.$route("foods.destroy", food.id);
+                this.$inertia.delete(url);
             },
             goToPageOne(){
                 this.goToPage(1);
@@ -115,8 +110,9 @@
                     preserveScroll: true,
                 });
             },
-            show(e){
-                let url = `${this.$route("foods.show", e.target.id)}`;
+            show(food){
+                let url = `${this.$route("foods.show", food.id)}`;
+                // let url = `${this.$route("foods.show", e.target.id)}`;
                 this.$inertia.visit(url);
             },
             add(){
