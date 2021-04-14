@@ -14,8 +14,13 @@
 
                         <!-- Navigation Links -->
                         <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                            <jet-nav-link :href="route('dashboard')" :active="route().current('dashboard')">
-                                Dashboard
+                            <jet-nav-link :href="route('foods.index')" :active="route().current('foods.index')">
+                                Foods
+                            </jet-nav-link>
+                        </div>
+                        <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <jet-nav-link :href="route('logentries.index')" :active="route().current('logentries.index')">
+                                Logentries
                             </jet-nav-link>
                         </div>
                     </div>
