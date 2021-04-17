@@ -7,46 +7,48 @@
         </template>
         <div class="container">
             <div>
-                <label for="from">From:</label>
-                <input type="date" name="from" id="from" v-model='from' @change="goToPageOne">
-            </div>
-            <div>
-                <label for="to">To:</label>
-                <input type="date" name="to" id="to" v-model='to' @change="goToPageOne">
-            </div>
-            <div>
-                <h1>Totals</h1>
-                <label for="totalKcal">Calories</label>
-                <input type="text" name="totalKcal" id="totalKcal" :value="totalKcal" disabled>
+                <div>
+                    <label for="from">From:</label>
+                    <input type="date" name="from" id="from" v-model='from' @change="goToPageOne">
+                </div>
+                <div>
+                    <label for="to">To:</label>
+                    <input type="date" name="to" id="to" v-model='to' @change="goToPageOne">
+                </div>
+                <div>
+                    <h1>Totals</h1>
+                    <label for="totalKcal">Calories</label>
+                    <input type="text" name="totalKcal" id="totalKcal" :value="totalKcal" disabled>
 
-                <label for="totalFat">Fat</label>
-                <input type="text" name="totalFat" id="totalFat" :value="totalFat" disabled>
+                    <label for="totalFat">Fat</label>
+                    <input type="text" name="totalFat" id="totalFat" :value="totalFat" disabled>
 
-                <label for="totalProtein">Protein</label>
-                <input type="text" name="totalProtein" id="totalProtein" :value="totalProtein" disabled>
+                    <label for="totalProtein">Protein</label>
+                    <input type="text" name="totalProtein" id="totalProtein" :value="totalProtein" disabled>
 
-                <label for="totalCarbohydrate">Carbohydrate</label>
-                <input type="text" name="totalCarbohydrate" id="totalCarbohydrate" :value="totalCarbohydrate" disabled>
+                    <label for="totalCarbohydrate">Carbohydrate</label>
+                    <input type="text" name="totalCarbohydrate" id="totalCarbohydrate" :value="totalCarbohydrate" disabled>
 
-                <label for="totalPotassium">Potassium</label>
-                <input type="text" name="totalPotassium" id="totalPotassium" :value="totalPotassium" disabled>
-            </div>
-            <div>
-                <h1>Averages</h1>
-                <label for="averageKcal">Calories</label>
-                <input type="text" name="averageKcal" id="averageKcal" :value="averageKcal" disabled>
+                    <label for="totalPotassium">Potassium</label>
+                    <input type="text" name="totalPotassium" id="totalPotassium" :value="totalPotassium" disabled>
+                </div>
+                <div>
+                    <h1>Averages</h1>
+                    <label for="averageKcal">Calories</label>
+                    <input type="text" name="averageKcal" id="averageKcal" :value="averageKcal" disabled>
 
-                <label for="averageFat">Fat</label>
-                <input type="text" name="averageFat" id="averageFat" :value="averageFat" disabled>
+                    <label for="averageFat">Fat</label>
+                    <input type="text" name="averageFat" id="averageFat" :value="averageFat" disabled>
 
-                <label for="averageProtein">Protein</label>
-                <input type="text" name="averageProtein" id="averageProtein" :value="averageProtein" disabled>
+                    <label for="averageProtein">Protein</label>
+                    <input type="text" name="averageProtein" id="averageProtein" :value="averageProtein" disabled>
 
-                <label for="averageCarbohydrate">Carbohydrate</label>
-                <input type="text" name="averageCarbohydrate" id="averageCarbohydrate" :value="averageCarbohydrate" disabled>
+                    <label for="averageCarbohydrate">Carbohydrate</label>
+                    <input type="text" name="averageCarbohydrate" id="averageCarbohydrate" :value="averageCarbohydrate" disabled>
 
-                <label for="averagePotassium">Potassium</label>
-                <input type="text" name="averagePotassium" id="averagePotassium" :value="averagePotassium" disabled>
+                    <label for="averagePotassium">Potassium</label>
+                    <input type="text" name="averagePotassium" id="averagePotassium" :value="averagePotassium" disabled>
+                </div>
             </div>
 
             <div class='flex justify-between'>

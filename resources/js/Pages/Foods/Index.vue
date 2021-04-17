@@ -10,9 +10,9 @@
                 </button>
             </div>
         </template>
-        <div class="max-w-7xl mx-auto pb-2 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl pb-2">
             <section class="py-2 grid grid-cols-12 gap-2">
-                <label class="col-span-2" for="aliasSearch">QAlias:</label>
+                <label class="col-span-2" for="aliasSearch">Alias:</label>
                 <input class="border col-span-4" type="text" name="aliasSearch" id="aliasSearch" @input="goToPageOne" v-model="aliasSearchText" placeholder="Alias"/>
                 <div class="col-span-6"></div>
 
@@ -32,13 +32,15 @@
                 <div class="flex col-span-2">
                     <p>Favourites:</p>
                 </div>
-                <div class="ml-2 col-span-2">
+                <div>
                     <label for="favouriteYes">Yes</label>
                     <input type="radio" name="favourites" id="favouriteYes" value="yes" v-model="favouritesFilter" @change="goToPageOne">
-                    <label for="favouriteNo">No</label>
-                    <input type="radio" name="favourites" id="favouriteNo" value="no" checked v-model="favouritesFilter" @change="goToPageOne">
                 </div>
-                <div class="col-span-8"></div>
+                <div>
+                    <label for="favouriteNo">No</label>
+                    <input type="radio" name="favourites" id="favouriteNo" value="no" v-model="favouritesFilter" @change="goToPageOne">
+                    </div>
+                <div class="col-span-6"></div>
             </section>
             <section class="py-2">
                 <main-food-list :foods="foods.data" @view="show" @edit="show" @destroy="destroy" @favourite="toggleFavourite"></main-food-list>
