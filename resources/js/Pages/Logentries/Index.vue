@@ -6,17 +6,20 @@
             </h2>
         </template>
         <div class="container">
-            <div>
-                <div>
+            <div class="grid grid-cols-12 gap-2">
+                <div class="col-span-4 grid grid-cols-4 place-items-start border">
+                    <h3 class="col-span-4">Period</h3>
                     <label for="from">From:</label>
-                    <input type="date" name="from" id="from" v-model='from' @change="goToPageOne">
-                </div>
-                <div>
+                    <input class="col-span-3 mr-16" type="date" name="from" id="from" v-model='from' @change="goToPageOne">
                     <label for="to">To:</label>
-                    <input type="date" name="to" id="to" v-model='to' @change="goToPageOne">
+                    <input class="col-span-3 mr-16" type="date" name="to" id="to" v-model='to' @change="goToPageOne">
+                    <div class="col-span-3"><br/></div>
+                    <div class="col-span-3"><br/></div>
+                    <div class="col-span-3"><br/></div>
+
                 </div>
-                <div>
-                    <h1>Totals</h1>
+                <div class="col-span-4 grid grid-cols-2 border">
+                    <h1 class="col-span-2">Totals for Period</h1>
                     <label for="totalKcal">Calories</label>
                     <input type="text" name="totalKcal" id="totalKcal" :value="totalKcal" disabled>
 
@@ -32,8 +35,8 @@
                     <label for="totalPotassium">Potassium</label>
                     <input type="text" name="totalPotassium" id="totalPotassium" :value="totalPotassium" disabled>
                 </div>
-                <div>
-                    <h1>Averages</h1>
+                <div class="col-span-4 grid grid-cols-2 border">
+                    <h1 class="col-span-2">Averages for Period</h1>
                     <label for="averageKcal">Calories</label>
                     <input type="text" name="averageKcal" id="averageKcal" :value="averageKcal" disabled>
 
