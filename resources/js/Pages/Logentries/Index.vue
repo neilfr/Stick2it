@@ -13,7 +13,7 @@
         <div class="container">
             <div class="grid grid-cols-12 gap-2">
                 <div class="col-span-4 grid grid-cols-4 place-items-start border p-2">
-                    <h3 class="col-span-4 font-bold text-l text-gray-800">Period</h3>
+                    <h3 class="col-span-4 font-bold text-l text-gray-800 my-2">Period</h3>
                     <label for="from">From:</label>
                     <input class="col-span-3 mr-16" type="date" name="from" id="from" v-model='from' @change="goToPageOne">
                     <label for="to">To:</label>
@@ -24,7 +24,7 @@
 
                 </div>
                 <div class="col-span-4 grid grid-cols-2 border p-2">
-                    <h1 class="col-span-2 font-bold text-l text-gray-800">Totals for Period</h1>
+                    <h1 class="col-span-2 font-bold text-l text-gray-800 my-2">Totals for Period</h1>
                     <label for="totalKcal">Calories</label>
                     <input type="text" name="totalKcal" id="totalKcal" :value="totalKcal" disabled>
 
@@ -41,7 +41,7 @@
                     <input type="text" name="totalPotassium" id="totalPotassium" :value="totalPotassium" disabled>
                 </div>
                 <div class="col-span-4 grid grid-cols-2 border p-2">
-                    <h1 class="col-span-2 font-bold text-l text-gray-800">Averages for Period</h1>
+                    <h1 class="col-span-2 font-bold text-l text-gray-800 my-2">Averages for Period</h1>
                     <label for="averageKcal">Calories</label>
                     <input type="text" name="averageKcal" id="averageKcal" :value="averageKcal" disabled>
 
@@ -70,7 +70,7 @@
                     <th class="text-left translate-x-4 transform -rotate-45 origin-bottom-left">Potassium</th>
                     <th class="text-left translate-x-4 transform -rotate-45 origin-bottom-left">Actions</th>
                 </tr>
-                <tr v-for="logentry in logentries.data" :key="logentry.id" class="odd:bg-gray-100 leading-8">
+                <tr v-for="logentry in logentries.data" :key="logentry.id" class="odd:bg-gray-100 leading-9">
                     <td class="text-center">{{logentry.consumed_at}}</td>
                     <td class="truncate">{{logentry.description}}</td>
                     <td>{{logentry.quantity}}</td>

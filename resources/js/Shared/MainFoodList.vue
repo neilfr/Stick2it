@@ -31,11 +31,11 @@
                 <td>{{food.carbohydrate}}</td>
                 <td>{{food.potassium}}</td>
                 <td>{{food.base_quantity}}</td>
-                <td class="text-center">
+                <td class="text-center flex justify-between">
                     <button v-if="food.editable" @click="edit(food)" :id="food.id">
                         <img class="w-6" src="/images/edit-pencil.svg">
                     </button>
-                    <button class="ml-4" v-if="food.editable" @click="destroy(food)" :id="food.id">
+                    <button v-if="food.editable" @click="destroy(food)" :id="food.id">
                         <img class="w-6" src="/images/trash.svg">
                     </button>
                     <button v-if="!food.editable" @click="view(food)" :id="food.id">
