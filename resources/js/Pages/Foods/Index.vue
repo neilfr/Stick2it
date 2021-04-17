@@ -12,24 +12,24 @@
         </template>
         <div class="max-w-7xl mx-auto pb-2 px-4 sm:px-6 lg:px-8">
             <section class="py-2 grid grid-cols-12 gap-2">
-                <label for="aliasSearch">Alias:</label>
-                <input class="border col-span-3" type="text" name="aliasSearch" id="aliasSearch" @input="goToPageOne" v-model="aliasSearchText" placeholder="Alias"/>
-                <div class="col-span-8"></div>
+                <label class="col-span-2" for="aliasSearch">QAlias:</label>
+                <input class="border col-span-4" type="text" name="aliasSearch" id="aliasSearch" @input="goToPageOne" v-model="aliasSearchText" placeholder="Alias"/>
+                <div class="col-span-6"></div>
 
-                <label for="descriptionSearch">Description:</label>
-                <input class="border col-span-3" type="text" name="descriptionSearch" id="descriptionSearch" @input="goToPageOne" v-model="descriptionSearchText" placeholder="Description"/>
-                <div class="col-span-8"></div>
+                <label class="col-span-2" for="descriptionSearch">Description:</label>
+                <input class="border col-span-4" type="text" name="descriptionSearch" id="descriptionSearch" @input="goToPageOne" v-model="descriptionSearchText" placeholder="Description"/>
+                <div class="col-span-6"></div>
 
-                <label for="foodgroups">Food Group:</label>
-                <select class="border col-span-3" name="foodgroups" id="foodgroups" v-model="foodgroupFilter" @change="goToPageOne">
+                <label class="col-span-2" for="foodgroups">Food Group:</label>
+                <select class="border col-span-4" name="foodgroups" id="foodgroups" v-model="foodgroupFilter" @change="goToPageOne">
                     <option value="">All</option>
                     <option v-for="foodgroup in foodgroups.data" :key="foodgroup.id" :value="foodgroup.id">
                         {{ foodgroup.description }}
                     </option>
                 </select>
-                <div class="col-span-8"></div>
+                <div class="col-span-6"></div>
 
-                <div class="flex">
+                <div class="flex col-span-2">
                     <p>Favourites:</p>
                 </div>
                 <div class="ml-2 col-span-2">
@@ -38,7 +38,7 @@
                     <label for="favouriteNo">No</label>
                     <input type="radio" name="favourites" id="favouriteNo" value="no" checked v-model="favouritesFilter" @change="goToPageOne">
                 </div>
-                <div class="col-span-9"></div>
+                <div class="col-span-8"></div>
             </section>
             <section class="py-2">
                 <main-food-list :foods="foods.data" @view="show" @edit="show" @destroy="destroy" @favourite="toggleFavourite"></main-food-list>

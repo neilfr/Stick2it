@@ -53,7 +53,7 @@ class LogentryController extends Controller
             ->aliasSearch($request->query('aliasSearch'))
             ->favouritesFilter($request->query('favouritesFilter') ? $request->query('favouritesFilter') : 'yes')
             ->with('ingredients')
-            ->paginate(Config::get('ml2.paginator.per_page'));
+            ->paginate(Config::get('stick2it.paginator.per_page'));
 
         return Inertia::render('Logentries/Create',[
             'foods' => FoodResource::collection($foods),
@@ -79,7 +79,7 @@ class LogentryController extends Controller
             ->aliasSearch($request->query('aliasSearch'))
             ->favouritesFilter($request->query('favouritesFilter'))
             ->with('ingredients')
-            ->paginate(Config::get('ml2.paginator.per_page'));
+            ->paginate(Config::get('stick2it.paginator.per_page'));
 
         return Inertia::render('Logentries/Edit',[
             'logentry' => new LogentryResource($logentry),
