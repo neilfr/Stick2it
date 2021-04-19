@@ -11,10 +11,6 @@
             </div>
         </template>
     <div>
-        <div v-if="food.data.editable">
-            <button class="border rounded" @click="updateFood">Update Food</button>
-            <button class="border rounded" @click="setToRecommendedValues">Set to Recommended Values</button>
-        </div>
         <div class="grid grid-cols-12 gap-2">
             <p class="col-span-12" v-if="errors.description">{{errors.description}}</p>
             <label class="col-span-2" for="description">Description:</label>
@@ -25,48 +21,67 @@
             <label class="col-span-2" for="alias">Alias:</label>
             <input class="border rounded" id="alias" type="text" :readonly="!food.data.editable" v-model="food.data.alias"/>
             <div class="col-span-9"></div>
-            <!-- <span></span> -->
-            <span v-if="food.data.editable">Current</span>
+            <span class="col-span-2" v-if="food.data.editable"></span>
+            <span class="col-span-2" v-if="food.data.editable">Current</span>
             <!-- <span v-if="!food.data.editable"></span> -->
-            <span v-if="food.data.editable">Recommended</span>
+            <span class="col-span-8" v-if="food.data.editable">Recommended</span>
             <!-- <span v-if="!food.data.editable"></span> -->
 
             <p class="col-span-12" v-if="errors.kcal">{{errors.kcal}}</p>
             <label class="col-span-2" for="kcal">KCal:</label>
             <input class="border rounded" id="kcal" type="number" :readonly="!food.data.editable" v-model="food.data.kcal" min="0"/>
-            <input v-if="food.data.editable" class ="border rounded" id="calc_kcal" type="number" readonly v-model="calculatedKCal">
+            <div v-if="food.data.editable"></div>
+            <input v-if="food.data.editable" class="border rounded" id="calc_kcal" type="number" readonly v-model="calculatedKCal">
             <div class="col-span-9" v-if="!food.data.editable"></div>
+            <div class="col-span-7" v-if="food.data.editable"></div>
 
-            <p class="col-span-2" v-if="errors.protein">{{errors.protein}}</p>
+            <p class="col-span-12" v-if="errors.protein">{{errors.protein}}</p>
             <label class="col-span-2" for="protein">Protein:</label>
             <input class="border rounded" id="protein" type="number" :readonly="!food.data.editable" v-model="food.data.protein" min="0"/>
-            <input v-if="food.data.editable" class ="border rounded" id="calc_protein" type="number" readonly v-model="calculatedProtein">
+            <div v-if="food.data.editable"></div>
+            <input v-if="food.data.editable" class="border rounded" id="calc_protein" type="number" readonly v-model="calculatedProtein">
             <div class="col-span-9" v-if="!food.data.editable"></div>
+            <div class="col-span-7" v-if="food.data.editable"></div>
 
-            <p class="col-span-2" v-if="errors.fat">{{errors.fat}}</p>
+            <p class="col-span-12" v-if="errors.fat">{{errors.fat}}</p>
             <label class="col-span-2" for="fat">Fat:</label>
             <input class="border rounded" id="fat" type="number" :readonly="!food.data.editable" v-model="food.data.fat" min="0"/>
-            <input v-if="food.data.editable" class ="border rounded" id="calc_fat" type="number" readonly v-model="calculatedFat">
+            <div v-if="food.data.editable"></div>
+            <input v-if="food.data.editable" class="border rounded" id="calc_fat" type="number" readonly v-model="calculatedFat">
             <div class="col-span-9" v-if="!food.data.editable"></div>
+            <div class="col-span-7" v-if="food.data.editable"></div>
 
-            <p class="col-span-2" v-if="errors.carbohydrate">{{errors.carbohydrate}}</p>
+            <p class="col-span-12" v-if="errors.carbohydrate">{{errors.carbohydrate}}</p>
             <label class="col-span-2" for="carbohydrate">Carbohydrate:</label>
             <input class="border rounded" id="carbohydrate" type="number" :readonly="!food.data.editable" v-model="food.data.carbohydrate" min="0"/>
-            <input v-if="food.data.editable" class ="border rounded" id="calc_carbohydrate" type="number" readonly v-model="calculatedCarbohydrate">
+            <div v-if="food.data.editable"></div>
+            <input v-if="food.data.editable" class="border rounded" id="calc_carbohydrate" type="number" readonly v-model="calculatedCarbohydrate">
             <div class="col-span-9" v-if="!food.data.editable"></div>
+            <div class="col-span-7" v-if="food.data.editable"></div>
 
-            <p class="col-span-2" v-if="errors.potassium">{{errors.potassium}}</p>
+            <p class="col-span-12" v-if="errors.potassium">{{errors.potassium}}</p>
             <label class="col-span-2" for="potassium">Potassium:</label>
             <input class="border rounded" id="potassium" type="number" :readonly="!food.data.editable" v-model="food.data.potassium" min="0"/>
-            <input v-if="food.data.editable" class ="border rounded" id="calc_potassium" type="number" readonly v-model="calculatedPotassium">
+            <div v-if="food.data.editable"></div>
+            <input v-if="food.data.editable" class="border rounded" id="calc_potassium" type="number" readonly v-model="calculatedPotassium">
             <div class="col-span-9" v-if="!food.data.editable"></div>
+            <div class="col-span-7" v-if="food.data.editable"></div>
 
-            <p class="col-span-2" v-if="errors.base_quantity">{{errors.base_quantity}}</p>
+            <p class="col-span-12" v-if="errors.base_quantity">{{errors.base_quantity}}</p>
             <label class="col-span-2" for="base_quantity">Base Quantity:</label>
             <input class="border rounded" id="base_quantity" type="number" :readonly="!food.data.editable" v-model="food.data.base_quantity" min="0"/>
-            <input v-if="food.data.editable" class ="border rounded" id="calc_base_quantity" type="number" readonly v-model="calculatedBaseQuantity">
+            <div v-if="food.data.editable"></div>
+            <input v-if="food.data.editable" class="border rounded" id="calc_base_quantity" type="number" readonly v-model="calculatedBaseQuantity">
             <div class="col-span-9" v-if="!food.data.editable"></div>
+            <div class="col-span-7" v-if="food.data.editable"></div>
 
+        </div>
+
+        <div class="grid grid-cols-12 my-4">
+            <div class="col-span-5 flex justify-between" v-if="food.data.editable">
+                <button class="border rounded px-2" @click="updateFood">Update Food</button>
+                <button class="border rounded px-2" @click="setToRecommendedValues">Set to Recommended Values</button>
+            </div>
         </div>
 
         <ingredients-list

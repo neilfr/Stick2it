@@ -1,7 +1,14 @@
 <template>
   <div>
-    <h2>Ingredients</h2>
-    <button @click="showAddIngredientModal">Add Ingredient</button>
+    <div class="flex justify-between">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            Ingredients
+        </h2>
+        <button @click="showAddIngredientModal">
+            <img class="w-6" src="/images/add-outline.svg">
+        </button>
+    </div>
+
     <modal :showing="this.showAddIngredientModalProp" @close="closeAddIngredientModal">
         <template v-slot:title>
             Add Ingredient
