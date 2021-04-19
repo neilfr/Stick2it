@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex justify-between">
+    <div class="flex justify-between mt-8">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             Ingredients
         </h2>
@@ -16,28 +16,35 @@
         <ingredient-add :foodgroups="foodgroups" :foods="foods" :food="food"></ingredient-add>
     </modal>
 
-      <table>
+      <table class="table-fixed w-full mt-8">
         <tr>
             <th>Alias</th>
-            <th>Description</th>
-            <th>KCal</th>
-            <th>Protein</th>
-            <th>Fat</th>
-            <th>Carbohydrate</th>
-            <th>Potassium</th>
-            <th>Quantity</th>
-            <th>Actions</th>
+            <th class="w-1/3">Description</th>
+            <th class="text-left translate-x-4 transform -rotate-45 origin-bottom-left">KCal</th>
+            <th class="text-left translate-x-4 transform -rotate-45 origin-bottom-left">Protein</th>
+            <th class="text-left translate-x-4 transform -rotate-45 origin-bottom-left">Fat</th>
+            <th class="text-left translate-x-4 transform -rotate-45 origin-bottom-left">Carbohydrate</th>
+            <th class="text-left translate-x-4 transform -rotate-45 origin-bottom-left">Potassium</th>
+            <th class="text-left translate-x-4 transform -rotate-45 origin-bottom-left">Quantity</th>
+            <th class="text-left translate-x-4 transform -rotate-45 origin-bottom-left">Actions</th>
         </tr>
-        <tr v-for="ingredient in food.ingredients" :key="ingredient.food_ingredient_id">
+        <tr class="odd:bg-gray-100 leading-9" v-for="ingredient in food.ingredients" :key="ingredient.food_ingredient_id">
             <td>{{ingredient.alias}}</td>
-            <td>{{ingredient.description}}</td>
+            <td class="truncate">{{ingredient.description}}</td>
             <td>{{Math.round(ingredient.kcal)}}</td>
             <td>{{Math.round(ingredient.protein)}}</td>
             <td>{{Math.round(ingredient.fat)}}</td>
             <td>{{Math.round(ingredient.carbohydrate)}}</td>
             <td>{{Math.round(ingredient.potassium)}}</td>
             <td>{{ingredient.quantity}}</td>
-            <td><button @click="showIngredientQuantityModal(ingredient)">Edit</button><button @click="removeIngredient(ingredient)">Delete</button></td>
+            <td class="text-center flex justify-between">
+                <button @click="showIngredientQuantityModal(ingredient)">
+                    <img class="w-6" src="/images/edit-pencil.svg">
+                </button>
+                <button @click="removeIngredient(ingredient)">
+                    <img class="w-6" src="/images/trash.svg">
+                </button>
+            </td>
         </tr>
         <modal :showing="this.showIngredientQuantityModalProp" @close="closeIngredientQuantityModal">
             <template v-slot:title>
