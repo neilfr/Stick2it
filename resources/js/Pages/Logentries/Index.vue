@@ -15,9 +15,9 @@
                 <div class="col-span-4 grid grid-cols-4 place-items-start border p-2">
                     <h3 class="col-span-4 font-bold text-l text-gray-800 my-2">Period</h3>
                     <label for="from">From:</label>
-                    <input class="col-span-3 mr-16" type="date" name="from" id="from" v-model='from' @change="goToPageOne">
+                    <input class="col-span-3 border mr-16 mb-2" type="date" name="from" id="from" v-model='from' @change="goToPageOne">
                     <label for="to">To:</label>
-                    <input class="col-span-3 mr-16" type="date" name="to" id="to" v-model='to' @change="goToPageOne">
+                    <input class="col-span-3 border mr-16" type="date" name="to" id="to" v-model='to' @change="goToPageOne">
                     <div class="col-span-3"><br/></div>
                     <div class="col-span-3"><br/></div>
                     <div class="col-span-3"><br/></div>
