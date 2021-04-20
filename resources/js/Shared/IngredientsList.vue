@@ -9,14 +9,14 @@
         </button>
     </div>
 
-    <modal :showing="this.showAddIngredientModalProp" @close="closeAddIngredientModal">
+    <modal class="z-30" :showing="this.showAddIngredientModalProp" @close="closeAddIngredientModal">
         <template v-slot:title>
             Add Ingredient
         </template>
         <ingredient-add :foodgroups="foodgroups" :foods="foods" :food="food"></ingredient-add>
     </modal>
 
-      <table class="table-fixed w-full mt-8">
+      <table class="z-20 table-fixed w-full mt-8">
         <tr>
             <th>Alias</th>
             <th class="w-1/3">Description</th>
