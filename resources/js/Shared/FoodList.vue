@@ -13,7 +13,7 @@
             <th class="text-left translate-x-4 transform -rotate-45 origin-bottom-left">Base Quantity</th>
             <th class="text-left translate-x-4 transform -rotate-45 origin-bottom-left">Actions</th>
         </tr>
-        <tr v-for="food in foods.data" :key="food.id" class="odd:bg-gray-100">
+        <tr v-for="food in foods.data" :key="food.id" class="odd:bg-gray-100 leading-10">
             <td>
                 <input type="checkbox" :id="food.id" :value="food.favourite" :checked="food.favourite" disabled/>
             </td>
@@ -27,11 +27,11 @@
             <td>{{food.base_quantity}}</td>
             <td>
                 <button
-                    @click="selectFood"
+                    @click="selectFood(food)"
                     :id="food.id"
                     :selectedFoodBaseQuantity="food.quantity"
                 >
-                    Add
+                    <img class="w-6" src="/images/add-outline.svg">
                 </button>
             </td>
         </tr>
@@ -85,8 +85,8 @@ export default {
         goToPage(){
             this.$emit('pageUpdated', this.page);
         },
-        selectFood(e){
-            this.$emit('selectedFood', e.target.id);
+        selectFood(food){
+            this.$emit('selectedFood', food.id);
         }
     }
 }

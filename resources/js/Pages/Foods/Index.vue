@@ -13,11 +13,11 @@
         <div class="max-w-7xl pb-2">
             <section class="py-2 grid grid-cols-12 gap-2">
                 <label class="col-span-2" for="aliasSearch">Alias:</label>
-                <input class="border col-span-4" type="text" name="aliasSearch" id="aliasSearch" @input="goToPageOne" v-model="aliasSearchText" placeholder="Alias"/>
+                <input class="border col-span-4" type="text" name="aliasSearch" id="aliasSearch" @input="goToPageOne" v-model="aliasSearchText" placeholder="Alias Search"/>
                 <div class="col-span-6"></div>
 
                 <label class="col-span-2" for="descriptionSearch">Description:</label>
-                <input class="border col-span-4" type="text" name="descriptionSearch" id="descriptionSearch" @input="goToPageOne" v-model="descriptionSearchText" placeholder="Description"/>
+                <input class="border col-span-4" type="text" name="descriptionSearch" id="descriptionSearch" @input="goToPageOne" v-model="descriptionSearchText" placeholder="Description Search"/>
                 <div class="col-span-6"></div>
 
                 <label class="col-span-2" for="foodgroups">Food Group:</label>

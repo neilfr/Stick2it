@@ -1,29 +1,39 @@
 <template>
-  <div class="container">
-    <label for="foodgroups">Food Group:</label>
-    <select name="foodgroups" id="foodgroups" v-model="foodgroupFilter" @change="updateFoodList">
-        <option value="">All</option>
-        <option v-for="foodgroup in foodgroups.data" :key="foodgroup.id" :value="foodgroup.id">
-            {{ foodgroup.description }}
-        </option>
-    </select>
-    <br/>
-    <label for="descriptionSearch">Description Search:</label>
-    <input type="text" name="descriptionSearch" id="descriptionSearch" @input="updateFoodList" v-model="descriptionSearchText"/>
-    <br/>
-    <label for="aliasSearch">Alias Search:</label>
-    <input type="text" name="aliasSearch" id="aliasSearch" @input="updateFoodList" v-model="aliasSearchText"/>
-    <div class="flex">
-        <p>Favourites:</p>
-        <div class="ml-2">
-            <label for="favouriteYes">Yes</label>
-            <input type="radio" name="favourites" id="favouriteYes" value="yes" v-model="favouritesFilter" @change="updateFoodList">
-            <label for="favouriteNo">No</label>
-            <input type="radio" name="favourites" id="favouriteNo" value="no" checked v-model="favouritesFilter" @change="updateFoodList">
-        </div>
+    <div class="container">
+        <section class="py-2 grid grid-cols-12 gap-2 mb-8">
+            <label class="col-span-2" for="aliasSearch">Alias:</label>
+            <input class="border col-span-4" type="text" name="aliasSearch" id="aliasSearch" @input="updateFoodList" v-model="aliasSearchText" placeholder="Alias Search"/>
+            <div class="col-span-6"></div>
+
+            <label class="col-span-2" for="descriptionSearch" placeholder="Description Search">Description:</label>
+            <input class="border col-span-4" type="text" name="descriptionSearch" id="descriptionSearch" @input="updateFoodList" v-model="descriptionSearchText" placeholder="Description Search"/>
+            <div class="col-span-6"></div>
+
+            <label class="col-span-2" for="foodgroups">Food Group:</label>
+
+            <select class="border col-span-4" name="foodgroups" id="foodgroups" v-model="foodgroupFilter" @change="updateFoodList">
+                <option value="">All</option>
+                <option v-for="foodgroup in foodgroups.data" :key="foodgroup.id" :value="foodgroup.id">
+                    {{ foodgroup.description }}
+                </option>
+            </select>
+            <div class="col-span-6"></div>
+
+            <div class="flex col-span-2">
+                <p>Favourites:</p>
+            </div>
+            <div>
+                <label for="favouriteYes">Yes</label>
+                <input type="radio" name="favourites" id="favouriteYes" value="yes" v-model="favouritesFilter" @change="updateFoodList">
+            </div>
+            <div>
+                <label for="favouriteNo">No</label>
+                <input type="radio" name="favourites" id="favouriteNo" value="no" checked v-model="favouritesFilter" @change="updateFoodList">
+            </div>
+            <div class="col-span-6"></div>
+        </section>
+        <food-list @pageUpdated="updateFoodList" @selectedFood="addFoodAsIngredient" :foods="foods"></food-list>
     </div>
-    <food-list @pageUpdated="updateFoodList" @selectedFood="addFoodAsIngredient" :foods="foods"></food-list>
-  </div>
 </template>
 
 <script>
