@@ -61,69 +61,78 @@
 
             <div v-if="showSelectFoodModal" class="fixed inset-0 w-full h-screen flex items-center justify-center overflow-auto">
                 <div class="w-full max-w-6xl bg-white shadow-lg rounded-lg p-8">
-                <label for="foodgroups">Food Group:</label>
-                <select name="foodgroups" id="foodgroups" v-model="foodgroupFilter" @change="goToPageOne">
-                    <option value="">All</option>
-                    <option v-for="foodgroup in foodgroups.data" :key="foodgroup.id" :value="foodgroup.id">
-                        {{ foodgroup.description }}
-                    </option>
-                </select>
-                <br>
-                <label for="descriptionSearch">Description Search:</label>
-                <input type="text" name="descriptionSearch" id="descriptionSearch" @input="goToPageOne" v-model="descriptionSearchText"/>
-                <br/>
-                <label for="aliasSearch">Alias Search:</label>
-                <input type="text" name="aliasSearch" id="aliasSearch" @input="goToPageOne" v-model="aliasSearchText"/>
-                <div class="flex">
-                    <p>Favourites:</p>
-                    <div class="ml-2">
-                        <label for="favouriteYes">Yes</label>
-                        <input type="radio" name="favourites" id="favouriteYes" value="yes" v-model="favouritesFilter" @change="goToPageOne">
-                        <label for="favouriteNo">No</label>
-                        <input type="radio" name="favourites" id="favouriteNo" value="no" checked v-model="favouritesFilter" @change="goToPageOne">
-                    </div>
-                </div>
-                <table>
-                    <tr>
-                        <th>Favourite</th>
-                        <th>Alias</th>
-                        <th>Description</th>
-                        <th>Base Quantity</th>
-                        <th>KCal</th>
-                        <th>Protein</th>
-                        <th>Fat</th>
-                        <th>Carbohydrate</th>
-                        <th>Potassium</th>
-                        <th>Quantity</th>
-                        <th>Actions</th>
-                    </tr>
-                    <tr v-for="food in foods.data" :key="food.id">
-                        <td>
-                            <div class="ml-2">
-                                <input type="checkbox" name="favourites" id="favourite" disabled :checked="food.favourite">
+                    <section class="py-2 grid grid-cols-12 gap-2">
+                        <label class="col-span-2" for="aliasSearch">Alias:</label>
+                        <input class="border col-span-4" type="text" name="aliasSearch" id="aliasSearch" @input="goToPageOne" v-model="aliasSearchText" placeholder="Alias Search"/>
+                        <div class="col-span-6"></div>
+
+                        <label class="col-span-2" for="descriptionSearch">Description:</label>
+                        <input class="border col-span-4" type="text" name="descriptionSearch" id="descriptionSearch" @input="goToPageOne" v-model="descriptionSearchText" placeholder="Description Search"/>
+                        <div class="col-span-6"></div>
+
+                        <label class="col-span-2" for="foodgroups">Food Group:</label>
+                        <select class="border col-span-4" name="foodgroups" id="foodgroups" v-model="foodgroupFilter" @change="goToPageOne">
+                            <option value="">All</option>
+                            <option v-for="foodgroup in foodgroups.data" :key="foodgroup.id" :value="foodgroup.id">
+                                {{ foodgroup.description }}
+                            </option>
+                        </select>
+                        <div class="col-span-6"></div>
+
+                        <div class="flex col-span-2">
+                            <p>Favourites:</p>
+                        </div>
+                        <div>
+                            <label for="favouriteYes">Yes</label>
+                            <input type="radio" name="favourites" id="favouriteYes" value="yes" v-model="favouritesFilter" @change="goToPageOne">
+                        </div>
+                        <div>
+                            <label for="favouriteNo">No</label>
+                            <input type="radio" name="favourites" id="favouriteNo" value="no" v-model="favouritesFilter" @change="goToPageOne">
                             </div>
-                        </td>
-                        <td>{{food.alias}}</td>
-                        <td>{{food.description}}</td>
-                        <td>{{food.base_quantity}}</td>
-                        <td>{{Math.round(food.kcal)}}</td>
-                        <td>{{Math.round(food.protein)}}</td>
-                        <td>{{Math.round(food.fat)}}</td>
-                        <td>{{Math.round(food.carbohydrate)}}</td>
-                        <td>{{Math.round(food.potassium)}}</td>
-                        <td>{{food.quantity}}</td>
-                        <td><button @click="selectFood(food)">Select</button></td>
-                    </tr>
-                </table>
-                <div>
-                    <button @click="goToPageOne">First</button>
-                    <button @click="previousPage">Previous</button>
-                    <button @click="nextPage">Next</button>
-                    <button @click="lastPage">Last</button>
-                </div>
-                <div>
-                    <p>Page: {{foods.meta.current_page}} of {{foods.meta.last_page}}</p>
-                </div>
+                        <div class="col-span-6"></div>
+                    </section>
+                    <table class="table-fixed w-full mt-2">
+                        <tr>
+                            <th>Favourite</th>
+                            <th>Alias</th>
+                            <th class="w-1/3">Description</th>
+                            <th class="text-left translate-x-4 transform -rotate-45 origin-bottom-left">Base Quantity</th>
+                            <th class="text-left translate-x-4 transform -rotate-45 origin-bottom-left">KCal</th>
+                            <th class="text-left translate-x-4 transform -rotate-45 origin-bottom-left">Protein</th>
+                            <th class="text-left translate-x-4 transform -rotate-45 origin-bottom-left">Fat</th>
+                            <th class="text-left translate-x-4 transform -rotate-45 origin-bottom-left">Carbohydrate</th>
+                            <th class="text-left translate-x-4 transform -rotate-45 origin-bottom-left">Potassium</th>
+                            <th class="text-left translate-x-4 transform -rotate-45 origin-bottom-left">Actions</th>
+                        </tr>
+                        <tr v-for="food in foods.data" :key="food.id" class="odd:bg-gray-100 leading-9">
+                            <td>
+                                <div class="ml-2">
+                                    <input type="checkbox" name="favourites" id="favourite" disabled :checked="food.favourite">
+                                </div>
+                            </td>
+                            <td class="w-5 text-center">{{food.alias}}</td>
+                            <td class="truncate">{{food.description}}</td>
+                            <td>{{food.base_quantity}}</td>
+                            <td>{{Math.round(food.kcal)}}</td>
+                            <td>{{Math.round(food.protein)}}</td>
+                            <td>{{Math.round(food.fat)}}</td>
+                            <td>{{Math.round(food.carbohydrate)}}</td>
+                            <td>{{Math.round(food.potassium)}}</td>
+                            <td>
+                                <button @click="selectFood(food)">
+                                    <img class="w-6" src="/images/add-outline.svg">
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="grid grid-cols-12 gap-2 mt-2">
+                        <button class="col-span-1 border rounded" @click="goToPageOne">First</button>
+                        <button class="col-span-1 border rounded" @click="previousPage">Previous</button>
+                        <button class="col-span-1 border rounded" @click="nextPage">Next</button>
+                        <button class="col-span-1 border rounded" @click="lastPage">Last</button>
+                        <p class="col-span-2">Page: {{foods.meta.current_page}} of {{foods.meta.last_page}}</p>
+                    </div>
                 </div>
             </div>
         </div>
