@@ -168,7 +168,7 @@ export default {
             descriptionSearchText: '',
             aliasSearchText: '',
             foodgroupFilter: '',
-            favouritesFilter: '',
+            favouritesFilter: 'yes',
             page: 1,
             selectedFood: this.food,
         }
