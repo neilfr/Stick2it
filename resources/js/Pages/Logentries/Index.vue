@@ -130,14 +130,6 @@ export default {
             myhello:''
         }
     },
-    mounted(){
-        this.today = new Date()
-        this.to = this.today.toISOString().substr(0,10);
-
-        this.lastWeek = new Date();
-        this.lastWeek.setDate(this.lastWeek.getDate()-7);
-        this.from = this.lastWeek.toISOString().substr(0,10);
-    },
     methods:{
         add () {
             let url = `${this.$route("logentries.create")}`;
