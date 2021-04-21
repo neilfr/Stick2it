@@ -11,7 +11,6 @@
             </div>
         </template>
         <div>
-            <form method="POST" @submit.prevent="submit">
                 <div class="grid grid-cols-12 gap-2">
                     <button class="border rounded col-span-2" @click="handlePickFood">Pick Food</button>
                     <button class="border rounded col-span-2" :disabled="!readyToSave" @click="store">Save</button>
@@ -55,12 +54,13 @@
                     <label class="py-2 col-span-2" for="potassium">Potassium:</label>
                     <input disabled class="border rounded col-span-2" id="potassium" type="number" min="0" :value="logentry.potassium">
                     <p class="col-span-8"></p>
-
                 </div>
-            </form>
 
             <div v-if="showSelectFoodModal" class="fixed inset-0 w-full h-screen flex items-center justify-center overflow-auto">
                 <div class="w-full max-w-6xl bg-white shadow-lg rounded-lg p-8">
+                    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                        Pick Food
+                    </h2>
                     <section class="py-2 grid grid-cols-12 gap-2">
                         <label class="col-span-2" for="aliasSearch">Alias:</label>
                         <input class="border col-span-4" type="text" name="aliasSearch" id="aliasSearch" @input="goToPageOne" v-model="aliasSearchText" placeholder="Alias Search"/>
