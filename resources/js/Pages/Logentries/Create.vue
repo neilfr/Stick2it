@@ -14,9 +14,9 @@
             <form method="POST" @submit.prevent="submit">
                 <div class="grid grid-cols-12 gap-2">
                     <button class="border rounded col-span-2" @click="handlePickFood">Pick Food</button>
-                    <div class="col-span-1"></div>
                     <button class="border rounded col-span-2" :disabled="!readyToSave" @click="store">Save</button>
-                    <div class="col-span-7"></div>
+                    <div class="col-span-8"></div>
+
                     <p class="col-span-12" v-if="errors.consumed_at">{{errors.consumed_at}}</p>
                     <label class="py-2 col-span-2" for="consumed_at">Consumed at:</label>
                     <input class="border rounded col-span-2" id="consumed_at_date" type="date" v-model="logentry.consumed_at">
