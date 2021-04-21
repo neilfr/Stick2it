@@ -1,51 +1,64 @@
 <template>
     <app-layout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Add Log Entry
-            </h2>
+            <div class="flex justify-between">
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                    Add Log Entry
+                </h2>
+                <button @click="cancel">
+                    <img class="w-6" src="/images/close.svg">
+                </button>
+            </div>
         </template>
         <div>
-            <h1>Create Log Entry</h1>
             <form method="POST" @submit.prevent="submit">
-                <div class="grid grid-cols-2 gap-2">
-                    <p class="col-span-2" v-if="errors.consumed_at">{{errors.consumed_at}}</p>
-                    <label class="p-2" for="consumed_at">Consumed at:</label>
-                    <input class="border rounded" id="consumed_at_date" type="date" v-model="logentry.consumed_at">
+                <div class="grid grid-cols-12 gap-2">
+                    <button class="border rounded col-span-2" @click="handlePickFood">Pick Food</button>
+                    <div class="col-span-1"></div>
+                    <button class="border rounded col-span-2" :disabled="!readyToSave" @click="store">Save</button>
+                    <div class="col-span-7"></div>
+                    <p class="col-span-12" v-if="errors.consumed_at">{{errors.consumed_at}}</p>
+                    <label class="py-2 col-span-2" for="consumed_at">Consumed at:</label>
+                    <input class="border rounded col-span-2" id="consumed_at_date" type="date" v-model="logentry.consumed_at">
+                    <p class="col-span-8"></p>
 
-                    <p class="col-span-2" v-if="errors.quantity">{{errors.quantity}}</p>
-                    <label class="p-2" for="quantity">Quantity:</label>
-                    <input class="border rounded" id="quantity" type="number" min="0" v-model="logentry.quantity" @change="updateQuantity">
+                    <p class="col-span-12" v-if="errors.quantity">{{errors.quantity}}</p>
+                    <label class="py-2 col-span-2" for="quantity">Quantity:</label>
+                    <input class="border rounded col-span-2" id="quantity" type="number" min="0" v-model="logentry.quantity" @change="updateQuantity">
+                    <p class="col-span-8"></p>
 
-                    <p class="col-span-2" v-if="errors.description">{{errors.consumed_at}}</p>
-                    <label class="p-2" for="description">Description:</label>
-                    <input disabled class="border rounded" id="description" type="text" :value="this.selectedFood.description">
+                    <p class="col-span-12" v-if="errors.description">{{errors.consumed_at}}</p>
+                    <label class="py-2 col-span-2" for="description">Description:</label>
+                    <input disabled class="border rounded col-span-10" id="description" type="text" :value="this.selectedFood.description">
 
-                    <p class="col-span-2" v-if="errors.kcal">{{errors.kcal}}</p>
-                    <label class="p-2" for="kcal">KCal:</label>
-                    <input disabled class="border rounded" id="kcal" type="number" min="0" :value="logentry.kcal">
+                    <p class="col-span-12" v-if="errors.kcal">{{errors.kcal}}</p>
+                    <label class="py-2 col-span-2" for="kcal">KCal:</label>
+                    <input disabled class="border rounded col-span-2" id="kcal" type="number" min="0" :value="logentry.kcal">
+                    <p class="col-span-8"></p>
 
-                    <p class="col-span-2" v-if="errors.fat">{{errors.fat}}</p>
-                    <label class="p-2" for="fat">Fat:</label>
-                    <input disabled class="border rounded" id="fat" type="number" min="0" :value="logentry.fat">
+                    <p class="col-span-12" v-if="errors.fat">{{errors.fat}}</p>
+                    <label class="py-2 col-span-2" for="fat">Fat:</label>
+                    <input disabled class="border rounded col-span-2" id="fat" type="number" min="0" :value="logentry.fat">
+                    <p class="col-span-8"></p>
 
-                    <p class="col-span-2" v-if="errors.protein">{{errors.protein}}</p>
-                    <label class="p-2" for="protein">Protein:</label>
-                    <input disabled class="border rounded" id="protein" type="number" min="0" :value="logentry.protein">
+                    <p class="col-span-12" v-if="errors.protein">{{errors.protein}}</p>
+                    <label class="py-2 col-span-2" for="protein">Protein:</label>
+                    <input disabled class="border rounded col-span-2" id="protein" type="number" min="0" :value="logentry.protein">
+                    <p class="col-span-8"></p>
 
-                    <p class="col-span-2" v-if="errors.carbohydrate">{{errors.carbohydrate}}</p>
-                    <label class="p-2" for="carbohydrate">Carbohydrate:</label>
-                    <input disabled class="border rounded" id="carbohydrate" type="number" min="0" :value="logentry.carbohydrate">
+                    <p class="col-span-12" v-if="errors.carbohydrate">{{errors.carbohydrate}}</p>
+                    <label class="py-2 col-span-2" for="carbohydrate">Carbohydrate:</label>
+                    <input disabled class="border rounded col-span-2" id="carbohydrate" type="number" min="0" :value="logentry.carbohydrate">
+                    <p class="col-span-8"></p>
 
-                    <p class="col-span-2" v-if="errors.potassium">{{errors.potassium}}</p>
-                    <label class="p-2" for="potassium">Potassium:</label>
-                    <input disabled class="border rounded" id="potassium" type="number" min="0" :value="logentry.potassium">
+                    <p class="col-span-12" v-if="errors.potassium">{{errors.potassium}}</p>
+                    <label class="py-2 col-span-2" for="potassium">Potassium:</label>
+                    <input disabled class="border rounded col-span-2" id="potassium" type="number" min="0" :value="logentry.potassium">
+                    <p class="col-span-8"></p>
 
                 </div>
             </form>
-            <button @click='cancel'>Cancel</button>
-            <button :disabled="!readyToSave" @click="store">Save</button>
-            <button @click="handlePickFood">Pick Food</button>
+
             <div v-if="showSelectFoodModal" class="fixed inset-0 w-full h-screen flex items-center justify-center overflow-auto">
                 <div class="w-full max-w-6xl bg-white shadow-lg rounded-lg p-8">
                 <label for="foodgroups">Food Group:</label>
