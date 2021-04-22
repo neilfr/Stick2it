@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('welcome');
+// Route::get('/', function () {
+//     return view('welcome');
+// })->name('welcome');
 
 // Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 //     return Inertia\Inertia::render('Dashboard');
@@ -27,6 +27,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
         return Inertia\Inertia::render('Dashboard');
     })->name('dashboard');
+
+    Route::get('/', 'LogentryController@index')->name('logentries.index');
 
     Route::get('/foods', 'FoodController@index')->name('foods.index');
     Route::get('/foods/new', 'FoodController@create')->name('foods.create');
