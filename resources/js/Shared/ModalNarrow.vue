@@ -1,8 +1,8 @@
 <template>
     <div v-if="showing" class="fixed inset-0 w-full h-screen flex items-center justify-center overflow-auto">
-        <div class="w-full max-w-6xl bg-white shadow-lg rounded-lg p-8">
-            <div class="flex justify-between">
-                <h2 class="font-semibold text-xl text-gray-800 leading-tight mb-2">
+        <div class="w-full max-w-sm bg-white shadow-lg rounded-lg p-8">
+            <div class="flex justify-between mb-4">
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                     <slot name="title"></slot>
                 </h2>
                 <button @click="close">

@@ -45,7 +45,7 @@ class FoodController extends Controller
         ->aliasSearch($request->query('aliasSearch'))
         ->favouritesFilter($request->query('favouritesFilter'))
         ->with('ingredients')
-        ->paginate(Config::get('ml2.paginator.per_page'));
+        ->paginate(Config::get('stick2it.paginator.per_page'));
 
         if (($food->user_id === auth()->user()->id) || ((bool)$food->foodsource->sharable === true)){
             return Inertia::render('Foods/Show', [

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Food;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -36,7 +37,7 @@ class Logentry extends Model
         ->orderBy('consumed_at', 'DESC');
     }
 
-    public function scopeInDateRange(Builder $query, $from = '2021-04-08', $to = '2021-05-01')
+    public function scopeInDateRange(Builder $query, $from, $to)
     {
         if (is_null($from) && is_null($to)){
             return $query;
