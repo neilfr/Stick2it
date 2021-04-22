@@ -46,16 +46,18 @@
                 </button>
             </td>
         </tr>
-        <modal :showing="this.showIngredientQuantityModalProp" @close="closeIngredientQuantityModal">
-            <template v-slot:title>
-                Change ingredient quantity
-            </template>
-            <update-quantity
-                :id="selectedIngredient.id"
-                :initialValue="selectedIngredient.quantity"
-                @update="update"
-            />
-        </modal>
+        <div>
+            <modal-narrow :showing="this.showIngredientQuantityModalProp" @close="closeIngredientQuantityModal">
+                <template v-slot:title>
+                    Change ingredient quantity
+                </template>
+                <update-quantity
+                    :id="selectedIngredient.id"
+                    :initialValue="selectedIngredient.quantity"
+                    @update="update"
+                />
+            </modal-narrow>
+        </div>
       </table>
     <ingredient-add v-if="showIngredientAdd" :foodgroups="foodgroups" :foods="foods" :food="food"></ingredient-add>
   </div>
@@ -65,6 +67,7 @@
 
 import UpdateNumberModal from "@/Shared/UpdateNumberModal";
 import IngredientAdd from "@/Shared/IngredientAdd";
+import ModalNarrow from "@/Shared/ModalNarrow";
 import Modal from "@/Shared/Modal";
 import UpdateQuantity from '@/Shared/UpdateQuantity.vue';
 
@@ -72,6 +75,7 @@ export default {
     components:{
         UpdateNumberModal,
         IngredientAdd,
+        ModalNarrow,
         Modal,
         UpdateQuantity
     },

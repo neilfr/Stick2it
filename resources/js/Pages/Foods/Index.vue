@@ -75,7 +75,7 @@
                 descriptionSearchText: '',
                 aliasSearchText: '',
                 foodgroupFilter: '',
-                favouritesFilter: '',
+                favouritesFilter: 'no',
             }
         },
         methods:{

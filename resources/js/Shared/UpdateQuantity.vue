@@ -1,7 +1,10 @@
 <template>
   <div>
-        <input :id="id" type="number" min="0" :value="newValue" @input="updateValue"/>
-        <button @click="update">Update</button>
+        <div class="grid grid-cols-2">
+            <label for="id">Quantity:</label>
+            <input class="border rounded mb-2" :id="id" type="number" min="0" :value="newValue" @input="updateValue"/>
+            <button class="border rounded" @click="update">Update</button>
+        </div>
   </div>
 </template>
 
