@@ -58,9 +58,14 @@
 
             <div v-if="showSelectFoodModal" class="fixed inset-0 w-full h-screen flex items-center justify-center overflow-auto">
                 <div class="w-full max-w-6xl bg-white shadow-lg rounded-lg p-8">
-                    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                        Pick Food
-                    </h2>
+                    <div class="flex justify-between">
+                        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                            Pick Food
+                        </h2>
+                        <button @click="closePickFoodModal">
+                            <img class="w-6" src="/images/close.svg">
+                        </button>
+                    </div>
                     <section class="py-2 grid grid-cols-12 gap-2">
                         <label class="col-span-2" for="aliasSearch">Alias:</label>
                         <input class="border col-span-4" type="text" name="aliasSearch" id="aliasSearch" @input="goToPageOne" v-model="aliasSearchText" placeholder="Alias Search"/>
@@ -210,6 +215,9 @@ export default {
         },
         handlePickFood(){
             this.showSelectFoodModal = true;
+        },
+        closePickFoodModal(){
+            this.showSelectFoodModal = false;
         },
         selectFood(food){
             console.log("logentry.quantity", this.logentry.quantity);
