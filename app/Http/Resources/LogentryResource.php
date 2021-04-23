@@ -26,6 +26,7 @@ class LogentryResource extends JsonResource
             'protein' => $this->protein,
             'carbohydrate' => $this->carbohydrate,
             'potassium' => $this->potassium,
+
             'consumed_at' => Carbon::parse($this->consumed_at)->format('Y-m-d'),
         ];
     }

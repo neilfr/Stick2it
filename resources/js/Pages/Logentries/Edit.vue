@@ -160,6 +160,7 @@ export default {
     computed: {
         readyToSave () {
             return this.logentry.data.quantity>0 && !isNaN(new Date(this.logentry.data.consumed_at).getDate()) && this.logentry.data.description!=null;
+
         }
     },
     data() {
@@ -186,6 +187,7 @@ export default {
                     'protein': this.logentry.data.protein,
                     'carbohydrate': this.logentry.data.carbohydrate,
                     'potassium': this.logentry.data.potassium,
+
                     'consumed_at': this.logentry.data.consumed_at
                 }
             )
@@ -211,6 +213,7 @@ export default {
                 this.logentry.data.potassium = Math.round(this.selectedFood.potassium * (this.logentry.data.quantity / this.selectedFood.base_quantity));
             }
         },
+
         goToPageOne(){
             this.page=1;
             this.goToPage(1);

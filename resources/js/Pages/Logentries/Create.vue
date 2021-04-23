@@ -137,6 +137,7 @@
             </div>
         </div>
     </app-layout>
+
 </template>
 
 <script>
@@ -147,6 +148,7 @@ export default {
     components: {
         AppLayout,
     },
+
     props: {
         errors: Object,
         user: Object,
@@ -268,7 +270,59 @@ export default {
             console.log("cancel");
             let url = `${this.$route("logentries.index")}`;
             this.$inertia.visit(url);
+
         }
+    },
+    methods: {
+        store(){
+            this.$inertia.post(
+                this.$route("logentries.store"),
+                {
+                    'user_id': this.user.id,
+                    'food_id': this.selectedFood.id,
+                    'quantity': this.logentry.quantity,
+                    'consumed_at': this.logentry.consumed_at
+                }
+            )
+        },
+        selectFood(food){
+            console.log("select food", food);
+            this.selectedFood=food;
+        },
+        goToPageOne(){
+            this.page=1;
+            this.goToPage(1);
+        },
+        previousPage(){
+            if(this.page>1){
+                this.page--;
+                this.goToPage();
+            }
+        },
+        nextPage(){
+            if(this.page<this.foods.meta.last_page){
+                this.page++;
+                this.goToPage();
+            }
+        },
+        lastPage(){
+            this.page = this.foods.meta.last_page;
+            this.goToPage();
+        },
+        goToPage(){
+            let url = `${this.$route("logentries.create")}`;
+            url += `?descriptionSearch=${this.descriptionSearchText}`;
+            url += `&aliasSearch=${this.aliasSearchText}`;
+            url += `&foodgroupSearch=${this.foodgroupFilter}`;
+            url += `&favouritesFilter=${this.favouritesFilter}`;
+            this.$inertia.visit(url, {
+                data:{
+                    'page':this.page
+                },
+                preserveState: true,
+                preserveScroll: true,
+            });
+        },
     }
 }
 </script>
