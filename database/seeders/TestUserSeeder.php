@@ -22,7 +22,7 @@ class TestUserSeeder extends Seeder
     {
         $testUser = User::factory()->create([
             'name' => 'Test User',
-            'password' => Hash::make('tester'),
+            'password' => Hash::make('Pumpkin1!s'),
             'email' => 'tester@example.com',
         ]);
 
