@@ -361,13 +361,15 @@ class LogentryControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_can_create_a_log_entry_from_only_the_users_list_of_foods()
+    public function it_can_create_a_log_entry_from_users_list_of_favourite_foods()
     {
         Sanctum::actingAs($this->user);
 
         $userFoods = Food::factory()->count(2)->create([
             'user_id' => $this->user->id,
         ]);
+
+        $this->user->favourites()->sync($userFoods->pluck('id'));
 
         $anotherUser = User::factory()->create();
 
