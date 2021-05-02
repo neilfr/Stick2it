@@ -80,12 +80,10 @@
         },
         methods:{
             toggleFavourite(food){
-                console.log(food);
                 let url =this.$route("foods.toggle-favourite", food.id);
                 this.$inertia.post(url,{},{preserveScroll: true});
             },
             destroy(food){
-                console.log("destroy", food.id);
                 let url =this.$route("foods.destroy", food.id);
                 this.$inertia.delete(url);
             },

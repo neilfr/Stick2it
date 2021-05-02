@@ -187,17 +187,6 @@ export default {
     },
     methods: {
         store(){
-            console.log("payload",                {
-                    'user_id': this.user.id,
-                    'description': this.logentry.description,
-                    'quantity': this.logentry.quantity,
-                    'kcal': this.logentry.kcal,
-                    'fat': this.logentry.fat,
-                    'protein': this.logentry.protein,
-                    'carbohydrate': this.logentry.carbohydrate,
-                    'potassium': this.logentry.potassium,
-                    'consumed_at': this.logentry.consumed_at
-                });
             this.$inertia.post(
                 this.$route("logentries.store"),
                 {
@@ -220,7 +209,6 @@ export default {
             this.showSelectFoodModal = false;
         },
         selectFood(food){
-            console.log("logentry.quantity", this.logentry.quantity);
             this.selectedFood=food;
             this.logentry.description=food.description;
             if(this.logentry.quantity===0){
@@ -273,7 +261,6 @@ export default {
             });
         },
         cancel(){
-            console.log("cancel");
             let url = `${this.$route("logentries.index")}`;
             this.$inertia.visit(url);
         }

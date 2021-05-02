@@ -136,7 +136,6 @@ export default {
                 }));
         },
         showIngredients () {
-            console.log("testing");
             this.showIngredientAdd=!this.showIngredientAdd;
         },
     }

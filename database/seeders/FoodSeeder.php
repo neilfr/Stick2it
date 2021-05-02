@@ -19,7 +19,7 @@ class FoodSeeder extends Seeder
     {
         $admin = User::factory()->create([
             'name' => 'Admin User',
-            'password' => Hash::make('Pumpkin1!s'),
+            'password' => Hash::make('temporary'),
             'email' => 'admin@example.com',
         ]);
 

@@ -254,7 +254,6 @@ export default {
             });
         },
         cancel(){
-            console.log("cancel");
             let url = `${this.$route("logentries.index")}`;
             this.$inertia.visit(url);
         }
