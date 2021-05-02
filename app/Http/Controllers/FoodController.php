@@ -79,7 +79,7 @@ class FoodController extends Controller
             $mealFoodgroupId,
         );
 
-        Food::create();
+        Food::create($food);
 
         return redirect()->route('foods.index');
     }
