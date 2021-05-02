@@ -78,7 +78,7 @@ class FoodController extends Controller
             $userFoodsourceId,
             $mealFoodgroupId,
         );
-        dd($food);
+
         Food::create();
 
         return redirect()->route('foods.index');

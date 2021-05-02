@@ -69,7 +69,6 @@ export default {
         },
 
         updateFoodList (page){
-            console.log("food", this.food);
             let url = `${this.$route("foods.show", this.food.id)}`;
             url += `?descriptionSearch=${this.descriptionSearchText}`;
             url += `&aliasSearch=${this.aliasSearchText}`;

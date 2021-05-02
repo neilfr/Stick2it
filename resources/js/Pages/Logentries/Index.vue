@@ -133,7 +133,6 @@ export default {
     methods:{
         add () {
             let url = `${this.$route("logentries.create")}`;
-            console.log(url);
             this.$inertia.visit(url);
         },
         edit(logentry) {
@@ -151,9 +150,6 @@ export default {
             if(this.page>1) this.goToPage(this.page-1);
         },
         nextPage(){
-            console.log('next page');
-            console.log('this.page', this.page);
-            console.log('this.logentries.meta.last_page', this.logentries.meta.last_page);
             if(this.page<this.logentries.meta.last_page) this.goToPage(this.page+1);
         },
         lastPage(){
