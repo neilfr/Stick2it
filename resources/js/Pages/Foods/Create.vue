@@ -83,12 +83,9 @@ export default {
     },
     methods: {
         store(){
-            console.log("food",this.food);
             this.$inertia.post(
                 this.$route("foods.store"), this.food
-            ).then(()=>{
-                console.log("errors", this.errors.description);
-            });
+            );
         },
         cancel () {
             let url = `${this.$route("foods.index")}`;
