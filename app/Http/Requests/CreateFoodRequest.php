@@ -35,8 +35,8 @@ class CreateFoodRequest extends FormRequest
             'carbohydrate' => 'required|integer|min:0',
             'potassium' => 'required|integer|min:0',
             'base_quantity' => 'required|integer|min:0',
-            'foodgroup_id' => 'required|exists:App\Models\Foodgroup,id',
-            'foodsource_id' => 'required|exists:App\Models\Foodsource,id',
+            // 'foodgroup_id' => 'required|exists:App\Models\Foodgroup,id',
+            // 'foodsource_id' => 'required|exists:App\Models\Foodsource,id',
             'user_id' => 'required|exists:App\Models\User,id',
         ];
     }

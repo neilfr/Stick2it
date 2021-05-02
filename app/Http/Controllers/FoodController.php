@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Config;
 use App\Http\Requests\CreateFoodRequest;
 use App\Http\Requests\UpdateFoodRequest;
 use App\Http\Resources\FoodgroupResource;
+use App\Models\Foodsource;
 
 class FoodController extends Controller
 {
@@ -66,7 +67,19 @@ class FoodController extends Controller
 
     public function store(CreateFoodRequest $request)
     {
-        Food::create($request->validated());
+        $userFoodsourceId = [
+            'foodsource_id' => Foodsource::where('name','User')->first()->id
+        ];
+        $mealFoodgroupId = [
+            'foodgroup_id' => Foodgroup::where('description','Meals')->first()->id
+        ];
+        $food = array_merge(
+            $request->validated(),
+            $userFoodsourceId,
+            $mealFoodgroupId,
+        );
+        dd($food);
+        Food::create();
 
         return redirect()->route('foods.index');
     }

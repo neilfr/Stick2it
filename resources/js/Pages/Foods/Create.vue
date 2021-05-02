@@ -75,8 +75,8 @@ export default {
                 potassium: 0,
                 favourite: true,
                 base_quantity: 0,
-                foodsource_id: 2,
-                foodgroup_id: 26,
+                // foodsource_id: 2,
+                // foodgroup_id: 26,
                 user_id: this.user.id
             }
         }
