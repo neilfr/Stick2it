@@ -455,8 +455,13 @@ class FoodControllerTest extends TestCase
             'carbohydrate' => 135,
             'potassium' => 456,
             'base_quantity' => 200,
-            'foodgroup_id' => Foodgroup::factory()->create()->id,
-            'foodsource_id' => Foodsource::factory()->create()->id,
+            'foodgroup_id' => Foodgroup::factory()->create([
+                'description' => 'Meals'
+            ])->id,
+            'foodsource_id' => Foodsource::factory()->create([
+                'name' => 'User',
+                'sharable' => false,
+            ])->id,
             'user_id' => auth()->user()->id,
         ];
 
@@ -1070,8 +1075,13 @@ class FoodControllerTest extends TestCase
             'carbohydrate' => 135,
             'potassium' => 456,
             'base_quantity' => 200,
-            'foodgroup_id' => Foodgroup::factory()->create()->id,
-            'foodsource_id' => Foodsource::factory()->create()->id,
+            'foodgroup_id' => Foodgroup::factory()->create([
+                'description' => 'Meals'
+            ])->id,
+            'foodsource_id' => Foodsource::factory()->create([
+                'name' => 'User',
+                'sharable' => false,
+            ])->id,
             'user_id' => auth()->user()->id,
         ];
     }
