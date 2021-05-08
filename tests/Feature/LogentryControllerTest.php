@@ -42,25 +42,29 @@ class LogentryControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_can_return_a_list_of_users_logentries()
+    public function it_can_return_a_list_of_user_logentries()
     {
         Sanctum::actingAs($this->user);
 
-        $logentries = Logentry::factory()->times(2)->create([
+        $foods = Food::factory()->times(2)->create([
             'user_id' => $this->user->id,
+            'kcal' => 123,
         ]);
+
+        foreach($foods as $key => $food){
+            $logentries[$key] = Logentry::factory()->create([
+                'user_id' => $this->user->id,
+                'food_id' => $food->id,
+                'quantity' => 100,
+            ]);
+        }
+
         $response = $this->get(route('logentries.index', $this->user))
             ->assertOk()
-            ->assertPropValue('logentries', function ($returnedLogentries) use($logentries) {
+            ->assertPropValue('logentries', function ($returnedLogentries) use($foods, $logentries) {
                 $this->assertEquals(2, count($returnedLogentries['data']));
                 foreach($returnedLogentries['data'] as $index => $returnedLogentry){
-                    $this->assertEquals($logentries[$index]->user->email,$returnedLogentry['user']['email']);
-                    $this->assertEquals($logentries[$index]->description,$returnedLogentry['description']);
-                    $this->assertEquals($logentries[$index]->kcal,$returnedLogentry['kcal']);
-                    $this->assertEquals($logentries[$index]->fat,$returnedLogentry['fat']);
-                    $this->assertEquals($logentries[$index]->protein,$returnedLogentry['protein']);
-                    $this->assertEquals($logentries[$index]->carbohydrate,$returnedLogentry['carbohydrate']);
-                    $this->assertEquals($logentries[$index]->potassium,$returnedLogentry['potassium']);
+                    $this->assertEquals($logentries[$index]->food->id,$returnedLogentry['food']['id']);
                 }
             });
     }
@@ -94,7 +98,7 @@ class LogentryControllerTest extends TestCase
             ->assertOk()
             ->assertPropValue('logentries', function ($returnedLogentries) use($logentries) {
                 $this->assertEquals(1, count($returnedLogentries['data']));
-                $this->assertEquals($logentries[1]->description, $returnedLogentries['data'][0]['description']);
+                $this->assertEquals($logentries[1]->food->toArray(), $returnedLogentries['data'][0]['food']);
             });
     }
 
@@ -119,18 +123,16 @@ class LogentryControllerTest extends TestCase
     /** @test */
     public function it_can_store_a_new_logentry()
     {
-        $this->withoutExceptionHandling();
         Sanctum::actingAs($this->user);
+
+        $food = Food::factory()->create([
+            'user_id' => $this->user->id,
+        ]);
 
         $payload = [
             "user_id" => $this->user->id,
-            'description' => 'my new logentry',
             'quantity' => 100,
-            'kcal' => 101,
-            'fat' => 102,
-            'protein' => 103,
-            'carbohydrate' => 104,
-            'potassium' => 105,
+            'food_id' => $food->id,
             'consumed_at' => Carbon::now(),
         ];
 
@@ -175,6 +177,23 @@ class LogentryControllerTest extends TestCase
                     ];
                 }
             ],
+            'it fails if food_id is not an integer' => [
+                function () {
+                    return [
+                        'food_id',
+                        array_merge($this->getValidLogentryData(), ['food_id' => 'not an integer']),
+                    ];
+                }
+            ],
+            'it fails if food_id is not in foods table' => [
+                function () {
+                    return [
+                        'food_id',
+                        array_merge($this->getValidLogentryData(), ['food_id' => 999]),
+                    ];
+                }
+            ],
+
             'it fails if quantity is not an integer' => [
                 function () {
                     return [
@@ -206,13 +225,8 @@ class LogentryControllerTest extends TestCase
     {
         return [
             'user_id' => $user_id = auth()->user()->id,
-            'description' => 'logentry description',
+            'food_id' => $food = Food::factory()->create()->id,
             'quantity' => 100,
-            'kcal' => 101,
-            'fat' => 102,
-            'protein' => 103,
-            'carbohydrate' => 104,
-            'potassium' => 105,
             'consumed_at' => Carbon::now(),
         ];
     }
@@ -226,13 +240,8 @@ class LogentryControllerTest extends TestCase
 
         $payload = [
             'user_id' => $this->user->id,
-            'description' => 'new food',
-            'quantity' => 100,
-            'kcal' => 101,
-            'fat' => 102,
-            'protein' => 103,
-            'carbohydrate' => 104,
-            'potassium' => 105,
+            'food_id' => $this->getValidLogentryData()['food_id'],
+            'quantity' => 999,
             'consumed_at' => Carbon::now(),
         ];
 
@@ -242,31 +251,28 @@ class LogentryControllerTest extends TestCase
         $this->assertDatabaseHas('logentries', array_merge(['id' => $logentry->id], $payload));
     }
 
-        /** @test */
+    /** @test */
     public function it_cannot_update_another_users_logentry()
     {
         Sanctum::actingAs($this->user);
 
         $anotherUser = User::factory()->create();
 
-        $logentry = Logentry::factory()->create($this->getValidLogentryData());
+        $anotherUsersLogentry = Logentry::factory()->create(
+            array_merge(
+                $this->getValidLogentryData(),
+                ['user_id' => $anotherUser->id]
+            ));
 
-        $payload = [
-            'user_id' => $this->user->id,
-            'description' => 'initial food',
-            'quantity' => 200,
-            'kcal' => 201,
-            'fat' => 202,
-            'protein' => 203,
-            'carbohydrate' => 204,
-            'potassium' => 205,
-            'consumed_at' => Carbon::now()->subDays(2),
-        ];
+        $payload = array_merge(
+            $anotherUsersLogentry->toArray(),
+            ['quantity' => 999],
+        );
 
-        $this->patch(route('logentries.update', $logentry), $payload)
+        $this->patch(route('logentries.update', $anotherUsersLogentry), $payload)
             ->assertRedirect(route('logentries.index'));
 
-        $this->assertDatabaseHas('logentries', array_merge(['id' => $logentry->id], $payload));
+        $this->assertDatabaseHas('logentries', $anotherUsersLogentry->toArray());
     }
 
     /**
@@ -301,6 +307,22 @@ class LogentryControllerTest extends TestCase
                     return [
                         'user_id',
                         array_merge($this->getValidLogentryData(), ['user_id' => 999]),
+                    ];
+                }
+            ],
+            'it fails if food_id is not an integer' => [
+                function () {
+                    return [
+                        'food_id',
+                        array_merge($this->getValidLogentryData(), ['food_id' => 'not an integer']),
+                    ];
+                }
+            ],
+            'it fails if food_id is not in foods table' => [
+                function () {
+                    return [
+                        'food_id',
+                        array_merge($this->getValidLogentryData(), ['food_id' => 999999]),
                     ];
                 }
             ],

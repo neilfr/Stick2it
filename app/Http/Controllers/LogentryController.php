@@ -90,7 +90,9 @@ class LogentryController extends Controller
 
     public function update(UpdateLogentryRequest $request, Logentry $logentry)
     {
-        $logentry->update($request->validated());
+        if($logentry->user_id === auth()->user()->id) {
+            $logentry->update($request->validated());
+        }
         return redirect()->route('logentries.index');
     }
 
