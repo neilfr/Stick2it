@@ -70,6 +70,36 @@ class LogentryControllerTest extends TestCase
     }
 
     /** @test */
+    public function it_can_return_a_logentry_with_deleted_food()
+    {
+        Sanctum::actingAs($this->user);
+
+        $food = Food::factory()->create([
+            'id' => 99,
+            'user_id' => $this->user->id,
+            'kcal' => 123,
+        ]);
+
+        $logentry = Logentry::factory()->create([
+            'user_id' => $this->user->id,
+            'food_id' => $food->id,
+            'quantity' => 100,
+        ]);
+
+        $food->delete();
+
+        $this->assertSoftDeleted('foods', $food->toArray());
+
+        $response = $this->get(route('logentries.index', $this->user))
+            ->assertOk()
+            ->assertPropValue('logentries', function ($returnedLogentry) use($logentry) {
+                $this->assertEquals(1, count($returnedLogentry['data']));
+                $this->assertEquals($logentry->food_id,$returnedLogentry['data'][0]['food']['id']);
+            });
+    }
+
+
+    /** @test */
     public function it_can_return_a_user_logentry_in_a_date_range()
     {
         Sanctum::actingAs($this->user);

@@ -26,6 +26,7 @@ class CreateFoodsTable extends Migration
             $table->unsignedBigInteger('foodsource_id');
             $table->unsignedBigInteger('foodgroup_id');
             $table->unsignedBigInteger('user_id');
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('foodgroup_id')->on('foodgroups')->references('id');
