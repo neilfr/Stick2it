@@ -17,11 +17,17 @@ class LogentryResource extends JsonResource
      */
     public function toArray($request)
     {
+        $scaleFactor = $this->quantity/$this->food->base_quantity;
         return [
             'id' => $this->id,
             'user' => $this->user,
             'quantity' => $this->quantity,
             'food' => $this->food,
+            'kcal' => $this->food->kcal * $scaleFactor,
+            'fat' => $this->food->fat * $scaleFactor,
+            'protein' => $this->food->protein * $scaleFactor,
+            'carbohydrate' => $this->food->carbohydrate * $scaleFactor,
+            'potassium' => $this->food->potassium * $scaleFactor,
             'consumed_at' => Carbon::parse($this->consumed_at)->format('Y-m-d'),
         ];
     }
