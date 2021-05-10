@@ -72,13 +72,13 @@
                 </tr>
                 <tr v-for="logentry in logentries.data" :key="logentry.id" class="odd:bg-gray-100 leading-9">
                     <td class="text-center">{{logentry.consumed_at}}</td>
-                    <td class="truncate">{{logentry.description}}</td>
+                    <td class="truncate">{{logentry.food.description}}</td>
                     <td>{{logentry.quantity}}</td>
-                    <td>{{logentry.kcal}}</td>
-                    <td>{{logentry.fat}}</td>
-                    <td>{{logentry.protein}}</td>
-                    <td>{{logentry.carbohydrate}}</td>
-                    <td>{{logentry.potassium}}</td>
+                    <td>{{logentry.food.kcal*logentry.quantity/logentry.food.base_quantity}}</td>
+                    <td>{{logentry.food.fat*logentry.quantity/logentry.food.base_quantity}}</td>
+                    <td>{{logentry.food.protein*logentry.quantity/logentry.food.base_quantity}}</td>
+                    <td>{{logentry.food.carbohydrate*logentry.quantity/logentry.food.base_quantity}}</td>
+                    <td>{{logentry.food.potassium*logentry.quantity/logentry.food.base_quantity}}</td>
                     <td class="text-center flex justify-between">
                         <button @click="edit(logentry)">
                             <img class="w-6" src="/images/edit-pencil.svg">
