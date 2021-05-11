@@ -44,6 +44,8 @@ class LogentryController extends Controller
             $nutrientValues['potassium'] += $logentry->food->potassium;
         });
 
+        $logentryCount = $allLogentries->count();
+
         return Inertia::render('Logentries/Index',[
             'page' => $paginatedLogentries->currentPage(),
             'logentries' => LogentryResource::collection($paginatedLogentries),
@@ -52,11 +54,11 @@ class LogentryController extends Controller
             'totalProtein' => $nutrientValues['protein'],
             'totalCarbohydrate' => $nutrientValues['carbohydrate'],
             'totalPotassium' => $nutrientValues['potassium'],
-            'averageKcal' => round($nutrientValues['kcal']/$allLogentries->count()),
-            'averageFat' => round($nutrientValues['fat']/$allLogentries->count()),
-            'averageProtein' => round($nutrientValues['protein']/$allLogentries->count()),
-            'averageCarbohydrate' => round($nutrientValues['carbohydrate']/$allLogentries->count()),
-            'averagePotassium' => round($nutrientValues['potassium']/$allLogentries->count()),
+            'averageKcal' => $logentryCount > 0 ? round($nutrientValues['kcal']/$logentryCount): 0,
+            'averageFat' => $logentryCount ? round($nutrientValues['fat']/$logentryCount): 0,
+            'averageProtein' => $logentryCount ? round($nutrientValues['protein']/$logentryCount): 0,
+            'averageCarbohydrate' => $logentryCount ? round($nutrientValues['carbohydrate']/$logentryCount): 0,
+            'averagePotassium' => $logentryCount ? round($nutrientValues['potassium']/$logentryCount): 0,
         ]);
     }
 

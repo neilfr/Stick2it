@@ -28,6 +28,7 @@ class LogentryControllerTest extends TestCase
     /** @test */
     public function it_can_access_logentries_index_as_an_authenticated_user()
     {
+        $this->withoutExceptionHandling();
         Sanctum::actingAs($this->user);
 
         $response = $this->get(route('logentries.index'))
@@ -42,29 +43,27 @@ class LogentryControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_can_return_a_list_of_user_logentries()
+    public function it_can_return_a_logentry()
     {
         Sanctum::actingAs($this->user);
 
-        $foods = Food::factory()->times(2)->create([
+        $food = Food::factory()->create([
             'user_id' => $this->user->id,
             'kcal' => 123,
         ]);
 
-        foreach($foods as $key => $food){
-            $logentries[$key] = Logentry::factory()->create([
-                'user_id' => $this->user->id,
-                'food_id' => $food->id,
-                'quantity' => 499,
-            ]);
-        }
+        $logentry = Logentry::factory()->create([
+            'user_id' => $this->user->id,
+            'food_id' => $food->id,
+            'quantity' => 499,
+        ]);
 
         $response = $this->get(route('logentries.index', $this->user))
             ->assertOk()
-            ->assertPropValue('logentries', function ($returnedLogentries) use($foods, $logentries) {
-                $this->assertEquals(2, count($returnedLogentries['data']));
+            ->assertPropValue('logentries', function ($returnedLogentries) use($food, $logentry) {
+                $this->assertEquals(1, count($returnedLogentries['data']));
                 foreach($returnedLogentries['data'] as $index => $returnedLogentry){
-                    $this->assertEquals($logentries[$index]->food->id,$returnedLogentry['food']['id']);
+                    $this->assertEquals($logentry->food->id,$returnedLogentry['food']['id']);
                 }
             });
     }
