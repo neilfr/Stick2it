@@ -18,43 +18,43 @@
 
                     <p class="col-span-12" v-if="errors.consumed_at">{{errors.consumed_at}}</p>
                     <label class="py-2 col-span-2" for="consumed_at">Consumed at:</label>
-                    <input class="border rounded col-span-2" id="consumed_at_date" type="date" v-model="logentry.data.consumed_at">
-                    <div class="col-span-8"></div>
+                    <input class="border rounded col-span-3" id="consumed_at_date" type="date" v-model="logentry.data.consumed_at">
+                    <div class="col-span-7"></div>
 
                     <p class="col-span-12" v-if="errors.quantity">{{errors.quantity}}</p>
                     <label class="py-2 col-span-2" for="quantity">Quantity:</label>
-                    <input class="border rounded col-span-2" id="quantity" type="number" min="0" v-model="logentry.data.quantity" @change="updateQuantity">
-                    <div class="col-span-8"></div>
+                    <input class="border rounded col-span-3" id="quantity" type="number" min="0" v-model="logentry.data.quantity" @change="updateQuantity">
+                    <div class="col-span-7"></div>
 
                     <p class="col-span-12" v-if="errors.description">{{errors.consumed_at}}</p>
                     <label class="py-2 col-span-2" for="description">Description:</label>
-                    <input disabled class="border rounded col-span-2" id="description" type="text" :value="logentry.data.description">
-                    <div class="col-span-8"></div>
+                    <input disabled class="border rounded col-span-3" id="description" type="text" :value="logentry.data.food.description">
+                    <div class="col-span-7"></div>
 
                     <p class="col-span-12" v-if="errors.kcal">{{errors.kcal}}</p>
                     <label class="py-2 col-span-2" for="kcal">KCal:</label>
-                    <input disabled class="border rounded col-span-2" id="kcal" type="number" min="0" :value="logentry.data.kcal">
-                    <div class="col-span-8"></div>
+                    <input disabled class="border rounded col-span-3" id="kcal" type="number" min="0" :value="kcal">
+                    <div class="col-span-7"></div>
 
                     <p class="col-span-12" v-if="errors.fat">{{errors.fat}}</p>
                     <label class="py-2 col-span-2" for="fat">Fat:</label>
-                    <input disabled class="border rounded col-span-2" id="fat" type="number" min="0" :value="logentry.data.fat">
-                    <div class="col-span-8"></div>
+                    <input disabled class="border rounded col-span-3" id="fat" type="number" min="0" :value="fat">
+                    <div class="col-span-7"></div>
 
                     <p class="col-span-12" v-if="errors.protein">{{errors.protein}}</p>
                     <label class="py-2 col-span-2" for="protein">Protein:</label>
-                    <input disabled class="border rounded col-span-2" id="protein" type="number" min="0" :value="logentry.data.protein">
-                    <div class="col-span-8"></div>
+                    <input disabled class="border rounded col-span-3" id="protein" type="number" min="0" :value="protein">
+                    <div class="col-span-7"></div>
 
                     <p class="col-span-12" v-if="errors.carbohydrate">{{errors.carbohydrate}}</p>
                     <label class="py-2 col-span-2" for="carbohydrate">Carbohydrate:</label>
-                    <input disabled class="border rounded col-span-2" id="carbohydrate" type="number" min="0" :value="logentry.data.carbohydrate">
-                    <div class="col-span-8"></div>
+                    <input disabled class="border rounded col-span-3" id="carbohydrate" type="number" min="0" :value="carbohydrate">
+                    <div class="col-span-7"></div>
 
                     <p class="col-span-12" v-if="errors.potassium">{{errors.potassium}}</p>
                     <label class="py-2 col-span-2" for="potassium">Potassium:</label>
-                    <input disabled class="border rounded col-span-2" id="potassium" type="number" min="0" :value="logentry.data.potassium">
-                    <div class="col-span-8"></div>
+                    <input disabled class="border rounded col-span-3" id="potassium" type="number" min="0" :value="potassium">
+                    <div class="col-span-7"></div>
 
                 </div>
 
@@ -157,7 +157,7 @@ export default {
     props: {
         errors: Object,
         user: Object,
-        food: Object,
+        // food: Object,
         foods: Object,
         foodgroups: Object,
         logentry: Object
@@ -165,8 +165,23 @@ export default {
     computed: {
         readyToSave () {
             return this.logentry.data.quantity>0 && !isNaN(new Date(this.logentry.data.consumed_at).getDate()) && this.logentry.data.description!=null;
+        },
+        kcal () {
+            return Math.round(this.logentry.data.food.kcal * this.logentry.data.quantity / this.logentry.data.food.base_quantity);
+        },
+        fat () {
+            return Math.round(this.logentry.data.food.fat * this.logentry.data.quantity / this.logentry.data.food.base_quantity);
+        },
+        protein () {
+            return Math.round(this.logentry.data.food.protein * this.logentry.data.quantity / this.logentry.data.food.base_quantity);
+        },
+        carbohydrate () {
+            return Math.round(this.logentry.data.food.carbohydrate * this.logentry.data.quantity / this.logentry.data.food.base_quantity);
+        },
+        potassium () {
+            return Math.round(this.logentry.data.food.potassium * this.logentry.data.quantity / this.logentry.data.food.base_quantity);
         }
-    },
+     },
     data() {
         return {
             showSelectFoodModal: false,
