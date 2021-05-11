@@ -55,7 +55,7 @@ class LogentryControllerTest extends TestCase
             $logentries[$key] = Logentry::factory()->create([
                 'user_id' => $this->user->id,
                 'food_id' => $food->id,
-                'quantity' => 100,
+                'quantity' => 499,
             ]);
         }
 

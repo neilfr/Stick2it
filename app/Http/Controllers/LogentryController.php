@@ -25,21 +25,38 @@ class LogentryController extends Controller
         $allLogentries = Logentry::query()
                 ->userLogEntries()
                 ->inDateRange($request->query('from'), $request->query('to'))
+                ->with('food')
                 ->get();
+
+        $nutrientValues= [
+            'kcal' => 0,
+            'fat' => 0,
+            'protein' => 0,
+            'carbohydrate' => 0,
+            'potassium' => 0
+        ];
+
+        $allLogentries->each(function($logentry) use(&$nutrientValues) {
+            $nutrientValues['kcal'] += $logentry->food->kcal;
+            $nutrientValues['fat'] += $logentry->food->fat;
+            $nutrientValues['protein'] += $logentry->food->protein;
+            $nutrientValues['carbohydrate'] += $logentry->food->carbohydrate;
+            $nutrientValues['potassium'] += $logentry->food->potassium;
+        });
 
         return Inertia::render('Logentries/Index',[
             'page' => $paginatedLogentries->currentPage(),
             'logentries' => LogentryResource::collection($paginatedLogentries),
-            'totalKcal' => $allLogentries->sum('kcal'),
-            'totalFat' => $allLogentries->sum('fat'),
-            'totalProtein' => $allLogentries->sum('protein'),
-            'totalCarbohydrate' => $allLogentries->sum('carbohydrate'),
-            'totalPotassium' => $allLogentries->sum('potassium'),
-            'averageKcal' => round($allLogentries->avg('kcal')),
-            'averageFat' => round($allLogentries->avg('fat')),
-            'averageProtein' => round($allLogentries->avg('protein')),
-            'averageCarbohydrate' => round($allLogentries->avg('carbohydrate')),
-            'averagePotassium' => round($allLogentries->avg('potassium')),
+            'totalKcal' => $nutrientValues['kcal'],
+            'totalFat' => $nutrientValues['fat'],
+            'totalProtein' => $nutrientValues['protein'],
+            'totalCarbohydrate' => $nutrientValues['carbohydrate'],
+            'totalPotassium' => $nutrientValues['potassium'],
+            'averageKcal' => round($nutrientValues['kcal']/$allLogentries->count()),
+            'averageFat' => round($nutrientValues['fat']/$allLogentries->count()),
+            'averageProtein' => round($nutrientValues['protein']/$allLogentries->count()),
+            'averageCarbohydrate' => round($nutrientValues['carbohydrate']/$allLogentries->count()),
+            'averagePotassium' => round($nutrientValues['potassium']/$allLogentries->count()),
         ]);
     }
 
