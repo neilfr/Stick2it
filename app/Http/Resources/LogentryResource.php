@@ -23,11 +23,11 @@ class LogentryResource extends JsonResource
             'user' => $this->user,
             'quantity' => $this->quantity,
             'food' => $this->food,
-            'kcal' => $this->food->kcal * $scaleFactor,
-            'fat' => $this->food->fat * $scaleFactor,
-            'protein' => $this->food->protein * $scaleFactor,
-            'carbohydrate' => $this->food->carbohydrate * $scaleFactor,
-            'potassium' => $this->food->potassium * $scaleFactor,
+            'kcal' => round($this->food->kcal * $scaleFactor),
+            'fat' => round($this->food->fat * $scaleFactor),
+            'protein' => round($this->food->protein * $scaleFactor),
+            'carbohydrate' => round($this->food->carbohydrate * $scaleFactor),
+            'potassium' => round($this->food->potassium * $scaleFactor),
             'consumed_at' => Carbon::parse($this->consumed_at)->format('Y-m-d'),
         ];
     }
