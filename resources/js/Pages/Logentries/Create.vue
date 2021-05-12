@@ -23,36 +23,36 @@
 
                     <p class="col-span-12" v-if="errors.quantity">{{errors.quantity}}</p>
                     <label class="py-2 col-span-2" for="quantity">Quantity:</label>
-                    <input class="border rounded col-span-2" id="quantity" type="number" min="0" v-model="logentry.quantity" @change="updateQuantity">
+                    <input class="border rounded col-span-2" id="quantity" type="number" min="0" v-model="logentry.quantity">
                     <p class="col-span-8"></p>
 
                     <p class="col-span-12" v-if="errors.description">{{errors.consumed_at}}</p>
                     <label class="py-2 col-span-2" for="description">Description:</label>
-                    <input disabled class="border rounded col-span-10" id="description" type="text" :value="this.selectedFood.description">
+                    <input disabled class="border rounded col-span-10" id="description" type="text" :value="this.description">
 
                     <p class="col-span-12" v-if="errors.kcal">{{errors.kcal}}</p>
                     <label class="py-2 col-span-2" for="kcal">KCal:</label>
-                    <input disabled class="border rounded col-span-2" id="kcal" type="number" min="0" :value="logentry.kcal">
+                    <input disabled class="border rounded col-span-2" id="kcal" type="number" min="0" :value="this.kcal">
                     <p class="col-span-8"></p>
 
                     <p class="col-span-12" v-if="errors.fat">{{errors.fat}}</p>
                     <label class="py-2 col-span-2" for="fat">Fat:</label>
-                    <input disabled class="border rounded col-span-2" id="fat" type="number" min="0" :value="logentry.fat">
+                    <input disabled class="border rounded col-span-2" id="fat" type="number" min="0" :value="this.fat">
                     <p class="col-span-8"></p>
 
                     <p class="col-span-12" v-if="errors.protein">{{errors.protein}}</p>
                     <label class="py-2 col-span-2" for="protein">Protein:</label>
-                    <input disabled class="border rounded col-span-2" id="protein" type="number" min="0" :value="logentry.protein">
+                    <input disabled class="border rounded col-span-2" id="protein" type="number" min="0" :value="this.protein">
                     <p class="col-span-8"></p>
 
                     <p class="col-span-12" v-if="errors.carbohydrate">{{errors.carbohydrate}}</p>
                     <label class="py-2 col-span-2" for="carbohydrate">Carbohydrate:</label>
-                    <input disabled class="border rounded col-span-2" id="carbohydrate" type="number" min="0" :value="logentry.carbohydrate">
+                    <input disabled class="border rounded col-span-2" id="carbohydrate" type="number" min="0" :value="this.carbohydrate">
                     <p class="col-span-8"></p>
 
                     <p class="col-span-12" v-if="errors.potassium">{{errors.potassium}}</p>
                     <label class="py-2 col-span-2" for="potassium">Potassium:</label>
-                    <input disabled class="border rounded col-span-2" id="potassium" type="number" min="0" :value="logentry.potassium">
+                    <input disabled class="border rounded col-span-2" id="potassium" type="number" min="0" :value="this.potassium">
                     <p class="col-span-8"></p>
                 </div>
 
@@ -161,6 +161,24 @@ export default {
     computed: {
         readyToSave () {
             return this.logentry.quantity>0 && !isNaN(new Date(this.logentry.consumed_at).getDate()) && this.selectedFood!=null;
+        },
+        description () {
+            return this.selectedFood ? this.selectedFood.description : '';
+        },
+        kcal () {
+            return this.selectedFood ? Math.round(this.selectedFood.kcal * this.logentry.quantity / this.selectedFood.base_quantity) : 0;
+        },
+        fat () {
+            return this.selectedFood ? Math.round(this.selectedFood.fat * this.logentry.quantity / this.selectedFood.base_quantity) : 0;
+        },
+        protein () {
+            return this.selectedFood ? Math.round(this.selectedFood.protein * this.logentry.quantity / this.selectedFood.base_quantity) : 0;
+        },
+        carbohydrate () {
+            return this.selectedFood ? Math.round(this.selectedFood.carbohydrate * this.logentry.quantity / this.selectedFood.base_quantity) : 0;
+        },
+        potassium () {
+            return this.selectedFood ? Math.round(this.selectedFood.potassium * this.logentry.quantity / this.selectedFood.base_quantity) : 0;
         }
     },
     data() {
@@ -173,16 +191,10 @@ export default {
             page: 1,
             logentry: {
                 user_id: this.user.id,
-                description: '',
                 quantity: 0,
-                kcal: 0,
-                fat: 0,
-                protein: 0,
-                carbohydrate: 0,
-                potassium: 0,
                 consumed_at: (new Date()).toISOString().substr(0,10),
             },
-            selectedFood: ''
+            selectedFood: null
         }
     },
     methods: {
@@ -191,13 +203,8 @@ export default {
                 this.$route("logentries.store"),
                 {
                     'user_id': this.user.id,
-                    'description': this.logentry.description,
                     'quantity': this.logentry.quantity,
-                    'kcal': this.logentry.kcal,
-                    'fat': this.logentry.fat,
-                    'protein': this.logentry.protein,
-                    'carbohydrate': this.logentry.carbohydrate,
-                    'potassium': this.logentry.potassium,
+                    'food_id': this.selectedFood.id,
                     'consumed_at': this.logentry.consumed_at
                 }
             )
@@ -209,22 +216,12 @@ export default {
             this.showSelectFoodModal = false;
         },
         selectFood(food){
+            console.log("food",food);
             this.selectedFood=food;
-            this.logentry.description=food.description;
             if(this.logentry.quantity===0){
                 this.logentry.quantity = food.base_quantity
             }
-            this.updateQuantity();
             this.showSelectFoodModal = false;
-        },
-        updateQuantity(){
-            if(this.selectedFood){
-                this.logentry.kcal = Math.round(this.selectedFood.kcal * (this.logentry.quantity / this.selectedFood.base_quantity));
-                this.logentry.fat = Math.round(this.selectedFood.fat * (this.logentry.quantity / this.selectedFood.base_quantity));
-                this.logentry.protein = Math.round(this.selectedFood.protein * (this.logentry.quantity / this.selectedFood.base_quantity));
-                this.logentry.carbohydrate = Math.round(this.selectedFood.carbohydrate * (this.logentry.quantity / this.selectedFood.base_quantity));
-                this.logentry.potassium = Math.round(this.selectedFood.potassium * (this.logentry.quantity / this.selectedFood.base_quantity));
-            }
         },
         goToPageOne(){
             this.page=1;
