@@ -16,13 +16,8 @@ class StoreLogentryRequest extends FormRequest
     {
         return [
             "user_id" => 'required|integer|exists:users,id',
-            "description" => 'string',
             "quantity" => 'required|integer|min:0',
-            "kcal" => 'required|integer|min:0',
-            "fat" => 'required|integer|min:0',
-            "protein" => 'required|integer|min:0',
-            "carbohydrate" => 'required|integer|min:0',
-            "potassium" => 'required|integer|min:0',
+            "food_id" => 'required|integer|exists:foods,id',
             "consumed_at" => 'required|date',
         ];
     }
