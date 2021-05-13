@@ -72,7 +72,7 @@
                 </tr>
                 <tr v-for="logentry in logentries.data" :key="logentry.id" class="odd:bg-gray-100 leading-9">
                     <td class="text-center">{{logentry.consumed_at}}</td>
-                    <td class="truncate">{{logentry.description}}</td>
+                    <td class="truncate">{{logentry.food.description}}</td>
                     <td>{{logentry.quantity}}</td>
                     <td>{{logentry.kcal}}</td>
                     <td>{{logentry.fat}}</td>

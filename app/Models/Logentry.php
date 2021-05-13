@@ -15,13 +15,8 @@ class Logentry extends Model
 
     protected $fillable = [
         'user_id',
-        'description',
+        'food_id',
         'quantity',
-        'kcal',
-        'fat',
-        'protein',
-        'carbohydrate',
-        'potassium',
         'consumed_at',
     ];
 
@@ -29,6 +24,10 @@ class Logentry extends Model
 
     public function user(){
         return $this->belongsTo(User::class);
+    }
+
+    public function food(){
+        return $this->belongsTo(Food::class)->withTrashed();
     }
 
     public function scopeUserLogentries(Builder $query)

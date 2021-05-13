@@ -455,8 +455,13 @@ class FoodControllerTest extends TestCase
             'carbohydrate' => 135,
             'potassium' => 456,
             'base_quantity' => 200,
-            'foodgroup_id' => Foodgroup::factory()->create()->id,
-            'foodsource_id' => Foodsource::factory()->create()->id,
+            'foodgroup_id' => Foodgroup::factory()->create([
+                'description' => 'Meals'
+            ])->id,
+            'foodsource_id' => Foodsource::factory()->create([
+                'name' => 'User',
+                'sharable' => false,
+            ])->id,
             'user_id' => auth()->user()->id,
         ];
 
@@ -623,11 +628,11 @@ class FoodControllerTest extends TestCase
         $response = $this->delete(route('foods.destroy', $food->id))
             ->assertRedirect(route('foods.index'));
 
-        $this->assertDatabaseMissing('foods', ['id' => $food->id]);
+        $this->assertSoftDeleted('foods', $food->toArray());
     }
 
     /** @test */
-    public function it_deletes_a_foods_ingredients_when_the_food_is_deleted()
+    public function it_does_not_delete_a_foods_ingredients_when_the_food_is_soft_deleted()
     {
         $user = User::factory()->create();
         Sanctum::actingAs($user);
@@ -652,8 +657,9 @@ class FoodControllerTest extends TestCase
         $response = $this->delete(route('foods.destroy', $food->id))
             ->assertRedirect(route('foods.index'));
 
-        $this->assertDatabaseMissing('foods', ['id' => $food->id]);
-        $this->assertDatabaseMissing('ingredients', [
+        $this->assertSoftDeleted('foods', $food->toArray());
+
+        $this->assertDatabaseHas('ingredients', [
             'parent_food_id' => $food->id,
             'ingredient_id' => $ingredient->id,
             'quantity' => 100,
@@ -1070,8 +1076,13 @@ class FoodControllerTest extends TestCase
             'carbohydrate' => 135,
             'potassium' => 456,
             'base_quantity' => 200,
-            'foodgroup_id' => Foodgroup::factory()->create()->id,
-            'foodsource_id' => Foodsource::factory()->create()->id,
+            'foodgroup_id' => Foodgroup::factory()->create([
+                'description' => 'Meals'
+            ])->id,
+            'foodsource_id' => Foodsource::factory()->create([
+                'name' => 'User',
+                'sharable' => false,
+            ])->id,
             'user_id' => auth()->user()->id,
         ];
     }

@@ -25,21 +25,40 @@ class LogentryController extends Controller
         $allLogentries = Logentry::query()
                 ->userLogEntries()
                 ->inDateRange($request->query('from'), $request->query('to'))
+                ->with('food')
                 ->get();
+
+        $nutrientValues= [
+            'kcal' => 0,
+            'fat' => 0,
+            'protein' => 0,
+            'carbohydrate' => 0,
+            'potassium' => 0
+        ];
+
+        $allLogentries->each(function($logentry) use(&$nutrientValues) {
+            $nutrientValues['kcal'] += $logentry->food->kcal;
+            $nutrientValues['fat'] += $logentry->food->fat;
+            $nutrientValues['protein'] += $logentry->food->protein;
+            $nutrientValues['carbohydrate'] += $logentry->food->carbohydrate;
+            $nutrientValues['potassium'] += $logentry->food->potassium;
+        });
+
+        $logentryCount = $allLogentries->count();
 
         return Inertia::render('Logentries/Index',[
             'page' => $paginatedLogentries->currentPage(),
             'logentries' => LogentryResource::collection($paginatedLogentries),
-            'totalKcal' => $allLogentries->sum('kcal'),
-            'totalFat' => $allLogentries->sum('fat'),
-            'totalProtein' => $allLogentries->sum('protein'),
-            'totalCarbohydrate' => $allLogentries->sum('carbohydrate'),
-            'totalPotassium' => $allLogentries->sum('potassium'),
-            'averageKcal' => round($allLogentries->avg('kcal')),
-            'averageFat' => round($allLogentries->avg('fat')),
-            'averageProtein' => round($allLogentries->avg('protein')),
-            'averageCarbohydrate' => round($allLogentries->avg('carbohydrate')),
-            'averagePotassium' => round($allLogentries->avg('potassium')),
+            'totalKcal' => $nutrientValues['kcal'],
+            'totalFat' => $nutrientValues['fat'],
+            'totalProtein' => $nutrientValues['protein'],
+            'totalCarbohydrate' => $nutrientValues['carbohydrate'],
+            'totalPotassium' => $nutrientValues['potassium'],
+            'averageKcal' => $logentryCount > 0 ? round($nutrientValues['kcal']/$logentryCount): 0,
+            'averageFat' => $logentryCount ? round($nutrientValues['fat']/$logentryCount): 0,
+            'averageProtein' => $logentryCount ? round($nutrientValues['protein']/$logentryCount): 0,
+            'averageCarbohydrate' => $logentryCount ? round($nutrientValues['carbohydrate']/$logentryCount): 0,
+            'averagePotassium' => $logentryCount ? round($nutrientValues['potassium']/$logentryCount): 0,
         ]);
     }
 
@@ -90,7 +109,9 @@ class LogentryController extends Controller
 
     public function update(UpdateLogentryRequest $request, Logentry $logentry)
     {
-        $logentry->update($request->validated());
+        if($logentry->user_id === auth()->user()->id) {
+            $logentry->update($request->validated());
+        }
         return redirect()->route('logentries.index');
     }
 
