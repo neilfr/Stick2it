@@ -216,7 +216,6 @@ export default {
             this.showSelectFoodModal = false;
         },
         selectFood(food){
-            console.log("food",food);
             this.selectedFood=food;
             if(this.logentry.quantity===0){
                 this.logentry.quantity = food.base_quantity

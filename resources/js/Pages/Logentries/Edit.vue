@@ -198,7 +198,6 @@ export default {
     },
     methods: {
         update(){
-            console.log("update!");
             this.$inertia.patch(
                 this.$route("logentries.update", this.logentry.data.id),
                 {

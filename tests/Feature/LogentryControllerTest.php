@@ -28,7 +28,6 @@ class LogentryControllerTest extends TestCase
     /** @test */
     public function it_can_access_logentries_index_as_an_authenticated_user()
     {
-        $this->withoutExceptionHandling();
         Sanctum::actingAs($this->user);
 
         $response = $this->get(route('logentries.index'))
