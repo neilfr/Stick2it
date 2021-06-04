@@ -475,4 +475,30 @@ class LogentryControllerTest extends TestCase
         $response = $this->get(route('logentries.edit', $logentry))
             ->assertRedirect(route('login'));
     }
+
+    /** @test */
+    public function it_returns_todays_logentry_totals()
+    {
+        $yesterdaysLogentries = Logentry::factory()->count(5)->create([
+            'consumed_at' => Carbon::now()->subDays(1),
+        ]);
+
+        $tomorrowsLogentries = Logentry::factory()->count(4)->create([
+            'consumed_at' => Carbon::now()->addDays(1),
+        ]);
+
+        $todaysLogentries = Logentry::factory()->count(3)->create([
+            'consumed_at' => Carbon::now()
+        ]);
+
+        Sanctum::actingAs($this->user);
+
+        $response = $this->get(route('logentries.index'))
+            ->assertSuccessful()
+            ->assertPropValue('totalKcal', function ($returnedvalue) {
+                dd($returnedvalue);
+                // $this->assertEquals(1, count($returnedvalue['data']));
+            });
+
+    }
 }

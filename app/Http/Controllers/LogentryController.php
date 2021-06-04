@@ -44,6 +44,11 @@ class LogentryController extends Controller
             $nutrientValues['potassium'] += $logentry->food->potassium;
         });
 
+        $todaysLogentries = $allLogentries->filter(function ($logentry) {
+            dd($logentry);
+            return $logentry.consumed_at === now();
+        });
+
         $logentryCount = $allLogentries->count();
 
         return Inertia::render('Logentries/Index',[
