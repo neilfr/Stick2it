@@ -24,10 +24,11 @@ class LogentryController extends Controller
                 ->paginate(Config::get('stick2it.paginator.per_page'));
         $allLogentries = Logentry::query()
                 ->userLogEntries()
-                ->inDateRange($request->query('from'), $request->query('to'))
+                // ->inDateRange($request->query('from'), $request->query('to'))
                 ->with('food')
                 ->get();
-
+// dd(Logentry::with('food')->get()->toArray());
+dd(Logentry::all()->toArray());
         $nutrientValues= [
             'kcal' => 0,
             'fat' => 0,
@@ -44,10 +45,10 @@ class LogentryController extends Controller
             $nutrientValues['potassium'] += $logentry->food->potassium;
         });
 
-        $todaysLogentries = $allLogentries->filter(function ($logentry) {
-            dd($logentry);
-            return $logentry.consumed_at === now();
-        });
+        // $todaysLogentries = $allLogentries->filter(function ($logentry) {
+        //     dd($logentry);
+        //     return $logentry.consumed_at === now();
+        // });
 
         $logentryCount = $allLogentries->count();
 
