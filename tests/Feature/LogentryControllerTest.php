@@ -470,9 +470,7 @@ class LogentryControllerTest extends TestCase
     /** @test */
     public function it_cannot_access_logentries_edit_if_unauthenticated()
     {
-        $logentry = Logentry::factory()->create();
-
-        $response = $this->get(route('logentries.edit', $logentry))
+        $response = $this->get(route('logentries.edit', 1))
             ->assertRedirect(route('login'));
     }
 }
