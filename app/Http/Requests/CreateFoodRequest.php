@@ -36,6 +36,7 @@ class CreateFoodRequest extends FormRequest
             'potassium' => 'required|integer|min:0',
             'base_quantity' => 'required|integer|min:0',
             'user_id' => 'required|exists:App\Models\User,id',
+            'foodgroup_id' => 'required|exists:App\Models\Foodgroup,id'
         ];
     }
 }
