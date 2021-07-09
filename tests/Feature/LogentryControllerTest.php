@@ -37,7 +37,7 @@ class LogentryControllerTest extends TestCase
     /** @test */
     public function it_cannot_access_logentries_index_if_unauthenticated()
     {
-        $response = $this->get(route('logentries.index', 1))
+        $response = $this->get(route('logentries.index'))
             ->assertRedirect(route('login'));
     }
 
@@ -57,7 +57,7 @@ class LogentryControllerTest extends TestCase
             'quantity' => 499,
         ]);
 
-        $response = $this->get(route('logentries.index', $this->user))
+        $response = $this->get(route('logentries.index'))
             ->assertOk()
             ->assertPropValue('logentries', function ($returnedLogentries) use($food, $logentry) {
                 $this->assertEquals(1, count($returnedLogentries['data']));
@@ -472,5 +472,47 @@ class LogentryControllerTest extends TestCase
     {
         $response = $this->get(route('logentries.edit', 1))
             ->assertRedirect(route('login'));
+    }
+
+    /** @test */
+    public function it_returns_daily_total_potassium_with_index()
+    {
+        $this->withoutExceptionHandling();
+        Sanctum::actingAs($this->user);
+
+        $yesterdaysLogentry = Logentry::factory()->create([
+            'user_id' => $this->user->id,
+            'consumed_at' => now()->subDays(2)
+        ]);
+
+        $todaysLogentries = Logentry::factory(2)->create([
+            'user_id' => $this->user->id,
+            'consumed_at' => now(),
+        ]);
+
+        $tomorrowsLogentries = Logentry::factory(3)->create([
+            'user_id' => $this->user->id,
+            'consumed_at' => now()->addDays(2)
+        ]);
+
+        $yesterdaysPotassium = $yesterdaysLogentry->food->potassium;
+
+        $todaysPotassium = $todaysLogentries->reduce(function ($acc, $logentry) {
+            return $acc+$logentry->food->potassium;
+        }, 0);
+
+        $tomorrowsPotassium = $tomorrowsLogentries->reduce(function ($acc, $logentry) {
+            return $acc+$logentry->food->potassium;
+        }, 0);
+
+        $totalPotassium = $yesterdaysPotassium + $todaysPotassium + $tomorrowsPotassium;
+
+        $response = $this->get(route('logentries.index'))
+            ->assertOk()
+            ->assertPropValue('logentries', function ($returnedLogentries) {
+                $this->assertEquals(6, count($returnedLogentries['data']));
+            })
+            ->assertPropValue('todaysPotassium', $todaysPotassium)
+            ->assertPropValue('totalPotassium', $totalPotassium);
     }
 }
