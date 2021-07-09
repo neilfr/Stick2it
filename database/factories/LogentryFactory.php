@@ -27,7 +27,7 @@ class LogentryFactory extends Factory
         return [
             'user_id' => $user = User::factory()->create(),
             'food_id' => Food::factory()->create([
-                'user_id' => $user->id,
+                'user_id' => auth()->user()->id,
             ]),
             'quantity' => $this->faker->numberBetween(1,300),
             'consumed_at' => Carbon::now()->subDays(random_int(0,9)),

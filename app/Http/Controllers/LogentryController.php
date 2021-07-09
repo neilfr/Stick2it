@@ -13,6 +13,7 @@ use App\Http\Resources\LogentryResource;
 use App\Http\Resources\FoodgroupResource;
 use App\Http\Requests\StoreLogentryRequest;
 use App\Http\Requests\UpdateLogentryRequest;
+use Carbon\Carbon;
 
 class LogentryController extends Controller
 {
@@ -28,7 +29,7 @@ class LogentryController extends Controller
                 ->with('food')
                 ->get();
 
-        $nutrientValues= [
+        $totalNutrientValues= [
             'kcal' => 0,
             'fat' => 0,
             'protein' => 0,
@@ -36,29 +37,54 @@ class LogentryController extends Controller
             'potassium' => 0
         ];
 
-        $allLogentries->each(function($logentry) use(&$nutrientValues) {
-            $nutrientValues['kcal'] += $logentry->food->kcal;
-            $nutrientValues['fat'] += $logentry->food->fat;
-            $nutrientValues['protein'] += $logentry->food->protein;
-            $nutrientValues['carbohydrate'] += $logentry->food->carbohydrate;
-            $nutrientValues['potassium'] += $logentry->food->potassium;
+        $allLogentries->each(function($logentry) use(&$totalNutrientValues) {
+            $totalNutrientValues['kcal'] += $logentry->food->kcal;
+            $totalNutrientValues['fat'] += $logentry->food->fat;
+            $totalNutrientValues['protein'] += $logentry->food->protein;
+            $totalNutrientValues['carbohydrate'] += $logentry->food->carbohydrate;
+            $totalNutrientValues['potassium'] += $logentry->food->potassium;
         });
 
         $logentryCount = $allLogentries->count();
 
+        $todaysNutrientValues= [
+            'kcal' => 0,
+            'fat' => 0,
+            'protein' => 0,
+            'carbohydrate' => 0,
+            'potassium' => 0
+        ];
+
+        $todaysLogEntries = $allLogentries->filter(function($logentry) {
+            return Carbon::createFromFormat('Y-m-d H:i:s',$logentry->consumed_at)->format('Y-m-d') === Carbon::today()->format('Y-m-d');
+        });
+
+        $todaysLogEntries->each(function($logentry) use(&$todaysNutrientValues) {
+            $todaysNutrientValues['kcal'] += $logentry->food->kcal;
+            $todaysNutrientValues['fat'] += $logentry->food->fat;
+            $todaysNutrientValues['protein'] += $logentry->food->protein;
+            $todaysNutrientValues['carbohydrate'] += $logentry->food->carbohydrate;
+            $todaysNutrientValues['potassium'] += $logentry->food->potassium;
+        });
+
         return Inertia::render('Logentries/Index',[
             'page' => $paginatedLogentries->currentPage(),
             'logentries' => LogentryResource::collection($paginatedLogentries),
-            'totalKcal' => $nutrientValues['kcal'],
-            'totalFat' => $nutrientValues['fat'],
-            'totalProtein' => $nutrientValues['protein'],
-            'totalCarbohydrate' => $nutrientValues['carbohydrate'],
-            'totalPotassium' => $nutrientValues['potassium'],
-            'averageKcal' => $logentryCount > 0 ? round($nutrientValues['kcal']/$logentryCount): 0,
-            'averageFat' => $logentryCount ? round($nutrientValues['fat']/$logentryCount): 0,
-            'averageProtein' => $logentryCount ? round($nutrientValues['protein']/$logentryCount): 0,
-            'averageCarbohydrate' => $logentryCount ? round($nutrientValues['carbohydrate']/$logentryCount): 0,
-            'averagePotassium' => $logentryCount ? round($nutrientValues['potassium']/$logentryCount): 0,
+            'totalKcal' => $totalNutrientValues['kcal'],
+            'totalFat' => $totalNutrientValues['fat'],
+            'totalProtein' => $totalNutrientValues['protein'],
+            'totalCarbohydrate' => $totalNutrientValues['carbohydrate'],
+            'totalPotassium' => $totalNutrientValues['potassium'],
+            'todaysKcal' => $todaysNutrientValues['kcal'],
+            'todaysFat' => $todaysNutrientValues['fat'],
+            'todaysProtein' => $todaysNutrientValues['protein'],
+            'todaysCarbohydrate' => $todaysNutrientValues['carbohydrate'],
+            'todaysPotassium' => $todaysNutrientValues['potassium'],
+            'averageKcal' => $logentryCount > 0 ? round($totalNutrientValues['kcal']/$logentryCount): 0,
+            'averageFat' => $logentryCount ? round($totalNutrientValues['fat']/$logentryCount): 0,
+            'averageProtein' => $logentryCount ? round($totalNutrientValues['protein']/$logentryCount): 0,
+            'averageCarbohydrate' => $logentryCount ? round($totalNutrientValues['carbohydrate']/$logentryCount): 0,
+            'averagePotassium' => $logentryCount ? round($totalNutrientValues['potassium']/$logentryCount): 0,
         ]);
     }
 

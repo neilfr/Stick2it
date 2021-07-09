@@ -12,7 +12,24 @@
         </template>
         <div class="container">
             <div class="grid grid-cols-12 gap-2">
-                <div class="col-span-4 grid grid-cols-4 place-items-start border p-2">
+                <div class="col-span-3 grid grid-cols-2 border p-2">
+                    <h1 class="col-span-2 font-bold text-l text-gray-800 my-2">Totals for Today</h1>
+                    <label for="todaysKcal">Calories</label>
+                    <input type="text" name="todaysKcal" id="todaysKcal" :value="todaysKcal" disabled>
+
+                    <label for="todaysFat">Fat</label>
+                    <input type="text" name="todaysFat" id="todaysFat" :value="todaysFat" disabled>
+
+                    <label for="todaysProtein">Protein</label>
+                    <input type="text" name="todaysProtein" id="todaysProtein" :value="todaysProtein" disabled>
+
+                    <label for="todaysCarbohydrate">Carbohydrate</label>
+                    <input type="text" name="todaysCarbohydrate" id="todaysCarbohydrate" :value="todaysCarbohydrate" disabled>
+
+                    <label for="todaysPotassium">Potassium</label>
+                    <input type="text" name="todaysPotassium" id="todaysPotassium" :value="todaysPotassium" disabled>
+                </div>
+                <div class="col-span-3 grid grid-cols-4 place-items-start border p-2">
                     <h3 class="col-span-4 font-bold text-l text-gray-800 my-2">Period</h3>
                     <label for="from">From:</label>
                     <input class="col-span-3 border mr-16 mb-2" type="date" name="from" id="from" v-model='from' @change="goToPageOne">
@@ -21,9 +38,8 @@
                     <div class="col-span-3"><br/></div>
                     <div class="col-span-3"><br/></div>
                     <div class="col-span-3"><br/></div>
-
                 </div>
-                <div class="col-span-4 grid grid-cols-2 border p-2">
+                <div class="col-span-3 grid grid-cols-2 border p-2">
                     <h1 class="col-span-2 font-bold text-l text-gray-800 my-2">Totals for Period</h1>
                     <label for="totalKcal">Calories</label>
                     <input type="text" name="totalKcal" id="totalKcal" :value="totalKcal" disabled>
@@ -40,7 +56,7 @@
                     <label for="totalPotassium">Potassium</label>
                     <input type="text" name="totalPotassium" id="totalPotassium" :value="totalPotassium" disabled>
                 </div>
-                <div class="col-span-4 grid grid-cols-2 border p-2">
+                <div class="col-span-3 grid grid-cols-2 border p-2">
                     <h1 class="col-span-2 font-bold text-l text-gray-800 my-2">Averages for Period</h1>
                     <label for="averageKcal">Calories</label>
                     <input type="text" name="averageKcal" id="averageKcal" :value="averageKcal" disabled>
@@ -116,6 +132,11 @@ export default {
         totalProtein: Number,
         totalCarbohydrate: Number,
         totalPotassium: Number,
+        todaysKcal: Number,
+        todaysFat: Number,
+        todaysProtein: Number,
+        todaysCarbohydrate: Number,
+        todaysPotassium: Number,
         averageKcal: Number,
         averageFat: Number,
         averageProtein: Number,
