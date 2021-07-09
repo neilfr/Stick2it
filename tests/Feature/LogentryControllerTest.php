@@ -477,7 +477,6 @@ class LogentryControllerTest extends TestCase
     /** @test */
     public function it_returns_daily_total_potassium_with_index()
     {
-        $this->withoutExceptionHandling();
         Sanctum::actingAs($this->user);
 
         $yesterdaysLogentry = Logentry::factory()->create([
