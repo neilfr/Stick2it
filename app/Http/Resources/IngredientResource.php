@@ -14,7 +14,8 @@ class IngredientResource extends JsonResource
      */
     public function toArray($request)
     {
-        $scaleFactor = $this->pivot->quantity/$this->base_quantity;
+
+        $scaleFactor = $this->base_quantity===0 ? 0 : $this->pivot->quantity/$this->base_quantity;
 
         return [
             'id' => $this->id,
