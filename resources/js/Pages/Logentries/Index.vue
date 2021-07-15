@@ -142,13 +142,13 @@ export default {
         averageProtein: Number,
         averageCarbohydrate: Number,
         averagePotassium: Number,
+        periodStart: String,
+        periodEnd: String,
     },
     data(){
         return {
-            today: '',
-            from: '',
-            to: '',
-            myhello:''
+            from: this.periodStart,
+            to: this.periodEnd,
         }
     },
     methods:{
