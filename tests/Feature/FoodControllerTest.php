@@ -869,22 +869,6 @@ class FoodControllerTest extends TestCase
                     ];
                 }
             ],
-            'it fails if foodgroup_id is not a valid foodgroup id' => [
-                function () {
-                    return [
-                        'foodgroup_id',
-                        array_merge($this->getValidFoodData(), ['foodgroup_id' => 99999999]),
-                    ];
-                }
-            ],
-            'it fails if foodsource_id is not a valid foodsource id' => [
-                function () {
-                    return [
-                        'foodsource_id',
-                        array_merge($this->getValidFoodData(), ['foodsource_id' => 99999999]),
-                    ];
-                }
-            ],
             'it fails if user_id is not a valid user id' => [
                 function () {
                     return [
