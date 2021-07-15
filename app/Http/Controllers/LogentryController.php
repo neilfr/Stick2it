@@ -85,6 +85,8 @@ class LogentryController extends Controller
             'averageProtein' => $logentryCount ? round($totalNutrientValues['protein']/$logentryCount): 0,
             'averageCarbohydrate' => $logentryCount ? round($totalNutrientValues['carbohydrate']/$logentryCount): 0,
             'averagePotassium' => $logentryCount ? round($totalNutrientValues['potassium']/$logentryCount): 0,
+            'periodStart' => Carbon::now()->toDateString(),
+            'periodEnd' => Carbon::now()->addDays(7)->toDateString(),
         ]);
     }
 
