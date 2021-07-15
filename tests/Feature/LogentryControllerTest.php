@@ -514,4 +514,15 @@ class LogentryControllerTest extends TestCase
             ->assertPropValue('todaysPotassium', $todaysPotassium)
             ->assertPropValue('totalPotassium', $totalPotassium);
     }
+
+    /** @test */
+    public function it_returns_default_period_start_and_end_dates_with_index()
+    {
+        Carbon::setTestNow();
+        Sanctum::actingAs($this->user);
+        $response = $this->get(route('logentries.index'))
+            ->assertOk()
+            ->assertPropValue('periodStart', now()->toDateString())
+            ->assertPropValue('periodEnd', now()->addDays(7)->toDateString());
+    }
 }
