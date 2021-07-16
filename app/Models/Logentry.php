@@ -39,7 +39,8 @@ class Logentry extends Model
     public function scopeInDateRange(Builder $query, $from, $to)
     {
         if (is_null($from) && is_null($to)){
-            return $query;
+            return $query->where('consumed_at', '>=', now()->subDays(7)->toDateString())
+                ->where('consumed_at', '<=', Carbon::now()->toDateString());
         }
 
         if (is_null($from)){

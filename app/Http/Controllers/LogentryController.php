@@ -56,6 +56,7 @@ class LogentryController extends Controller
         ];
 
         $todaysLogEntries = $allLogentries->filter(function($logentry) {
+//            return $logentry->consumed_at === now()->toDateString();
             return Carbon::createFromFormat('Y-m-d H:i:s',$logentry->consumed_at)->format('Y-m-d') === Carbon::today()->format('Y-m-d');
         });
 
@@ -85,8 +86,8 @@ class LogentryController extends Controller
             'averageProtein' => $logentryCount ? round($totalNutrientValues['protein']/$logentryCount): 0,
             'averageCarbohydrate' => $logentryCount ? round($totalNutrientValues['carbohydrate']/$logentryCount): 0,
             'averagePotassium' => $logentryCount ? round($totalNutrientValues['potassium']/$logentryCount): 0,
-            'periodStart' => Carbon::now()->toDateString(),
-            'periodEnd' => Carbon::now()->addDays(7)->toDateString(),
+            'periodStart' => Carbon::now()->subDays(7)->toDateString(),
+            'periodEnd' => Carbon::now()->toDateString(),
         ]);
     }
 

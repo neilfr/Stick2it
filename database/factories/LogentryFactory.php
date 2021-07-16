@@ -30,7 +30,7 @@ class LogentryFactory extends Factory
                 'user_id' => auth()->user()->id,
             ]),
             'quantity' => $this->faker->numberBetween(1,300),
-            'consumed_at' => Carbon::now()->subDays(random_int(0,9)),
+            'consumed_at' => Carbon::now()->subDay(),
             ];
     }
 }
