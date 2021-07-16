@@ -87,7 +87,6 @@ class LogentryControllerTest extends TestCase
         $food->delete();
 
         $this->assertSoftDeleted('foods', $food->toArray());
-
         $response = $this->get(route('logentries.index', $this->user))
             ->assertOk()
             ->assertPropValue('logentries', function ($returnedLogentry) use($logentry) {
@@ -104,23 +103,23 @@ class LogentryControllerTest extends TestCase
 
         $logentries[0] = Logentry::factory()->create([
             'user_id' => $this->user->id,
-            'consumed_at' => Carbon::parse(Carbon::now()->subDays(5))->format('Y-m-d')
+            'consumed_at' => now()->subDays(5)->toDateString(),
         ]);
 
         $logentries[1] = Logentry::factory()->create([
             'user_id' => $this->user->id,
-            'consumed_at' => Carbon::parse(Carbon::now())->format('Y-m-d')
+            'consumed_at' => now()->toDateString(),
         ]);
 
         $logentries[2] = Logentry::factory()->create([
             'user_id' => $this->user->id,
-            'consumed_at' => Carbon::parse(Carbon::now()->addDays(5))->format('Y-m-d')
+            'consumed_at' => now()->addDays(5)->toDateString(),
         ]);
 
         $response = $this->get(route('logentries.index', [
                 'user_id' => $this->user,
-                'from' => Carbon::parse(Carbon::now()->subDays(2))->format('Y-m-d'),
-                'to' => Carbon::parse(Carbon::now()->addDays(2))->format('Y-m-d'),
+                'from' => now()->subDays(2)->toDateString(),
+                'to' => now()->addDays(2)->toDateString(),
                 ]
             ))
             ->assertOk()
@@ -161,7 +160,7 @@ class LogentryControllerTest extends TestCase
             "user_id" => $this->user->id,
             'quantity' => 100,
             'food_id' => $food->id,
-            'consumed_at' => Carbon::now(),
+            'consumed_at' => now()->subDay()->toDateString(),
         ];
 
         $this->post(route('logentries.store'), $payload)
@@ -255,7 +254,7 @@ class LogentryControllerTest extends TestCase
             'user_id' => $user_id = auth()->user()->id,
             'food_id' => $food = Food::factory()->create()->id,
             'quantity' => 100,
-            'consumed_at' => Carbon::now(),
+            'consumed_at' => now()->subDay()->toDateString(),
         ];
     }
 
@@ -270,7 +269,7 @@ class LogentryControllerTest extends TestCase
             'user_id' => $this->user->id,
             'food_id' => $this->getValidLogentryData()['food_id'],
             'quantity' => 999,
-            'consumed_at' => Carbon::now(),
+            'consumed_at' => now()->subDay()->toDateString(),
         ];
 
         $this->patch(route('logentries.update', $logentry), $payload)
@@ -481,17 +480,12 @@ class LogentryControllerTest extends TestCase
 
         $yesterdaysLogentry = Logentry::factory()->create([
             'user_id' => $this->user->id,
-            'consumed_at' => now()->subDays(2)
+            'consumed_at' => now()->subDay()->toDateString()
         ]);
 
         $todaysLogentries = Logentry::factory(2)->create([
             'user_id' => $this->user->id,
-            'consumed_at' => now(),
-        ]);
-
-        $tomorrowsLogentries = Logentry::factory(3)->create([
-            'user_id' => $this->user->id,
-            'consumed_at' => now()->addDays(2)
+            'consumed_at' => now()->toDateString(),
         ]);
 
         $yesterdaysPotassium = $yesterdaysLogentry->food->potassium;
@@ -500,16 +494,12 @@ class LogentryControllerTest extends TestCase
             return $acc+$logentry->food->potassium;
         }, 0);
 
-        $tomorrowsPotassium = $tomorrowsLogentries->reduce(function ($acc, $logentry) {
-            return $acc+$logentry->food->potassium;
-        }, 0);
-
-        $totalPotassium = $yesterdaysPotassium + $todaysPotassium + $tomorrowsPotassium;
+        $totalPotassium = $yesterdaysPotassium + $todaysPotassium;
 
         $response = $this->get(route('logentries.index'))
             ->assertOk()
             ->assertPropValue('logentries', function ($returnedLogentries) {
-                $this->assertEquals(6, count($returnedLogentries['data']));
+                $this->assertEquals(3, count($returnedLogentries['data']));
             })
             ->assertPropValue('todaysPotassium', $todaysPotassium)
             ->assertPropValue('totalPotassium', $totalPotassium);
@@ -520,9 +510,44 @@ class LogentryControllerTest extends TestCase
     {
         Carbon::setTestNow();
         Sanctum::actingAs($this->user);
+
+        Sanctum::actingAs($this->user);
+
+        $beforePeriodLogentry = Logentry::factory()->create([
+            'user_id' => $this->user->id,
+            'consumed_at' => now()->subDays(9)->toDateString(),
+        ]);
+
+        $todaysLogentries = Logentry::factory(2)->create([
+            'user_id' => $this->user->id,
+            'consumed_at' => now()->subDays(2)->toDateString(),
+        ]);
+        $yesterdaysLogentries = Logentry::factory(3)->create([
+            'user_id' => $this->user->id,
+            'consumed_at' => now()->subDays(5)->toDateString(),
+        ]);
+
+        $afterPeriodLogentries = Logentry::factory(4)->create([
+            'user_id' => $this->user->id,
+            'consumed_at' => now()->addDays(2)->toDateString(),
+        ]);
+
         $response = $this->get(route('logentries.index'))
             ->assertOk()
-            ->assertPropValue('periodStart', now()->toDateString())
-            ->assertPropValue('periodEnd', now()->addDays(7)->toDateString());
+            ->assertPropValue('logentries', function ($returnedLogentries) {
+                $this->assertEquals(5, count($returnedLogentries['data']));
+            });
+    }
+
+    /** @test */
+    public function it_returns_logentries_within_the_period_start_and_end_dates_with_index()
+    {
+        Carbon::setTestNow();
+
+        Sanctum::actingAs($this->user);
+        $response = $this->get(route('logentries.index'))
+            ->assertOk()
+            ->assertPropValue('periodStart', now()->subDays(7)->toDateString())
+            ->assertPropValue('periodEnd', now()->toDateString());
     }
 }
